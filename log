@@ -1,0 +1,736 @@
+#31/05/2019
+
+giorno 1. Cose da fare scritte in $data /1_seed/README
+
+#3/06/2019
+# crispr search algorithm speed comparison
+PILER-CR vs minCED. 
+Paragone salvato nel notebook CRISPR_search_tools_comparison.ipynb
+Considerazioni nella mail
+
+Per i comandi per lanciarli, leggi il README dentro /home/lorenzo/Cas_mining/test1/README
+il test1 Ã¨stato fatto, da domani si puÃ² iniziare con la seconda fase (diciamo test2)
+cioÃ©provare a usare il dataset di nicola e runnarci minced(e pilercr) (e crisprdisco) sopra
+
+#4/06/2019
+Da fare: positive control sui dataset usati per vedere se effettivamente i dati trovati combaciano.
+scaricati i .gff relativi ai genbank index dei fasta:
+ for i in *.gff; do
+> echo $i
+> less $i | grep direct_repeat | wc -l
+> done
+
+Buk.gff
+0
+GCF_001021955.1_ASM102195v1_genomic.gff
+2
+Mlac.gff
+9
+NC_006449.gff
+3
+NC_015847.gff
+1
+NC_023011.gff
+1
+NC_023060.gff
+0
+Scel.gff
+7
+Spy.gff
+0
+
+Spy Ã¨ stato sostituito dallo Spy di GCF_001021955.1_ASM102195v1_genomic, XKE funge, ma ci sono 1800 genomi e mi ero confuso su quello giusto in qualche modo, bella
+
+#05/06/2019
+# Da oggi si inizia coi dataset di segata, che sono in:
+/scratchCM/tmp_projects/epasolli_darkmatter/allcontigs/ALLreconstructedgenomes
+# le annotazioni sono in
+/shares/CIBIO-Storage/CM/scratch/tmp_projects/epasolli_darkmatter/uniref_annotation
+# i file sono del tipo:
+#fasta file of single bin (with contigs inside) 
+# Datasetname_20credici__sampleN__bin.n.fa
+#annotation:
+# Datasetname_20credici__sampleN__bin.n.annotated
+in bocca al lupo. lol
+MAGs: metagenomic assembled genomes (per distinguerli dai genomi che vengono da isolate)
+
+es: asnicar_2017, ogni bin oguno ha un .annotated
+
+devi asses for completeness of bins (con set di geni che expect to see), check that genomes have them (checkM), and estimate completeness (n di copie, se ce ne sn troppe).
+
+binning: select (out of quelli sputati da un coso automatico (metabat)) completeness of 50% or above and contamination < 5%
+
+nel .annotated sono interessato a UniRef id
+#06/06/2019
+
+# STEP 0
+# check there are actually 157k genomes
+
+##########
+# step 0:
+#########
+# fatti due file $data/0pre_analyses/all_data e all_anno, che confermano entrambi
+# di avere 154723 bins in totale. bella.
+# (pipeline usata in 0prel_analyses/dataset_count)
+i due file all_anno e all_datasets hanno lo stesso numero di righe, ma differiscono un po'
+per i nomi di alcuni files:
+
+1) I dati del dataset Bengtsson-PalmeJ_2015, si chiamano Bengtsson-PalmeJ_2015 nei genomi, ma BengtssonPalmeJ_2015 (senza il trattino) nelle annotazioni (3837 bins)
+
+2) Il dataset che si chiama FerrettiP_2018 nei metagenomi si chiama CM_caritro nelle annotazioni (1132 bins)
+
+3) DavidLA_2015 dataset in MAGs folder is called LawrenceA_2015 in annotation folder (159 bins)
+
+4) IjazUZ_2017  LiJ_2014 Castro-Nallar OhJ_2014 RaymondF_2016 SmitsSA_2017 VatanenT_2016 VincentC_2016 WenC_2017 ZeeviD_2015 have megahit keyword in the annotation. 
+"megahit" is there to indicate the method used for assembly. In preference spades was used, but that was not always possible, in which case megahit was used. The megahit samples are still good and worth using. 
+
+5) bin.2 in Schirmer_2017__G88886__bin is missing the .2 in annotation file
+
+6) bin.10 in  SchirmerM_2016__G88887__ is missing the .10 in the annotation file
+
+7) bin.27 in SchirmerM_2016__G88911__bin.27 is missing the .27 in the annotation file 
+
+
+#10/06/2019
+
+############################
+#         STEPS1-3         #
+############################
+
+## creation of interesting loci :
+ Desired output is a table with the Study	Sample	Bin	Contig	Position	Uniref/othertags	sequence
+
+### 1) CRISPR search
+### 2) Cas annotation mining e/o homology search
+### 3) Positive control via CRISPRDisco
+
+#-----------------------------------
+##  1 CRISPR search
+
+mkdir /home/lorenzo.signorini/1crisprsearch
+mkdir $data/1crisprsearch
+cd /home/lorenzo.signorini/1crisprsearch
+# Using minced and pilercr
+# 1.1 Test
+
+# select one randon sample (each sample from each dataset should have different bins, each with different contigs)
+
+random sample   random test sample 
+python 1print_a_random_test_sample.py
+study:  ZellerG_2014 
+sample:  CCMD46947453ST-21-0
+il bin con dei crispr è il bin 33
+SmitsSA_2017   è il dataset piu piccino
+# PICCOLA NOTA IMPORTANTE:
+inced(df,dataset, CRISPRdir)
+i dati sono raccolti in $gnms secondo gli SGB () che sono dei numeri che indicano che quei bin sono dello stesso tipo , tipo una specie di specie. quindi se voglio tutti i bins di un campione, devo andarmeli a prendere. SOlo che nelle cartelle originali ci sono molti piÃ¹ bins, anche quelli non filtrati, e io voglio (ma voglio?) cercare solo nei filtrati, e la tabella che mi dice quali sono i filitrati Ã¨ la S3 supplementary information del paper di segata che mi ha mandato francesco asnicar nella lettera
+(oppure direttamente nel $data/0pre_analyses/all_coso, che c'Ã¨ gia la lista giusta lol. ma vb
+
+#######
+# COMMANDS
+
+PILERCR
+
+pilercr -in <input.fa> -out <out> -minrepeat 8 -maxrepeat 100 -minspacer 8 -maxspacer 100
+minced
+problemi tecnici con minced, intanto facciamo pilercr
+
+risolti i problemi tecnici con minced, installando un'altra versione di java (con jdk qualcosa)
+in utils/jdk-12.0.1
+, compilandolo di nuovo,
+e ora per lanciare minced devo chiamare quel java li
+e fare -jar minced.jar (che Ã¨ una cosa che ha creato compilandolo)
+
+/home/lorenzo.signorini/utils/jdk-12.0.1/bin/java -jar /home/lorenzo.signorini/minced.jar  -minRL 8 -maxRL 100 -minSL 8 -maxSL 100 -gff tout.gff /patth/to/input parth/to/outputtout.txt  
+
+ppilercr lanciato tramite
+test_pilercr_runner 
+che Ã estremamente veloce, bella.
+
+vediamo se si riesce a fa lo stesso per minced
+
+ideally, alla fine, li runno anche coi paramteri laschi e  ci rifaccio il notebook tipo quello del test locale
+
+ma Ã¨ tardissimo quindi potrei anche andare a casa ma si dai, minced lo fai domani, e bella
+
+##########
+#11/06/2019
+
+l'exec time Ã¨ nei milliseconds range cmq
+
+ho fatto test_pilercr_runner e test_pilercr_minced,
+girati, e fungenti, con relativo time di esecuzione (nell'ordine dei millisecondi quindi shallonzola),
+
+
+Ho iniziato a usare il comando PARALLEL
+(per vedere come farlo fungere, guarda il file 1crisprsearch/pilercr_runner
+
+manca una cosa nella pipeline 1crisprcassearch: x cambiare nome ai minced.out.txt
+
+ho fatto due tmux sesh: pilercr in cm4  e minced in cm2, dove ho lanciato i cicletti pilercr e minced rispettivamente
+
+TODO: fare un summary table
+(Lo sto iniziando ma lo faccio dopo, meglio)
+nel summari ci dovranno essere vvarie lines,
+datasetname, samplename, binname, sgb, contigname, contiglen, contigcoverage, \#crisprfound by minced e by pilercr, exectime, e poi volendo aggiungerci anche la parte due,cioÃ¨ la annotazione. tutto standard. ci vorrebbe anche un header con i parametri di pilercr e minced, e cosi se lo runno con cose diverse, sono diversi igli header, biella
+
+#
+12/06/2019
+
+la sessione di pilercr ha fatto, Ã¨ pronta, bella.Infatti facendo ls| grep pilercr | wc -l dentro 
+la cartella $data/1crispr/out viene 309446 che Ã¨ esattamente 154723*2 .
+La sessione di minced ancora no, 171k file creati, siamo ancora a meta praticamente
+
+on a side note, la tavolona che voglio fare, meglio farla alla fine fine, e con tutti i contigs tipo e anche con info di anno. crisprcas, ecc, ecc, ecc, ecc.
+
+o magari intanto ci infilo i crispr dentro. direi che ora faccio un istogrammino dei dati.
+
+ho lanciato in cm2 una tmux sesh chiamata crisprviz bo nn ricordo come dove ho lanciato CRISPRviz.py o qualcosa di simile bo
+13/06/2019
+scazzo totale
+oggi ho fatto questo coso per fare i plot, funziona co 42 bin co 154k non so...
+ci mettera un po sicuramente 
+poi bo non so bene come fare per quell altro coso
+il mega tavolone diviso in contig
+a partire dal tavolone S3
+
+pero' bo bo bo
+bobborobobbobobo
+
+158 minuti ci mette a ciclare su tutti i cosi diocane.
+e me ne ha contati troppi, ma vabbe diicaone
+
+sto facendo cose eppure non concludendo nulla allo stesso tempo
+mi sembra una giornata buttata:
+sbagliato cose: un istogramma ci mette 3 ore, l'ho fatto due volte da ieri sera
+sto per farlo una terza, ergo giornata semi buttata.
+ma non proprio dai ho messo a posto i files, provato
+a resuscitare il fisso che mi ha dato anna (con successo del bo 49%), installato l'autocomplete per python
+su vim e incredibilmente funziona 
+daje
+migliorato il readme, fatto ordine tra i files come 
+le persone civili perche adesso sono un lavoratore e faccio le cose a modo
+
+tmux session aperta in cm4 che sta rinominado dutti i minced
+
+#
+14/06/2019
+oggi preso bene proviamo afare lo step2 così debbotto
+
+allora sui datasetnames ZeeviD_2015 nelle cartelle sue è diviso in ZeeviD_2015_A e ZeeviD2015_B
+
+ho appena scoperto che pare ci sia stato un minced going on with the prokka, quindi should be interesting tout
+DO THE SUPER MEGA DOUBLE CHECK OF THE MINCED DATA OVER THEIR MINCED DATA TO SEE SE SONO UGUALI
+
+CMQ less sample.bin | grep Cas  mi dovrebbe trova tutte le cas cose. e forse anche di piu.
+
+dobbiamo capire bene cosa greppare per non missare
+
+LAWL
+
+lanciato in cm3 tmux retrieveanno   il python retrieve-all_annotations.py
+
+belle cose
+da scrivere il readme di $data/2
+
+da leggere i 3 paper della cereseto (2 scaricati uno da scaricare)
+
+da lanciare un confronto tra i miei minced e i minced di prokka (in $data/2...)
+
+da rifare l'istogramma perché c'è qualcosa che non va.
+prossimo giorno ormai:
+da checckare che il grep del Cas greppi anche i cas un pochino piu nuovi e bizzari e carucci tipo cpfpcspcpsc o che ne so io che magari ancora non si chiamavano cas
+
+#17/06/2019
+#
+settimana nuova problema nuiovo. a qnt pare i lserver su cui ho lanciato il ciclo è crashato e ora ho rilanciato una versione simile su cm4 (una versione simile xke ora è retrieve_annotations_of_datasets, lanciato tramite parall.sh
+
+il server era crashato che avevo fatto circa 55k files, li ho rimandati tutti perchè era piu velcoe che passare la lista gigaante di tutti quelli che VEVO GIA MADNATO E CONTROLLArla ogni volta.
+mANDATI nella session retrieve_anno, ma con &, li vedi che girano con ps -efa | grep python
+
+#20/06/2019
+#
+perse due giornate a bere e farmi del male psicologico, forse ne esco
+ma la buona notizia è che 2casanno ha fatto!!!
+
+bellissimo
+
+Ora, prima di fare il tabellone:
+controlliamo che le annotazioni di minced e quelle di prokka siano le stesse.
+
+
+e famo i readme  carini,
+e uploadiamo tutto su github o proviamo su bitbucket
+
+e poi, devo capire quella cosa del uniprot
+
+
+
+# 21/06/2019
+#
+#Ho finalmente 
+finalmetne fatto il ciclo for per levare le righe inutili dai .minced.out.gff. sta girando pina piano  (ls *.gff non funzionava xke eerano troppi files, ma bastava fare *.gff e ciclava tra i files lol stupidz)
+che è
+
+for file in *.minced.out.gff; do  echo $file; sed '/^#/ d' <$file> ${file}_cut; mv $
+{file}_cut $file; done
+
+
+ta girando il 2-5 ma non salva file in just-minced, ma i diff files stanno venendo vuoti il che è un bene lololol+ù
+stica lanciamolo ammerda su ttttttt
+
+su cm2 tmux session chiamata 2-5 ho mandato parallel, non so quanto bene faccia, preoviampo
+su cm4 sta ancora andando il rename. ragion per cui hpo fatto una cazta  amandare qll su cm2 ora lo blocco lol
+ma funzionacchiav,a poi lo rimando tipo st owe se trovo un moenten
+
+cm4 lanciata tmux parallel
+
+prima cosa che devi fare luendi: decidere di parlare con la prof e con segata per  dirgli la cosa delle NN e per dirgli di ferie phd cose cose o addirittura cosa insegnare (l'aveva detto M. Juls)
+
+#24/06/2019
+
+parallel ha fatto, ma dava un po' di errori tipo no such file or directory
+ma ho ovvimaente appena chiuso i ltmux quindi chissà no potro piu rivedere gli errori
+
+
+DEVO COMINCIARE DA ORA (da dopo il 2-5) a raccogliere i dati in cartelle divise per dataset, xke se no viene lunghino guardare tutto ci sn troppi files nella cartella
+
+ho fat to uno scriptino check_emty che printa a schermo se un file .dkiff non è vuoto, e ovviamente nn ne viene fuori nessuno. c'è qlcs di sbajade..
+
+trovato lo sbajade, ma ora dal 2-5 invece che tenere tutti i files in una cartella, li sottodivido in cartelle dei dataset cosi li posso guardare un pochino xke se no sono troppi da aggeggiare. quindi ogni volta che sto per fare qualcosa , prima faccio un ciclo per fare cartelle
+
+
+fatti i diff, ma alcuni sono simili in realtà
+devo vedere bo bobbobobobo xke bo
+
+ok fatto, rimandato parallel tmux parallel su cm4, e poi dopo faccio un check_diff.py ytipo , e rimetto apposto sto log e il readme di 2-5 e poi viaggio.
+
+hi fatto un find . -type f | wc -l  dentro justminced e ne sono venuti fuori 143457 !! un sacco di CRISPR!!!!
+magari è controllabile vedere se sembrano tanti? pochi? medi?
+
+#25/06/2019
+#
+oggi iniziamo a fare un tabellone gigante. la cosa importante è avere le idee chiare prima di iniziare a farlo, così so gia quello che voglio.
+
+guarda tabellozza.py per sapere cosa devi continuare a fare. sei a buon pt
+
+
+# 1/07/2019
+
+da fare dopo pranzo: aggiornare i readme dentro $data in modo che abbiano un esempio dei dati contenuti dentro la cartella
+
+sto lanciando un count_pasolli_qlcs.py xkle non mi quadra che dentr o$anno ci sia una casella CM_tanzania, che non c'è nella lista dei mie dataset, e quindi boborobobbo, anche se a me mi viane che ho il numero giusto di dati quindi bah. vedem
+stp girando un for per mdivedere gli out in $data/1crispr/out in carelle relative al dataset che se no qua troppe robe
+direi che il pilercr file possiamo fare qualcosa che ne estragga info stile .gff . forse si
+
+ìerrroroene non matcha nulla guarda file
+
+#02/07
+#aggiunto dile in 0prelanalysise :
+#filename discrepancies.py , utile
+#
+lavorato bene su tabellazza.py, ci siamo quasi, guarda quello che c'è scritto dentro per sapere cosa manca lool
+# 03/07
+#devo vedere se $data/1/Zeevod ja fimzopmatp del tutto, xke credo di no.
+#mandato tmux tabellazza su cm4. dovrebbe funzionar esu tutte tranne che su alcune. sticazzi intanto lo mandiamo su alcune bella li.
+#
+#in cm4 tmux mv\ 1crispr   cè un altro ciclo for che sta spostando robe ,domani avrà fatt. saranno u npo incasinati quelli ma va bene cosi bella.
+
+#04/07
+#mi so scordato di fare >$dataset.log, e quindi ora mi salvo tutto a mano dei logs, lol
+#ma gli output osno tutti mischiati xke li ho lanciati con &, quindi prendo solo l'output finale lol x vede quanto c'ha messo e se son tti buoni. bravo lo che li hai scritti tutti
+#a mano, sto riguardando gli output di tutti (TUTTTI!!!) i logs (A MANO! c'e' sicuramente un modo automatizzabile di farlo che il numero di sample sia uguale in  tutti e in tutto. e in S3
+#quelli da rifare: 
+CM_caritro LiSS2016 LiJ_2014 QinJ_2012 VogtmannE_2016 VatanenT_2016 RaymondF_2016 LiSS_2016 OhJ_2014 CM_periimplantitis Castro-NallarE_2015 XieH_2016 LawrenceA_2015 CM_caritro ZeeviD_2015_B ZeeviD_2015_A BengtssonPalmeJ_2015
+CosteaPI_2017  WenC_2017 VincentC_2016 
+le cartelle dei discrepamnti n 1crispr sono le cartelle dei nomi working ma in realta i discrepantoi hanno i nomi S3, ecco xke nn l itrova.
+
+#
+#ora mancano CosteaPI e gli Zeevid
+#Vatenent ancora non fa vogtman  WenC  CM_qlcs OhJ LiSS 
+#
+#VincenTC ha fatto ma aveva gia funzionato hahahah
+#"LiJ_2014",  "OhJ_2014", "RaymondF_2016" stanno andando e dovrebbero fare ora.
+#Cm_periimplantitis andato , non si era creata la cartella for some reason
+#e vari altri  BengtssonPalmer WenC HineX wlcs , dovrebbero stare entrambi andando dentro tmux megahti insieme a liJ OhJ e Raymond   su cm4
+#
+#TODO cambia i nomi di crisprscas_hits_tabel_datasetbname.csv in datastetname_crisprcas_hits_table.csv
+#
+
+
+#05/07/2019
+BengtssonPalmeJ_2015  LiJ_2014 LiSS_2016 QinJ_2012 RaymondF_2016 VatanenT_2016 VogtmannE_2016 WenC_2017 ZeeviD_2015_A
+ZeeviD_2015_B
+ continuano a non funzionare. oggi uno per  uno madonna seghettata li facciamo
+temp:
+[11] 120987
+[12] 120988
+[13] 120989
+[14] 120990
+[15] 120991
+[16] 120992
+[17] 120993
+[18] 120994
+[19] 120995
+[20] 120996
+[21] 120997
+
+for i  in *; do if [[ $i == a* ]]; then echo $i; fi; done
+ sta funzionando non ci credo che sta funzionando, ho lo script perfeto per fare minced e pilercr solo di un dataset 
+
+da fare ZeeviD madonna.
+bbiamo capito che vogtman e liss e quinJ non fungevano xke non avevano la cartella in jsutminced, si era creata male e quindi non c'erano file. girato per vaugtman e giratne per liss il retrive_minced_annotations.sh, dopo di che si puo mandare tabellozza.py per loro.
+in via del tutto eccezzionale le sto facendo girare qui lol. 
+vaugtman e liss sta girando in tmux aiuto. qinj e sto facendo le justminced (vaugtman gia fatte)
+le altre mancanti, abbiamo risistemato il filename discrepancies, quindi stanno girando tutte inj aiuto. sembra vada tt bene. manca zeeviD. bella
+
+# 06-07-2019
+# e' sabato non si lavora di sabato SOPRATTUTTO PE ottocenteuro mavvabbe
+
+fatti i Liss  (mancavano dei justminced, ricreati, fatto) e i  bergssonpalmer (non era nella lista dei megahit)
+
+curiosita perce ci sono piu file del dovuto in justcasanno?
+# 07 è domenica,s tesso discorso, ma och
+# 08/07/2019
+#
+# finito finalmente lo step 3. siamo riusciti a far girare anche ZeeviD.
+#
+# PER GIRARE ZeeviD_2015 step3:  python tabellazza.py ZeeviD_2015_A  (o  _B, indifferente). processa sia _A che _B, e salva tutto in $data/3tabellazza/ZeeviD_2015/coso. senza distinzione fra A e B.
+#
+# last step: checckato che siano tutti e soli i file che vogliamo, per cui fatto un file s3datasets_count con
+#
+# for file in *; do echo $file>>../s3datasets_count; echo $(more ${file} | wc -l)>>../s3datasets_count; done
+#
+# e un tempcount in $data/3tabellazza con 
+# 
+# for dataset in AsnicarF_2017 BackhedF_2015 BengtssonPalmeJ_2015 BritoIL_2016 CM_cf CM_madagascar CM_periimplantitis Castro-NallarE_2015 ChengpingW_2017 ChngKR_2016 CosteaPI_2017 LawrenceA_2015 FengQ_2015 CM_caritro GeversD_2014 HMP_2012 HanniganGD_2017 HeQ_2017 IjazUZ_2017 KarlssonFH_2013 KosticAD_2015 LeChatelierE_2013 LiJ_2014 LiJ_2017 LiSS_2016 LiuW_2016 LomanNJ_2013 LoombaR_2017 LouisS_2016 NielsenHB_2014 Obregon-TitoAJ_2015 OhJ_2014 OlmMR_2017 QinJ_2012 QinN_2014 RampelliS_2015 RaymondF_2016 SchirmerM_2016 SmitsSA_2017 VatanenT_2016 VincentC_2016 VogtmannE_2016 WenC_2017 XieH_2016 YuJ_2015 ZeeviD_2015 ZellerG_2014; do cd $dataset;  echo $dataset >>../tempcount; echo $(more crisprcas_hits_table_${dataset}.csv | wc -l) >>../tempcount; cd ../; done
+# 
+#e paragonati., per vedere che il conto totale sia uguale, e lo è  (viene 15470, che sono 154723+ 47 lines di header, una per dataset. BELLAA.
+#
+#09/07/2019
+#fatta la tabellona. perfetto
+#salvata,
+#checcakto che il numero di righe sia  valido
+#e che sia uguale aS3Segata.csv
+#sembra andar tutto bene, bella
+#
+#Parlato con segata aggiornato sulle cose
+#cose pratiche da fare:
+#1) ritrovare folder condiviso su gdrive da antonio
+#
+#2) addare al summary un summary by genome, per dire qual'è la percentuale di genomi che ha / non ha una cas/ una crispr
+#
+#passare alla fase successiva
+#
+#essenzialmente due cose:
+#1 trovare un modo di fvisualizzare i loci crispr
+#
+#2 aggingere statistics relative agli SGB (in particolare SGB con molti sample per campione, e senza reference / opoco noti / ecc) tipo la proporzione di quanti di loro possiede quante crispr e quante cas.
+#insomma fare dei dati basati sugli SGB. 
+#potrei prima raccogliere tutta queste statistiche dentro il summary che ho fatto, e poi agggiunger edella visualizzazione
+#
+# 3 aggiungere i crispr spacers nel summary
+#16/07/2019
+#
+#ieri aggionrato il summary.ipynb, oggi si continuaa farlo , e si aggiunge un po' di info relattiva agli sgb, contenuta nella tabella S4Segata.csv che è il csv fatto (tramite python) dall'xlsx scaricato da internet della tabella supplementary 4 del paper di Cell.
+#df=pd.read_excel("asd.xlsx")
+#df.to_csv("asd.csv")
+#
+#
+#bello, spulciato un po' S4Segata.csv, e vedi che cibiobacter è quello che ha 1813 reconstructed genomes, ma 0 reference genomes
+#ma ce ne sono altri non solo lui così ignoti.
+#cercare nelle cose ignote se bueno.
+#intanto anche solo prendere una cas9 da questi animaletti, se sicuro che sia una cosa nuova, quindi cosa si vuole fare? lol
+#
+#bello, spulciato un po' S4Segata.csv, e vedi che cibiobacter è quello che ha 1813 reconstructed genomes, ma 0 reference genomes
+#ma ce ne sono altri non solo lui così ignoti.
+#cercare nelle cose ignote se bueno.
+#intanto anche solo prendere una cas9 da questi animaletti, se sicuro che sia una cosa nuova, quindi cosa si vuole fare? lol
+#
+#Intanto
+/scratchCM/tmp_projects/epasolli_darkmatter/allcontigs/ZeeviD_2015_A/metabat/genomes_comp50_cont05/prokka/ZeeviD_2015_A__PNP_Main_213_megahit__bin.52    
+#ha una cas9 in un bel locus su un contig con un cas1 accantp, molto bellino. dovrei trovare il modo di trovare le cose cosinose cosose ci staa ma questo è proprio caruccio eh.
+#apri il file .ffn e trovi /cas) e il gioco è fatto!!
+#presa! lol
+#
+#finito summary.ipydb
+#aggiunti esempi utili e cose ganze miste
+#oo
+#
+#
+#tracrrna
+#
+#SISTEMATIZZARE RICERCA LOCUS: (+tracrRNA se è cas9)
+#
+#per
+#1) identificare cas effector gia annotate
+#		1.2)#SIstematizzare le Cas effector trovae
+#
+#
+#2) trovare putative new cas  effector a partire da  loci noti (domini nucleasici, trasposasi(?) 
+#
+#in parallel: finding PAM
+#22/07/2019
+#mandato mail x sentire per i viral unmapped genomes
+#ora produco una cas loci table e bella per tutti quanti quelli che mi conoscono lol
+#
+#o forse prima devo fare una cosa che mi individua anche i tracrRNA (?)
+#e una coas che mi individua il tipo di cas ? ma per individuare il tipo di cas devo caprie bene cos'è uniprot
+#
+#altre cose che sto pensando: se vedo il locus, fare una visualizzazione di a che punto è il locus sul contig, perché: metit caso che ho due contigs uno con crispr e cas1 e un altro con cas9 e qlc altra cas, e uno ha gli elementi a destra, e l'altro a sinistra, molto ivicini al bordo: fposso dire: questi stanno insieme: e questi contigs sono ordinati così ! ! !
+#e magar scopro che non c em ai cas4 xk non si sequenzia (tipo x dire una stronzata)
+#devo fa sta cosa. visualizzare le robbe.
+#e salvarmi tutto dentro molteplici bei failz. visualizzare tipo : un annotazione = una -  , e i l contig è fatto cosi , e un * = un cas/crispr element. oppure una - = 1000 basi tipo.
+# una roba simile. sono curioso, secondo me posso allineare un po' di contigs.: FUNCTIONAL ALLIGNMENT OF CONTIGS
+#
+# ce qualcosa che non va coi Contigs di Zeevid di cibiobacter (ma probably di tutti?)
+# le anontazioni di CRISPR sono ripetute
+# allroa in parte sembra essere una duplicazione che avviene a monte. ma perché avviene? forse xke c' e un nodo senza crispr e questo lo fotte?
+#
+# AATTETTETTETENZIONE
+# TROVATO UN DUPLICATO IN CRISPR ANOTATION DI ZEEVID!!! IL MINCED È ANNOTATO DUE VOLTE! (e FORSE ANCHE IL PILERCR ALLORA?)
+# potrebbe essere dovuto al fatto che python tabellazza.py ZeeviD_A e ZeeeviD_B fanno entrambie entrambi e quindi magari facendolo entrambi si sono raddoppiati, bo, ho provato arilanciare python tabellazza.py ZeeviD_2015_A (NON rilancio anche il B), ci metterà abbastanza, poi porov a ri mergiar etutti insieme lol e rifare la tabellazza, e vediamo se era quello.
+# nmolot molto occhio al postprocess tabellazza dopo, fallo SOLO PEWR ZEEVID IL PUNTO 1 E MAGARI MANCO PER LUI E GUARDA BENE CHE STAI AFFA (STAI CMABIANDO I NOMI DENTRO ZEEVID? MA SERVE SEI SUCUROO??
+# trovato il problema, $data/crisprsearch/out/ZeeviD_201/samplename.gff è doppio, ha due entries diocane
+# lol. porviamo a smezzarlo...
+# 
+# cose importanti
+# parlato con francesco beghini, mi ha detto cose sulle annotazioni
+# in pratica le annotazioni di prokka lui annota1) fa le orf ab inito e 2) annota contro uniprotKB ma solo swissprot, che sono le proteine manually reviewed e annotated, mentre c'è anchte trembl.
+# poi ci sn uniref50 e 90 che servoono a ridurre lo spazio di ricerca xke clasterizzano le sequenze con identità al 50  al 80, se vai dentro epasollI_darkmatter/uniref_annotation/ ci sono loro.
+# e sn quelle che  ti disse a suo tempo il buon ade. e loro hanno molte piu cose, ci sono molte piu cose e sn annotate anche meglio di prokka.
+# prokka può sbagliare.
+#
+# sono blastate contro uniref, e dei batteri poco noti uniref990 spesso e volentieri non ne trovi
+# nisbaz, mentre uniref50 si, che ti raggruppa cose piu lascamente. e ste sono poco omologhe e sono essenzialmente nuove, anche xke NON cisono su uniref, però ci sono sul loro sito. 
+#
+non cè la data ma oggi pè il 23/07, un po d i cose di sopra sn state fatte oggi
+
+cmq mandato su cm3 su tmux 0 penso, un giro per tirare fuori tutte le uniref anno. da farci un readme piccolino sopra magara.
+mentre quello fa, prima di lanciar etabellazza, ora allineiamo le seuqnze virali lol
+
+ALLORA, tabellazza non fa xke il 6maineraltaeprimadel3 ha fatto per ogni dataset circa la meta dei files, mancano dei bins, nn so xke
+
+minced vecchio, sta ancora imperterrito girando, da tutto il giorno, fa ridere e che riccordiamo era solo xke mi sembrava di avere delle crispr duplicate dentro i cosi
+
+blastx di un virione contro mille altri, non funge xke devo capire che forma ha il database in pratica
+
+# 24/07
+
+MINCED VECCHIO HA DFATTO.
+	poer zeevid. cambiate le estensioni file di .out.txt, levati i \# dal .gff , ora devo solo aggiungere i .pilercr dalla cartella vecchia, ma prima di fare tale trasfer mineto devo checckare che siano effettivamente NON doppioni questa votla
+
+sta guiranto un tmux su cm3 con 6mainrealta3retreiveblabla,
+e poi dovro farci il tabellazza
+
+retrieve uniref sta andando di nuovo da capo xke sn stupido, su cibio1.cibio. xke tutti i cm sn intasati.
+
+e la table merge tables pure
+
+qquando avrà finito dovrò rirunnare tabeòlllzaza .py solo col punto 5, e poi rirunnare il erge tables
+
+intanto famo la cosa del virus: sto copiando tutti i contigs dentro 4../pam/ 
+parallelamente, ci mando il coso x creare un blastDB
+creato, sta girando (in due tempi, sperando non si overlappino ma si overlapperanno, ma singeramende sticazzi
+
+tte e tre le cose stanno girando sul server del cibio1.cibio
+
+DOMANI: filtra i contigs in modo da tenere SOLAMENTE i contig NON mappati. è una cosa fattibile in tempi decenti? si ha una lista dei contigs da qualche parte?
+#25/07
+makeblastndb parte 1 fatto
+makeblastdb parte 2 FACENTe ma è stato facente tutta la notte e è ancora a NIELSEN MANNAGGIA
+might be time to parallelize the mf.
+lancio per zellerg, zeevida, e zeevidb da seoli.
+
+retrieve_uniref_annotations gli manca ZeeviD da finire
+
+il blastn con outputformat 6 tabulare, seems to be working quite well.
+e ha quello che voglio perfettamente.e mammammamamamammaammama forse ho pure trovato qualcosa
+
+
+pero ora devo retrace back i contigs to cosa sono
+
+
+ALLORA
+lavorato guardato
+CM_madagascar__A01_02_1FE
+è il nostro TEST, poi lo dovrò generalizzare per tutti, ma mi sa che il blast mi tocca runnarlo mezzo a mano.
+
+l'ho girato, ha un po' di spacers, e facendo gli spacers c'è il secondo spacers che ha mappato su 2 contigs che non sono il solito contig. allora sono andato dentro originalsamples CM_madagascar e ho fatto
+
+
+################### 
+
+origianlsamples CM_madagascar
+
+for folder in *; do cd $folder; echo $folder; more ${folder}.faa | grep NODE_59_length_ ; cd ../; done 
+#############################
+
+e nnessuno dei due matchava, quindi immagino sia un coso virale. ora blasto quei due contigs online e vedo come vanno. e magari mi guardo che pam potrebbero avè..
+
+e poi devo fare una big table di ogni contig che ha ogni bin, è un ciclo, ci metto poco penso.
+
+e poi devo fare una cosa per fare in parallelo la ricerca sistematica di cas esotiche. prendo la mia listona di cose, ci levo ciò che ha  già cas9, e scorro vicino e lontano. con qualche motif searcher.
+
+
+ho blastato una cosa a caso, bella
+
+
+#28/07
+#
+creato  un bel ciclone per fare un summary di tutti i contigs, nello stesso formato di S3Segata.csv, che abbia Contig Name , Genome Name, Study, Sample Name, SGB ID come colonne
+e nel caso di contig ubninnati: SGB ID = 0, Genome Name=<dataset>__<sample name>__unbinned
+lo ciclo per tutto tranne ZeeviD, e vedo come va. lo lancio su un tmux contigs_list  su cm4
+
+TUTTI TRANNE ZEEVID. DA FARE: ZEEVID, e il coso finale per mergiare tutto
+sta girando looper_contigs_list c'è stato solo un errore strano incomprensibile che dovro rivedere dopo e speriamo bene... cioe era alla line 53
+   diceva qcs tipo cannot convert to int 'Name' ma bo....
+fatti anche zeevid
+
+poi importante ho spostato i file *asd* dentro $original ChengpingW_2017, che c'erano degli asdasd files strani, che CREDO Di aver creato io ma nn sn sicuro ,q uindi nel caso non li ho eliminati
+
+
+TODO erroraccio!!! l ultima riga scrive il file come contigs_summary_+dataset+.csv invece dovrebbe essere +s3 dataset!! #TODO da correggere alla fine!!!! 
+mandati anche per i vari zeeviDs. 
+
+vediamo
+
+
+ora, da costruire una table di hits esotici...
+
+dovrebbe essere una cosa tipo..
+pé ogni bin (o SGB??)
+
+tipo: analizza le annotazioni 200bp a monte e a valle del cas piu distante.
+
+#29/07
+#
+controllaco che contigs_summary_dataset avesse lo stesso numero di SGB di crisprcas_hits_table_dataset, and, it does
+
+;.;
+ucciso tutto
+fatti ripartire piano piano su cm3 e cm4 e cm2  tmux contigs_list
+e su cibio1.cibio e cibio2.cibio come tmux 0 anncato alle robe di uniref
+guarda i vari tmux per vedere quali dataset hai mandato e quali tim ancano
+
+dp pranzo devi guardarti come sta mr uniref
+
+# pomeriggio: guarda UNIREF.
+iQUANDO lanci i looper , lanciali con sh invece che con ./ xke secondo me fa molto meno casino per qualche motivo strano.
+
+cmq lanciato loopertabellazza, dovrebbe star facendo le uniref annotations, e dovrebbe finire
+614 cmq lanciato loopertabellazza, dovrebbe star facendo le uniref annotations, e dovrebbe finire in frettaa. 
+615 infatti vedo gia gli errori lol
+infatti vedo gia gli errori lol
+, mezz'oretta in cui posso vedere gli errori da dove vengono, sembrano i soliti zeevid, lij ecc ecc (cazzo i megahit?)
+# cosa interessante: empty samples
+# ZeeviD_2015__PNP_DietIntervention_26__bin.10   
+# ZeeviD_2015__PNP_DietIntervention_3__bin.4
+# ZeeviD_2015__PNP_DietIntervention_36__bin.16
+# ZeeviD_2015__PNP_Main_104__bin.5
+# ZeeviD_2015__PNP_DietIntervention_48__bin.6
+# ZeeviD_2015__PNP_DietIntervention_37__bin.4
+# ZeeviD_2015__PNP_Main_748__bin.10
+
+
+vediamo se per esempio, i cas9 di cibiobacter hanno una uniref_annotation 50 o 90?
+facendo ad esempio:
+
+##########################################
+more crisprcas_hits_table.csv | grep Cas9 |  grep -n 15286, | cut -d, -f18
+##############################################
+si vede che molti di loro hanno uniref unknown. e questo è buono per la proteina
+
+
+forse trovato cosa faceva rallentare tutto: dataframe.loc in pratica ogni votla fa ujna copia del dataframe, e quindi rallenta tutto tanto.
+
+cambiato lo script usando set_values prima e un semplice dizionario poi
+devo rimaneggiare per ZeevidA e ZeevidB come al solito..
+#2 agosto
+#
+MOLTISSIME cose successe, poche cose scrittte nel log, quindi:
+
+fatta presentazione a labmeeting, fatto un disegnino molto carino della pipeline
+ORA COSA IMPPORTANTE FARE MENTE LOCALE
+
+la parte  1 (non exotic cas variants)
+faccio che 
+1 . filtro subito pesantemente le cas con locus completamente annotato (cioe almeno una cas2 cas1 cas9 /(cpf1?) e crispr) sullo stesso contig
+2. plotto lunghezze, e scelgo una in un range sensato di lunghezze
+3. scelgo una cosa pesata tra la più corta e quella con l'sgb piu sconosciuto (faccio un peso dove 1 è cibiobacter anzi uno è la piu distante possibile e 0 e streptococcus pyogenes tipo)
+e sommo sta cosa
+4. opzionale: vedi se i suoi relativi spacer hanno anche una somiglianza coi loci che interessano a antonio? ci starebbe. e poi devi ricordarti di creare il blastncommand devi fare un ciclo che lo scriva direttamente per tutte le cartelle, cosi ce lhama dev esse un comando che prende in argomento il nome della query, e poi cosi puoi blastare ogni query contro ogni database. (mail). c,q puoi aggiungerlo come cosa laterale alla tabella che fai. così poi ognuno si sceglie quello che vuole. quello con questo? quello per cui gli spacers danno una pam buona? quello piu corto e ignoto?
+5. e cmq i òloci con cas1cas2CRISPR, (o cose simili! guardati letteratura!!) ci puoi comunque fare un lavoro simile, e poi cerchi i domini nucleasici!!
+
+per fare ciò, faccio un ulteriore database che ha x rows le 29k rows di genomes con cas9, poi lsgb, la seq di cas9, la sua lunghezza, e ppoi: quanto è completo il suo locus, quanto è sconosciuto l'sgb/quanto è simile aspCas9 ...
+
+poi potrei anche: per ognuna degli hit validi (cioè in locus buon) fare l'annotazione precia precia dei domini.
+e ci sta pure quello.
+tutto dentro una bellissima tabellula.
+
+fichissimo
+
+daje
+
+sta girando su jupyter minin for a ncie cas9 example, che pèotrebbe diventare un 'crea una tabella dei cas. ma si. fallo domani. metti una nuova sottocartella e fai sta cosa.
+
+M
+ORA COSA IMPORTANTE FARE MENTE LOCALE
+#2/08/2019
+mi è venuto in mente, che sti cicli che ci stanno mettendo secoli è perchè li faccio riga per riga mentre il tabellazza li facevo colonna per colonna..
+
+
+PROTOTTE le tabelle di cas locus. da finire ancora
+la lunghezza è 33k per Cas9 e 4.5k per cpf1, che se vedi pero tipo ci sono solo circa 29k genomi con cas9 e 4k con cpf1. e questo xke alcuni genomi hanno piu di una cas9 e o cpf1., infatti se fai
+
+more known_Cas9_variants_table.csv | cut -d, -f5 | uniq | wc -l   
+22981
+che è 22980 + l'header. . perfetto
+
+salvati in $data/5caslocitable
+bellissimo
+e mergiato  con merge_datasets.py
+
+da githubbare /utils 
+che ora è bello
+
+
+
+èrima di anda  acasa githubba utils-.
+
+
+
+ora te ne vai a casa ma devui githubbare tutto
+
+e poi
+allroa
+
+fatte le cose fino a 2fillblabla sia per Cas9 cehe per Cpf1 Andre had etto che esistono anche altre Cpf, tipo2
+
+ora devi fare 5casloci/3blabla aggiungi le cas1,cas2 e crispr per prima cosa
+e VEDI se rifacendo il grafico delle lunghezze , filtrando solo le cas col 'locs attivo', viene più pulito il grafico.
+se viene più pulito ma c'è sempre della roba intorno ai 300.. allroa chissa...
+DEVO INOLTRE PERO' ri mergiare la tabellona iniziale
+# 3/08/2019 a
+# ho notato che
+mancanvano info di i posizione sul gff annotation dei pilercr, quindi messa (modificato tabellazza.py, e rilanciato) funge per tutti, tranne che per ZeeviD, di nuovo, pare non ci siano i file di pilercr di zeevid lol. mi toccherà rilanciarli
+
+porcoddio ho fatto una cazzata con git,
+siccome mi dava errore che diceva failed tu push xke nella remote directory ci sono cose diverse, fai git pull prima, ho fatto git pull, e mi ha rimosso il .vimrc. domani devo sistema stac cosa porcoddio
+bitbucket ha fatto no problem, boh
+#05 / 08/2019
+#
+#recuperato il .vimrc da github, ma ora devo cancellare e rifaare il repository. 
+
+
+06/08/2019
+ # rifacimento pilercr per addare le posizioni di pilercr:
+ #
+ # in $dataa/3tabellazza/dataset/crisprcashitstableblabla.csv , non hanno ancora le posizioni dip pilercr crispr:
+ # ZeeviD mmoccammammt che non c'ha i files proprio
+ # alla fine dovro sempremergiare il file 3tabellazzona.
+ # pare che zeevid pilercr stiaandando. ora famo finta de nada, e finiamo la 5caslocus, voglio fare il grafico filtrato before lunch!
+ 
+
+ero arrivato che devo testare 3addlocus per il cxas1 cas2, printando cosa esce qundo faccio lo split sulla riga e prendendo l elemento uno per avere l'idd (che se no di solito nel suo caso mi veniva zero9)
+ #
