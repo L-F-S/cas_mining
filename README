@@ -1,0 +1,54 @@
+#06/06/2019
+#L-F-S
+#@University of Trento, Italy
+
+
+##################################################################
+#								 #
+#      Mining 154723 assembled metagenomes for Cas variants      #
+#                  Scripts Pipeline                              #
+#								 #
+##################################################################
+
+#5/08/2019 update:
+#moved the project inside a cas_mining folder, therefore all paths must have the cas_mining
+folder added to them. I'm not chanigning this for the past steps, because I shouldn t be running them in theory.
+
+
+THIS FOLDER should contain all the script used to run the data mining pipeline.
+Each step is numbered. Ideally, the output of the nth step is the input of
+the n+1th step. Plus some data analysis along the way. Plus this is not
+true for step 1 and 2, because I will need both their output
+to go inside step3, that will be the construction of a HUGE TABLE.
+
++++++++++++++++++++++ USEFUL path abbreviations used in all READMEs
+Data produced is stored in the subfolders of
+data="/shares/CIBIO-Storage/CM/scratch/tmp_projects/signorini_cas"
+with the same name of the step they were produced in (e.g. $data/0pre_analyses/)
+
+All the initial data is stored in:
+/scratchCM/tmp_projects/epasolli_darkmatter/allcontigs/ALLreconstructedgenomes
+which contains all genomes in fasta, sorted by sgb ID
+, or
+/scratchCM/tmp_projects/epasolli_darkmatter/allcontigs/
+<dataset_name>/metabat/genomes_comp50_cont05/prokka/<sample_ID>/
+which contains all genomes and annotations, sorted by dataset name
+
+++++++++++++FILES & DIRECTORIES
+|
+|0pre_analyses/       #contains scripts for step0 (see README inside)
+|1crisprsearch/       #              "          1       "
+|    |test/   
+|    |out/
+|2casanno/            #              "          2       "
+|2-5mincedcrisprcheck/
+|3tabellazza/
+|4exploratoryanalyses/ 
+|      pamsearch/    # blast databases creations, summary for all contigs
+|6mainrealtaeprimadel4unirefanno/   #extract unirefanno (like step 2 with uniref)
+|
+|utils/       # conains other  useful scripts and programmes
+|
+|README       #this file 
+|log          #the Log of everything I do, day by day
+

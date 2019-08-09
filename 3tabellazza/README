@@ -1,0 +1,30 @@
+#!/bin/bash
+# Fri Jul 5 11:02:18 CEST 2019
+# Made by L-F-S
+# At the University Of Trento, Italy
+
+
+###################################
+#                                 #
+#             STEP 3              #
+#       Summary table update      #
+#                                 #
+###################################
+
+
+I call this an update instead of a creation, because
+I am updating $data/S3Segata/<dataset>.csv with 
+4 new columns:
+pilercr_CRISPR, minced_CRISPR, prokka_CRISPR, prokka_CAS,
+and saving the new enlarged tables in
+$data/3tabellazza/<dataset>/crisrprrhits_table_<dataset>.csv
+
+++++++++++++++++++++++++++++++++++
+FILES:
+|
+|-looper_tabellazza.sh      # loops tabellazza.py on all datasets
+|     - crispr_hits_table_<dataset>.csv
+|-tabellazza.py          # creates new tables with new CRISPRCas annotations for, every sample in the given dataset.  Tables saved in $data/3tabellazza/<dataseet>/crispr_hits_table_<dataset>.csv  # usage: python3 tabellazza.py <dataset>
+|-split_S3.py    #Routine to split $data/S3Segata.py in N different .csvs , where N is the nubmer of datasets.
+|
+|-README         # this file

@@ -1,0 +1,7 @@
+#!/bin/bash
+# Wed Jul 24 12:14:51 CEST 2019
+# Made by L-F-S
+# At the University Of Trento, Italy
+for file in *.minced.out.gff; do  echo $file; sed '/^#/ d' <$file> ${file}_cut; mv $
+	{file}_cut $file; done
+

@@ -1,0 +1,68 @@
+#!/bin/bash
+# 06/06/2019
+# Made by L-F-S
+# At the University Of Trento, Italy
+
+#++++++++++++++++++++++++++++++++++++++++++
+# COUNT ALL THE DATASETS
+# and the annotations, making sure they are
+# 157k and they are both exactly the same number and 
+# the same name
+#++++++++++++++++++++++++++++++++++++++++++
+
+# create two files, which will store the list of all datasets, and 
+# the list of all annotations, respectively.
+touch /shares/CIBIO-Storage/CM/scratch/tmp_projects/signorini_cas/0pre_analyses/all_datasets
+touch /shares/CIBIO-Storage/CM/scratch/tmp_projects/signorini_cas/0pre_analyses/all_annotations
+ALLDATA="/shares/CIBIO-Storage/CM/scratch/tmp_projects/signorini_cas/0pre_analyses/all_datasets"
+ALLANNO="/shares/CIBIO-Storage/CM/scratch/tmp_projects/signorini_cas/0pre_analyses/all_annotations"
+
+# cd into dataset
+cd /scratchCM/tmp_projects/epasolli_darkmatter/allcontigs/ALLreconstructedgenomes
+echo cycling through folders
+
+for i in $(ls -d */); do
+	cd $i
+	# inside each of these folders there should only be
+	# the .fa files:
+	# save their names in a file
+	ls >>$ALLDATA
+	cd ../
+done
+
+#cd into data
+cd /shares/CIBIO-Storage/CM/scratch/tmp_projects/epasolli_darkmatter/uniref_annotation
+
+#cycle through annotatednumber.txt files
+for i in *annotatednumber.txt; do
+	echo $i
+	less $i>>$ALLANNO
+	done
+
+#check $ALLANNO and $ALLDATA are equal
+# 1 sort files  alphabetically
+sort $ALLDATA  > temp
+less temp > $ALLDATA
+rm temp
+
+sort $ALLANNO  > temp
+less temp > $ALLANNO
+rm temp
+
+# 2 polish files to make them equal
+# remove .fa (= the last 3 characters) from the end of each line in $ALLDATA
+rev $ALLDATA | cut -c 4 | rev > temp
+less temp > $ALLDATA
+rm temp
+# remove second column from $ALLANNO (but keep a copy, it might be useful)
+# cp $ALLANNO /path/to/all_anno 
+# vim all_anno
+# dentro vim: :%s/\t.*
+
+# check che siano uguali (a sto punto sei nella cartella giusta)
+
+diff $ALLDATA all_anno > diff
+
+# Visually inspect diff file and produce a list of 
+# discrepancies in the nomenclature of the bins between 
+# the fasta and the annotation filenames

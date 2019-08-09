@@ -1,0 +1,52 @@
+#!/bin/bash
+# 06/06/2019
+# Made by L-F-S
+# At the University Of Trento, Italy
+
+
+
+	#################################
+	#                               #
+	#             STEP 1            #
+	#      (comes after step 0):    #
+	#                               #
+	#         CRISPR Search		#
+	#				#
+	#################################
+
+
+
+This folder contains the scriptrs necessary to run step1:
+running pilercr and minced algorithms to search for
+ possible CRISPR sequences inside the 157k metagenomes
+
++++++  INPUT:
+
+THE 157K METAGENOMES (in $gnms)
+
++++++ OUTPUT:
+
+N files, stored in $data/1crisprsearch/out/
+
+where N = #metagenomes*4 circa= 157k*4
+
+#+++++++++++++++ FILES & DIRECTORIES
+|
+|-minced/       # Contains minced program
+|
+|-pilercr1.06/  # Contains pilercr program
+| 
+|1print_a_random_test_sample.py   #utility script to randomly print one sample. used for testing
+|
+|pilercr_runner               # run pilercr on all data
+|minced_runner                # run minced on all data
+|pilercr_runner_ZeeviDonly    # run pilercr on ZeeviD_2015 only
+|minced_runner_ZeeviDonly     # run minced on ZeeviD_2015 only
+|test_pilercr_runner          
+|test_minced_runner
+|rename_minced   # rename minced.out.txt files
+|
+|CRISPR_data_viz.py          # Basic data overview of the output of pilercr_runner and minced_runner
+
+
+

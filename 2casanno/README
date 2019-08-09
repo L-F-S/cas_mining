@@ -1,0 +1,36 @@
+#!/bin/bash
+# 06/06/2019
+# Made by L-F-S
+# At the University Of Trento, Italy
+
+
+
+        #################################
+        #                               #
+        #             STEP 2            #
+        #                               #
+        #      Cas search through       #
+        #         annotations           #
+        #                               #
+        #################################
+
+
+This folder contains all the scripts for running step2
+Step 2 is basically just retrieving all the crispr and Cas annotations
+from
+scratchCM/tmp_projects/epasolli_darkmatter/allcontigs/ZellerG_2014/metabat/genomes_comp50_cont05/prokka/<dataset__sample__bin>/<dataset__sample__bin.gff>
+and saving them inside
+$data/2casanno/crisprcasanno
+and, further filtering for just the proteins (neglecting CRISPR repeats) and saving them in
+$data/2casanno/justcasanno
+and filtering for just minced, che forse l'ho fatto 'a mano' da bash, senza salvarmi lo script, oh well non è niente di trascendentale
+
+maybe redundant, but, oh well.
+++++++++++++++++++++++++++++++++
+FILES 
+|
+|-retrieve_all_annotations.py                 # executes step2 for all datasets
+|-retrieve_annotations_of_dataset.py          # executes step2 for a given dataset
+|-retrieve_minced_annotations_of_dataset.py   # executes step2 for a given dataset, but only retrieves CRISPRrepeats  information
+|-parall.sh                                # just a for loop to iterate retrieve_annotations_of_dataset.py on all datasets
+|-README                                   # this file, lol.

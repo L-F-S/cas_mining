@@ -1,0 +1,29 @@
+#!/bin/bash
+
+# 11/06/2019
+# Made by L-F-S
+# At the University Of Trento, Italy
+
+# run pilercr the samplesample bins
+# with default parameters.
+DATADIR=/scratchCM/tmp_projects/epasolli_darkmatter/allcontigs/ALLreconstructedgenomes
+WDIR=/shares/CIBIO-Storage/CM/scratch/tmp_projects/signorini_cas/1crisprsearch
+pilercr="/home/lorenzo.signorini/1crisprsearch/pilercr1.06/pilercr"
+cd $DATADIR
+
+for sgb in $(ls); do
+    echo entro dentro +++++ $sgb
+    cd $sgb
+    # cicla tra tutti i file, e salva in tmp_Zeevid quelli che iniziano con ZeeviD (nel nome)
+    for i  in *; do if [[ $i == ZeeviD* ]]; then /home/lorenzo.signorini/cas_mining/1crisprsearch/pilercr1.06/pilercr -in ${i} -out /shares/CIBIO-Storage/CM/scratch/tmp_projects/signorini_cas/1crisprsearch/out/ZeeviD_2015/$i{}.pilercr.out; fi; done
+    # metti tutti i file che sono in colonna , in riga
+#    vim tmp_ZeeviD -c %j -c wq
+#    # apri il file, che è una riga di nomi space separated, e feedali a parallel
+#    while read p; do
+#	   echo "$p"
+#	   echo "$p" |  parallel --no-notice '/usr/bin/time -p -o /shares/CIBIO-Storage/CM/scratch/tmp_projects/signorini_cas/1crisprsearch/out/ZeeviD_2015/{}.pilercr.time /home/lorenzo.signorini/cas_mining/1crisprsearch/pilercr1.06/pilercr -in {} -out /shares/CIBIO-Storage/CM/scratch/tmp_projects/signorini_cas/1crisprsearch/out/ZeeviD_2015/{}.pilercr.out'
+#    done <tmp_ZeeviD
+#    rm tmp_ZeeviD
+    cd ../
+done
+

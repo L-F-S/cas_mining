@@ -1,0 +1,14 @@
+#!/bin/bash
+# Wed Jul 24 17:07:26 CEST 2019
+# Made by L-F-S
+# At the University Of Trento, Italy
+cd /shares/CIBIO-Storage/CM/scratch/tmp_projects/signorini_cas/4exploratoryanalyses/pamsearch
+
+dataset=$1
+	cd $dataset
+	echo $dataset
+	for sample in $(ls); do
+		makeblastdb -in $sample -parse_seqids  -dbtype nucl	
+	done
+	cd ../
+

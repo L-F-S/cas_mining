@@ -1,0 +1,16 @@
+#!/bin/bash
+# 06/06/2019
+# Made by L-F-S
+# At the University Of Trento, Italy
+
+# run pilercr the samplesample bins
+# with default parameters.
+WDIR=/shares/CIBIO-Storage/CM/scratch/tmp_projects/signorini_cas/1crisprsearch/test
+pilercr="/home/lorenzo.signorini/1crisprsearch/pilercr1.06/pilercr"
+cd $WDIR/samplesample
+for INFILE in $(ls); do
+    echo $INFILE
+    # the enxt command means: check the execution time, and save it to $WDIR/out/$infile.pilercr.time, of the commanda $pilercr ...blablabla 
+    /usr/bin/time -p -o $WDIR/out/$INFILE.pilercr.time  $pilercr -in $INFILE -out $WDIR/out/$INFILE.pilercr.out  &
+done
+

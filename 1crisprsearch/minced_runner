@@ -1,0 +1,20 @@
+#!/bin/bash
+# 11/06/2019
+# Made by L-F-S
+# At the University Of Trento, Italy
+
+# run pilercr the samplesample bins
+# with default parameters.
+DATADIR=/scratchCM/tmp_projects/epasolli_darkmatter/allcontigs/ALLreconstructedgenomes
+WDIR=/shares/CIBIO-Storage/CM/scratch/tmp_projects/signorini_cas/1crisprsearch
+cd $DATADIR
+
+for sgb in $(ls); do
+    echo entro dentro +++++ $sgb
+    cd $sgb
+    # the next command means: see pilercr_runner
+     ls  |  parallel --no-notice '/home/lorenzo.signorini/utils/jdk-12.0.1/bin/java -jar /home/lorenzo.signorini/1crisprsearch/minced/minced.jar {} /shares/CIBIO-Storage/CM/scratch/tmp_projects/signorini_cas/1crisprsearch/out/{}.minced.out.txt /shares/CIBIO-Storage/CM/scratch/tmp_projects/signorini_cas/1crisprsearch/out/{}.minced.out.gff'
+
+    cd ../
+done
+

@@ -1,0 +1,17 @@
+#!/bin/bash
+# Sun Jul 28 13:52:59 CEST 2019
+# Made by L-F-S
+# At the University Of Trento, Italy
+# cycles through all datasets and launches any python script giving it a dataset name
+
+#usage:
+
+# beware! metti il giusto python script dentro
+# chmod +x thisfilename
+# ./thisfilename
+
+
+for dataset in BackhedF_2015 BengtssonPalmeJ_2015 BritoIL_2016 CM_cf CM_madagascar CM_periimplantitis Castro-NallarE_2015 ChengpingW_2017 CosteaPI_2017; do
+echo $dataset
+time python build_contigs_list.py $dataset &
+done

@@ -1,0 +1,29 @@
+#!/bin/bash
+# 242424242424242424242424242424242424242424242424/06/2019
+# Made by L-F-S
+# At the University Of Trento, Italy
+
+
+# STEP 2.5
+
+since prokka annotations have also annotated crispr repeats with the minced algorithm, let us check for correspondence between the two.
+if they ar e100% euqal probably means they've both been run with default parameters.
+
+++++++++++++++++++++
++++++          FILES
+
+|-compare_minced_prokka.py      # extracts minced annotation from original .gff prokkas, and does a diff
+|                                         on our minced files
+|-parallel.sh                   # loops compare_minced_prokka.py over all datasets
+|
+|-check_empty.py                # goes into the output from diff file1 file2 and checks they are actually differen|                                        t
+|-check_empty_looper            # loops check_empty.py over all datasets.
+
+++++++++++++++++++++
+++++++        OUTPUT
+Output is saved in
+$data/2-5mincedcrisprcheck/<dataset>
+
+apparently, the annotations are the exact same.
+
+

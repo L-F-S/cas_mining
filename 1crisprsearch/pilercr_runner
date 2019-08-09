@@ -1,0 +1,28 @@
+#!/bin/bash
+# 11/06/2019
+# Made by L-F-S
+# At the University Of Trento, Italy
+
+# run pilercr the samplesample bins
+# with default parameters.
+DATADIR=/scratchCM/tmp_projects/epasolli_darkmatter/allcontigs/ALLreconstructedgenomes
+WDIR=/shares/CIBIO-Storage/CM/scratch/tmp_projects/signorini_cas/1crisprsearch
+pilercr="/home/lorenzo.signorini/1crisprsearch/pilercr1.06/pilercr"
+cd $DATADIR
+
+for sgb in $(ls); do
+    echo entro dentro +++++ $sgb
+    cd $sgb
+    # the next command means: send the content of ls  (that is, the list of all the files in the folder, that is, all the .fa inside every SGB ID folder) to the parallel command. (with --no-notice because it prints too much)
+# Parallel, in turn, will run whatever is between the ' ', for every file
+# given by ls, in parallel (that is, on multiple CPUs)
+# The rest of the command inside is similar to the one in test_piler_runner
+# notice that I did not use $WDIR, 
+#but I had to re-write the full path, because $WDIR did not work as a variable call, maybe there is a way but I can't be bothered finding it now.
+# the filename of the file being processed is {}.
+     ls  |  parallel --no-notice '/usr/bin/time -p -o /shares/CIBIO-Storage/CM/scratch/tmp_projects/signorini_cas/1crisprsearch/out/{}.pilercr.time /home/lorenzo.signorini/1crisprsearch/pilercr1.06/pilercr -in {} -out /shares/CIBIO-Storage/CM/scratch/tmp_projects/signorini_cas/1crisprsearch/out/{}.pilercr.out'
+ #$pilercr -in {} -out $WDIR/out/{}.pilercr.out'  
+
+    cd ../
+done
+

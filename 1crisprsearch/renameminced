@@ -1,0 +1,5 @@
+#!/bin/bash
+# 06/06/2019
+# Made by L-F-S
+# At the University Of Trento, Italy
+mmv '*.minced.out.txt' '#1.minced.out'
