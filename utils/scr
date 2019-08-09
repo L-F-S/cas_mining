@@ -1,0 +1,26 @@
+#!/bin/bash
+# 06/06/2019
+# Made by L-F-S
+# At the University Of Trento, Italy
+
+# Description: this script serves as
+# a standard script initializer:
+# it takes as input the filename
+# opens a vim file with that file-name
+# and automatically creates the header
+# (equal to the first for lines of this file)
+
+if [ $# -lt 1 ]; then
+	echo opens a vim session with an automated header
+	echo ++++++++++++++++++++++++++++++++++++++++++++
+        echo Usage: 
+	echo 	scr \<scriptname\>
+	exit 1
+fi
+
+echo \#\!/bin/bash >$1
+echo \# $(date) >>$1 
+echo \# Made by L-F-S >>$1
+echo \# At the University Of Trento, Italy >>$1
+
+vim $1

@@ -1,0 +1,37 @@
+#!/bin/bash
+# 06/06/2019
+# Made by L-F-S
+# At the University Of Trento, Italy
+
+
+if [ $# -lt 1 ]; then
+	echo creates a file and opens a vim session with a for loop
+	echo to iterate your python script over all datasets
+	echo ++++++++++++++++++++++++++++++++++++++++++++
+        echo Usage: 
+	echo 	looper \<looper_scriptname\>
+	exit 1
+fi
+
+echo \#!/bin/bash >$1
+echo \# $(date) >>$1 
+echo \# Made by L-F-S >>$1
+echo \# At the University Of Trento, Italy >>$1
+echo \# cycles through all datasets and launches any python script giving it a dataset name>>$1
+echo>>$1
+echo \#usage:>>$1
+echo>>$1
+echo \# beware! metti il giusto python script dentro>>$1
+echo \# chmod +x thisfilename>>$1
+echo \# sh thisfilename>>$1
+echo>>$1
+echo>>$1
+echo  for dataset in AsnicarF_2017 BackhedF_2015 Bengtsson-PalmeJ_2015 BritoIL_2016 CM_cf CM_madagascar CM_periimplantitis Castro-NallarE_2015 ChengpingW_2017 ChngKR_2016 CosteaPI_2017 DavidLA_2015 FengQ_2015 FerrettiP_2018 GeversD_2014 HMP_2012 HanniganGD_2017 HeQ_2017 IjazUZ_2017 KarlssonFH_2013 KosticAD_2015 LeChatelierE_2013 LiJ_2014 LiJ_2017 LiSS_2016 LiuW_2016 LomanNJ_2013 LoombaR_2017 LouisS_2016 NielsenHB_2014 Obregon-TitoAJ_2015 OhJ_2014 OlmMR_2017 QinJ_2012 QinN_2014 RampelliS_2015 RaymondF_2016 SchirmerM_2016 SmitsSA_2017 VatanenT_2016 VincentC_2016 VogtmannE_2016 WenC_2017 XieH_2016 YuJ_2015 ZeeviD_2015 ZellerG_2014\; \do>>$1
+echo	         echo \$dataset>>$1
+echo		         time python TODOSCRIPT.py \$dataset \&>>$1
+echo		 done>>$1
+
+
+
+
+vim $1

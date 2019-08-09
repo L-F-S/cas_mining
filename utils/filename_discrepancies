@@ -1,0 +1,3 @@
+data=$1
+new=$(python filename_discrepancies.py $1)
+echo $new

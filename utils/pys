@@ -1,0 +1,49 @@
+#!/bin/bash
+# 06/06/2019
+# Made by L-F-S
+# At the University Of Trento, Italy
+
+# Description: this script serves as
+# a standard script initializer:
+# it takes as input the filename
+# opens a vim file with that file-name
+# and automatically creates the header
+# (equal to the first for lines of this file)
+
+if [ $# -lt 1 ]; then
+	echo opens a vim session with an automated header
+	echo and useful imports already written in
+	echo ++++++++++++++++++++++++++++++++++++++++++++
+        echo Usage: 
+	echo 	pys \<scriptname\>.py  OPTIONS:\{anything else:create ipynb file\}
+	exit 1
+fi
+
+echo \# $(date) >>$1 
+echo \# Made by L-F-S >>$1
+echo \# At the University Of Trento, Italy >>$1
+echo >>$1
+echo import os>>$1
+echo import sys>>$1
+echo import numpy as np>>$1
+echo import pandas as pd>>$1
+echo import matplotlib.pyplot as plt>>$1
+echo >>$1
+echo sys.path.insert\(0, \'/home/lorenzo.signorini/utils/\'\)>>$1
+echo import filename_discrepancies >>$1
+echo >>$1
+echo >>$1
+echo dataset=\"SmitsSA_2017\" \#sys.argv[1] \#TODO switch test dataset>>$1
+echo outdir=\"/shares/CIBIO-Storage/CM/scratch/tmp_projects/signorini_cas/Nstep\" \#TODO add nstepdir>>$1
+echo datadir=\"/shares/CIBIO-Storage/CM/scratch/tmp_projects/signorini_cas/\" \#TODO add nstepdir>>$1
+echo annodir=\"/shares/CIBIO-Storage/CM/scratch/tmp_projects/signorini_cas/2casanno/crisprcasanno\">>$1
+
+
+########### open file or convert it to ipynb:
+if [ "$2" != "" ]
+then
+	python /home/lorenzo.signorini/utils/make_nb.py $1
+	rm $1
+else
+	vim $1
+fi
