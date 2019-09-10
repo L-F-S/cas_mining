@@ -20,7 +20,7 @@ for sgb in $(ls); do
 # notice that I did not use $WDIR, 
 #but I had to re-write the full path, because $WDIR did not work as a variable call, maybe there is a way but I can't be bothered finding it now.
 # the filename of the file being processed is {}.
-     ls  |  parallel --no-notice '/usr/bin/time -p -o /shares/CIBIO-Storage/CM/scratch/tmp_projects/signorini_cas/1crisprsearch/out/{}.pilercr.time /home/lorenzo.signorini/1crisprsearch/pilercr1.06/pilercr -in {} -out /shares/CIBIO-Storage/CM/scratch/tmp_projects/signorini_cas/1crisprsearch/out/{}.pilercr.out'
+     ls  |  parallel --no-notice '/usr/bin/time -p -o /shares/CIBIO-Storage/CM/scratch/tmp_projects/signorini_cas/1crisprsearch/out/{}.pilercr.time /home/lorenzo.signorini/cas_mining/1crisprsearch/pilercr1.06/pilercr -in {} -out /shares/CIBIO-Storage/CM/scratch/tmp_projects/signorini_cas/1crisprsearch/out/{}.pilercr.out'
  #$pilercr -in {} -out $WDIR/out/{}.pilercr.out'  
 
     cd ../

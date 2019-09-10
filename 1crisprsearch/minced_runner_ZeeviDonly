@@ -20,7 +20,7 @@ for sgb in $(ls); do
     # apri il file, che è una riga di nomi space separated, e feedali a parallel
     while read p; do
            echo "$p"
-           echo "$p" |  parallel --no-notice '/home/lorenzo.signorini/utils/jdk-12.0.1/bin/java -jar /home/lorenzo.signorini/1crisprsearch/minced/minced.jar {} /shares/CIBIO-Storage/CM/scratch/tmp_projects/signorini_cas/1crisprsearch/out/ZeeviD_2015/{}.minced.out.txt /shares/CIBIO-Storage/CM/scratch/tmp_projects/signorini_cas/1crisprsearch/out/ZeeviD_2015/{}.minced.out.gff'  # TODO occhio ai 2  folder ZeeviD hardcoded
+           echo "$p" |  parallel --no-notice '/home/lorenzo.signorini/cas_mining/utils/jdk-12.0.1/bin/java -jar /home/lorenzo.signorini/cas_mining/1crisprsearch/minced/minced.jar {} /shares/CIBIO-Storage/CM/scratch/tmp_projects/signorini_cas/1crisprsearch/out/ZeeviD_2015/{}.minced.out.txt /shares/CIBIO-Storage/CM/scratch/tmp_projects/signorini_cas/1crisprsearch/out/ZeeviD_2015/{}.minced.out.gff'  # TODO occhio ai 2  folder ZeeviD hardcoded
     done <tmp_ZeeviD
     rm tmp_ZeeviD
     cd ../

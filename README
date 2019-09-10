@@ -45,6 +45,7 @@ which contains all genomes and annotations, sorted by dataset name
 |3tabellazza/
 |4exploratoryanalyses/ 
 |      pamsearch/    # blast databases creations, summary for all contigs
+|5caslocitable/      # build a Cas loci table for variants of known effector Cas search
 |6mainrealtaeprimadel4unirefanno/   #extract unirefanno (like step 2 with uniref)
 |
 |utils/       # conains other  useful scripts and programmes

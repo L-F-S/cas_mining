@@ -13,7 +13,7 @@ for sgb in $(ls); do
     echo entro dentro +++++ $sgb
     cd $sgb
     # the next command means: see pilercr_runner
-     ls  |  parallel --no-notice '/home/lorenzo.signorini/utils/jdk-12.0.1/bin/java -jar /home/lorenzo.signorini/1crisprsearch/minced/minced.jar {} /shares/CIBIO-Storage/CM/scratch/tmp_projects/signorini_cas/1crisprsearch/out/{}.minced.out.txt /shares/CIBIO-Storage/CM/scratch/tmp_projects/signorini_cas/1crisprsearch/out/{}.minced.out.gff'
+     ls  |  parallel --no-notice '/home/lorenzo.signorini/cas_mining/utils/jdk-12.0.1/bin/java -jar /home/lorenzo.signorini/cas_mining/1crisprsearch/minced/minced.jar {} /shares/CIBIO-Storage/CM/scratch/tmp_projects/signorini_cas/1crisprsearch/out/{}.minced.out.txt /shares/CIBIO-Storage/CM/scratch/tmp_projects/signorini_cas/1crisprsearch/out/{}.minced.out.gff'
 
     cd ../
 done

@@ -734,3 +734,93 @@ bitbucket ha fatto no problem, boh
 
 ero arrivato che devo testare 3addlocus per il cxas1 cas2, printando cosa esce qundo faccio lo split sulla riga e prendendo l elemento uno per avere l'idd (che se no di solito nel suo caso mi veniva zero9)
  #
+ #26/08/2019
+ #
+fatto un fotglio che non dvevi perdere
+#27/08/2018
+
+Categorizza le cas9 in tipi
+sto iniziando a faro sul jupyter notebook ultimo, ma la verità è che devo aggiungere dei cas4 e dei csn2 nella tabella di cas9 e quindi serve piu lavoro
+
+faccio altro nortebook in cui ci metto un fasta dei cosi contro cui voglio fare pairwsie alginment
+due fasta: uno dei 'benchmark' fungenti+
+e uno dei 'noti non fungenti'
+ma oggi non c'è verso di far girare le cose cazzo.
+
+non funziona un cazzo+
+
+
+non vanno i server ?
+
+#03/09/2019
+
+oggi hai parlato con antonio, domani devi sentire brevemente segata e adrian per fargli un rapporto
+
+devi (a parte cos escritte su foglio cin inchiostro rosa)
+ saperec os 'è un bootstrap tree, e hai allineato 8774 con spcas9 e aucas9, che auCas9 sembra + vicina ma in realtà è spCas9 xke le indel contano 1? cm funge clustalw? va bene st allineamente' e il tree? fors eva rifatto
+gc'è il piu corto da 949 aa che si chiama gemmiger (genus, la specie è ignota)
+e cose interessanti di vaRIO TIPO e fattura. da parlarne. vanno bene ste analisi?
+
+e inizia a scrivere un po' di readme per sta parte che è parecchio lacking
+e poi dovrai fare
+tracrRNA
+e 
+megaPAM cosa.
+
+#5/09/2019
+#
+#scaricato mega sul mio portatile e jalvirew pure.
+sto facendo un ML tree with 1000 bootrstrap replicas del coso a 95% affinity
+
+ora magari faccio una paiplainina che aggiunge il tipo alle mie sequenze.
+
+
+MSA_97_subgroup_NM
+Neisseria meningitis 1 e 2 sono in un branch vicissimo a:
+9710  (il piu vicino dei 9710 ha lo stesso n di aa di nm2),
+vicino a
+4329
+
+15095
+
+15286
+15299
+---
+
+MSA_97_subgroup_CAMJ
+Q0P897 MANJE : vicino a 
+9340
+9311 LEAPH CFBA FLJK
+
+---
+
+MSA_97_subgroup_other
+
+un po da soli
+14454
+9281
+8769 HLOGOE
+9311 altri
+
+------------------
+MSA_97_subgroup_ST
+
+STAU STRTD STRTRSTRP1 STRTR STRTD vicini a
+
+_------
+
+MSA subgroup87only
+(ma in realtà questi sono un branch a parte)
+8769
+8767
+8774
+
+
+noti che alcuni SGB sono in gruppoi diversi: guarda l albero e nn sn monofiletici? why? intresting stuff.
+
+devo allinearli e poi bo farci alberini. devo colorare l'immagine dell'albero. devo prepararmi slides riassuntive . devo fare i readme dei vari files
+devo fa dumila 
+cose
+e poi ba in realtà.
+
+ah e l'annotazione, devo trovare il modo di fare l'annotazione
