@@ -824,3 +824,78 @@ cose
 e poi ba in realtà.
 
 ah e l'annotazione, devo trovare il modo di fare l'annotazione
+#10/09/2019
+#
+fatti i MSA a blocchetti, fatte le foto delle overview, messe su driv4e dentro clusters_97. da mettere tutti su sliide con i. loro titolo e da magari compararlie da magari tirar fuori un identyuty score fra di loro per ogni coso, o una bella matriciozza rettangollare in cui ogni coso ha l'identity rispetto alle varie references. eh nn sarebbe male quest ultima cosa.
+
+#11/09/2019
+
+fatto identity score lool
+con le grandezze dei testi giuste spero
+
+# 12/09
+#
+facco slaids
+
+fatte slids
+fatto coso di colorcoding per le features delle references.
+fatto a mano prendendo per ogni entri uniprot andando nella sezione family and domains e gaurdando i domains come si chiamavano e da dove a dove andavano. beeellapettutti, e poi colorati seguendo lo schema di colori di un immagine di spcas9 presa da un paper e usando un rgb converter su internet tipo  trova i colori (suggerito direttamente dal sito di  jalview sequence features file )
+https://www.w3schools.com/colors/colors_converter.asp
+per domattina: riguardati magari cosa dici, e trova il modo di mandar loro gli allineamenti, magari i link di NCBI che sembrano comoducci da vede. bellapettutti
+
+cosa sono i 100 su bootstrap?
+
+score di allineamento? eh vbb ormai no, se te lo chiedono , gli fai vede l'heatmap con quegli score li, che  sono gli unici utili.
+ Conservazione cosa vuol dire?
+#13/09/2019
+
+finito meeting bellapettutti
+
+allora cose da aggiungere:
+foto (png) di 38 pairwise alignments, ognuno con il suo reference piu vicino, che si veda la conservazione insomma.
+
+aggiungi annotazioni per CAMJ che dovrebbe avercele xke dovrebbe esserci la struttura.
+
+
+foto di MSA within clusters, folr every cluster. sono altri 38.
+
+
+e poi iniziare a trovare il tracerRNA (....e la pam)
+
+e poi ritestare tutta questa pipeline per cpf1!!!
+
+e magari fai un report in cui scrivi queste cose? ci starebbe. un latexxino addirittura? ci starebbe.
+
+
+fici fico sono contento
+
+è interessato antono tipo a vedere se la variabilità è concentrata tutta nllea regione della PID.
+xke nel caso del NM subgroup, vedendo il mio cluster più vicino a NEM8, solo il pairwise tra loro due, ha  visto che sono mooolto mooolto simili e tutta la variazione c'è alla fine. ficata.
+
+ magari,. cosi a caso, manda  ana mail a qlcn di quelli che hano fatto datamining per nuove varianti, e chiedi cm ha fatto
+
+e ancora più magari,
+
+chiacchiera con ANNa della biofisica, accennale la cosa.
+
+poi dopo dovrai anche riprovare a fare una mega PAM pipeline. daidai se trovi la pam sei il re.
+
+#16 / 09 /2019
+#
+sto facendo 38 (+) visualizzazioni di allineamenti a due a due come richiesto:
+jalview, ctrl, seleziono due sequenze clicco col dx: sleection: output to textbox-> fasta e poi clicco su new window. bellapemme. e poi esporto tt as png
+
+sto facendo pairwise adesso pero ho creato i files proprio con python e un ciclo for stranino per scrivere l'allineamento, che sta dentro il cas9 ipydb di settembre, e bella
+faccio pairwise di tutti i gruppi trnane l'87 che non ha senso guardarlo.
+e i vari ref STDA STDTD ecc non li pairwiso con nessunoi perché è un gruppetto a parte
+
+
+hsto rifacendo la pipeline per Cpf1. fatti dei cambiamentini.
+
+devo scrivermi: come annoto il ref_colore file per bene, che se no me lo scordo.
+devo fare i readme di tutto cazzooo
+
+csa importantissima: nel fare l MSA dei clusters mi sn reso conto di cose, e il nome lungo che si vede nelle analisi, non sono tutte le sequenze di un cluster, ma è il nome del centroide del cluster, che in alcuni caasi era fatto di piu sequenze dientiche.
+
+dopo la pausa rifai il notebook di Cas9 buonino, e poi vai a casa soddisfatto.
+o pensa a cosa dire fare 

@@ -49,7 +49,7 @@ outdir="/shares/CIBIO-Storage/CM/scratch/tmp_projects/signorini_cas/5caslocitabl
 datadir="/shares/CIBIO-Storage/CM/scratch/tmp_projects/signorini_cas/" 
 annodir="/shares/CIBIO-Storage/CM/scratch/tmp_projects/signorini_cas/2casanno/crisprcasanno"
 
-DF=pd.read_csv(outdir +"/"+s3dataset+"_known_"+feature+"_variants_table.csv", index_col=0) #input è come 3tabellazza, ma solo il subset con Cas9. piu piccolo e agile.
+DF=pd.read_csv(outdir +"/"+s3dataset+"_known_"+feature+"_variants_table.csv", index_col=0) #input e' come 3tabellazza, ma solo il subset con Cas9. piu piccolo e agile.
 
 outdf=pd.DataFrame(columns=["Seq ID","Seq Description","Seq","Contig","Genome Name","Study","Sample Name","SGB ID"])
 newindexmitocca=0

@@ -23,7 +23,7 @@ def analysis_has_megahit(analysis):
     return True if analysis=="prokka" or analysis == "old_anno" else False
 
 def dataset_has_megahit(dataset,sample):# in realta' e' solo zeevid (senz aa e b)
-#funzionicchia, ma se sample è in names3 e dataset no , scazza
+#funzionicchia, ma se sample  e' in names3 e dataset no , scazza
  # attenzione!!! OhJ_2014 ce l'ha per alcuni cosi si e per altri no!!
   # attenzione!!! OhJ_2014 ce l'ha per alcuni cosi si e per altri no!!
     """ returns True if the given sample has the megahit interfix """
