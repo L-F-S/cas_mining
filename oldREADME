@@ -46,10 +46,12 @@ which contains all genomes and annotations, sorted by dataset name
 |4exploratoryanalyses/ 
 |      pamsearch/    # blast databases creations, summary for all contigs
 |5caslocitable/      # build a Cas loci table for variants of known effector Cas search
+|              #actuallly also contains python notebooks with the extracction of nice sCas9 or Cpf1 working sequences from said database. THe final pipeline of known cas varinats.
 |6mainrealtaeprimadel4unirefanno/   #extract unirefanno (like step 2 with uniref)
 |
 |utils/       # conains other  useful scripts and programmes
 |
-|README       #this file 
+|oldREADME       #this file 
+|README.md       # a nicer looking readme that I plan on implementing for github 
 |log          #the Log of everything I do, day by day
 
