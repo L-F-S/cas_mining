@@ -2,6 +2,10 @@
 # Fri Aug 2 09:59:19 CEST 2019
 # Made by L-F-S
 # At the University Of Trento, Italy
+# Usage:
+
+# python 1build_known_effector_cas_table.py <datasetname> <effector_cas_name>
+# <effector_cas_name> can be Cas9 or Cpf1 (as of 17/09/2019)
 
 import os
 import sys

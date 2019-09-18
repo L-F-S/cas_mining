@@ -1,0 +1,54 @@
+#!/bin/bash
+# Fri Jul 5 11:02:18 CEST 2019
+# Made by L-F-S
+# At the University Of Trento, Italy
+
+
+###################################
+#                                 #
+#             STEP 5              #
+#    Build a table of Cas loci    #
+#              and                #
+#     produce a final list of     #
+#       candidate sequences       #
+###################################
+
+
+
+++++++++++++++++++++++++++++++++++
+CAS TABLE STRUCTURE:
+
+Each row represents an "Effector cas" (i.e. Cas9 or Cpf1) locus
+
+Columns:
+       Seq ID          # added by 2add_locusinfo.py Seq ID from prokka annotation
+       Seq Description # added by 2add_locusinfo.py Seq description from prokka annotation
+       Seq             # added by 2add_locusinfo.py str amino acid sequence of Cas9 (or Cpf1) for that locus    
+       Contig          # added by 2add_locusinfo.py str of contig name (eg. NOODE_145_length_37113_cov_85.6201)
+       Genome Name     # added by 2add_locusinfo.py same as S3 from https://doi.org/10.1016/j.cell.2019.01.001
+       Study           # added by 2add_locusinfo.py same as S3 from https://doi.org/10.1016/j.cell.2019.01.001 
+       Sample Name     # added by 2add_locusinfo.py same as S3 from https://doi.org/10.1016/j.cell.2019.01.001
+       SGB ID          # added by 2add_locusinfo.py same as S3 from https://doi.org/10.1016/j.cell.2019.01.001
+       pilercr_CRISPR #added by 3add_locusinfo.py python-syntaxed list of 1 3-tuple (why? idk) [(ID, startpos, endpos)] eg. "[(ID=CRISPR1,40172,12)]"
+       minced_CRISPR  #added by 3add_locusinfo.py same as pilercr_CRISPR, but there is no ID.
+       prokka_cas1    #added by 3add_locusinfo.py same as pilercr_CRISPR
+       prokka_cas2    #added by 3add_locusinfo.py same as pilercr_CRISPR
+       uSGB                         # added by 4addSGB_info.py same as S3 from https://doi.org/10.1016/j.cell.2019.01.001
+       Level of estimated taxonomy  # added by 4addSGB_info.py same as S3 from https://doi.org/10.1016/j.cell.2019.01.001
+       estimated taxonomy           # added by 4addSGB_info.py same as S3 from https://doi.org/10.1016/j.cell.2019.01.001
+
+++++++++++++++++++++++++++++++++++
+FILES:
+|
+|1build_known_effector_cas_table.py # These 4 files, executed sequentially, create a table of Cas9 (Cpf1) loci.
+|2fill_known_effector_cas_table.py  # to run:
+|3add_locusinfo.py                  # python 3add_locusinfo.py (or 1buil.., 2fill..) <datasetname> Cas9 (or Cpf1
+|4addSGB_info.py                    # <-Merge all datasets (utils/merge_datasets.py) before running 4addSGB..
+|
+|Mining for a nice Cas9 9-08 polished summary.ipynb  prova.png  # py notebooks to extract the sequences of
+|Mining for a nice Cas9-Copy1.ipynb                             # active, working Cas9s (Cpf1s)
+|Mining for a nice Cpf1 17-09-2019-Copy1.ipynb                  # from the table of ALL Cas9s (Cpf1s). 
+|
+|README                                                         # this file lol
+|TODO find tracer RNA.ipynb
+
