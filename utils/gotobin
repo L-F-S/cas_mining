@@ -1,0 +1,27 @@
+#!/bin/bash
+# Thu Jul 25 16:11:48 CEST 2019
+# Made by L-F-S
+# At the University Of Trento, Italy
+
+if [ $# -lt 1 ]; then
+    echo "cd to /scratchCM/tmp_projects/epasolli_darkmatter/allcontigs\<dataset\>/metabat/genomes_comp50_cont05/prokka/\<sample_ID\>/"
+    echo ++++++++++++++++++++++++++++++++++++++++++++
+    echo Usage: 
+    echo gotobin  \<dataset\>__\<sample\>__bin
+    exit 1
+fi
+
+#split string in bash:  nn so co sa fa ma funge
+BINNAME=$1 #str
+
+delimiter="__"
+s=$BINNAME$delimiter
+array=();
+while [[ $s ]]; do
+	    array+=( "${s%%"$delimiter"*}" );
+	        s=${s#*"$delimiter"};
+	done;
+#	declare -p array  # se fai questo ti printa l array diviso int re, ma se chiami $array for some reason ti printa solo il primo membro,che casualmente è quello che voglio quindi bella
+
+cd /scratchCM/tmp_projects/epasolli_darkmatter/allcontigs/$array/metabat/genomes_comp50_cont05/prokka/$1
+
