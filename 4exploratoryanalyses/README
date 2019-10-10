@@ -14,7 +14,7 @@
 This folder contains i) the python notebooks (.ipynb files)  with preliminary
 exploratory analyses propedeutici for step 5
 (which is the final step of the 'variants from known effectors' pipeline.)
-ii) Scripts for finding a PAM sequence in silico (currently (18/09/2019) failing
+ii) Scripts for finding a PAM sequence in silico (currently (18/09/2019) failing)
 
 ++++++++++++++++++++++++++++++++++
 FILES:

@@ -29,7 +29,7 @@ echo import numpy as np>>$1
 echo import pandas as pd>>$1
 echo import matplotlib.pyplot as plt>>$1
 echo >>$1
-echo sys.path.insert\(0, \'/home/lorenzo.signorini/utils/\'\)>>$1
+echo sys.path.insert\(0, \'/home/lorenzo.signorini/cas_mining/utils/\'\)>>$1
 echo import filename_discrepancies >>$1
 echo >>$1
 echo >>$1
@@ -42,7 +42,7 @@ echo annodir=\"/shares/CIBIO-Storage/CM/scratch/tmp_projects/signorini_cas/2casa
 ########### open file or convert it to ipynb:
 if [ "$2" != "" ]
 then
-	python /home/lorenzo.signorini/utils/make_nb.py $1
+	python /home/lorenzo.signorini/cas_mining/utils/make_nb.py $1
 	rm $1
 else
 	vim $1

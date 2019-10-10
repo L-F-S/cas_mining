@@ -1,0 +1,9 @@
+#!/bin/bash
+# Mon Sep 23 12:37:43 CEST 2019
+# Made by L-F-S
+# At the University Of Trento, Italy
+
+
+cd /shares/CIBIO-Storage/CM/scratch/tmp_projects/signorini_cas/4exploratoryanalyses/pamsearch
+blastdb_aliastool -dblist "$(more all_contigs_names_list)" -dbtype nucl  -out complete_blastdb -title "ALL CONTIGS FROM ALL SAMPLES FROM ALL DATASETS" 
+#blastdb_aliastool -dblist "/shares/CIBIO-Storage/CM/scratch/tmp_projects/signorini_cas/4exploratoryanalyses/pamsearch/AsnicarF_2017/AsnicarF_2017__MV_FEI1_t1Q14.contigs_filtered.fasta /shares/CIBIO-Storage/CM/scratch/tmp_projects/signorini_cas/4exploratoryanalyses/pamsearch/AsnicarF_2017/AsnicarF_2017__MV_FEI1_t1Q14_megahit.contigs_filtered.fasta" -dbtype nucl  -out complete_blastdb -title "ALL CONTIGS FROM ALL SAMPLES FROM ALL DATASETS" 

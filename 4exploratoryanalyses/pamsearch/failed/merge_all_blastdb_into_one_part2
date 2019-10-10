@@ -1,0 +1,16 @@
+#!/bin/bash
+# Mon Sep 23 12:37:43 CEST 2019
+# Made by L-F-S
+# At the University Of Trento, Italy
+
+
+cd /shares/CIBIO-Storage/CM/scratch/tmp_projects/signorini_cas/4exploratoryanalyses/pamsearch
+echo concatenating all files
+cat *.contigsnameslist > all_contigs_names_list
+
+echo putting all lines into one line
+vim all_contigs_names_list -c '%j|wq'
+
+echo removing partial contigs names list \(re run step 0 if you would like to have them\)
+rm *.contigsnameslist
+

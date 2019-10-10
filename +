@@ -547,21 +547,6 @@ retrieve_uniref_annotations gli manca ZeeviD da finire
 il blastn con outputformat 6 tabulare, seems to be working quite well.
 e ha quello che voglio perfettamente.e mammammamamamammaammama forse ho pure trovato qualcosa
 
--outfmt 6 qseqid sseqid pident qlen length mismatch gapopen qseq sseq sstart send evalue sstrand
-
-1. 	 qseqid 	 query (e.g., gene) sequence id
- 2. 	 sseqid 	 subject (e.g., reference genome) sequence id
- 3. 	 pident 	 percentage of identical matches
- 3. 	 qlen 	 Query sequence length
- 4. 	 length 	 alignment length
- 5. 	 mismatch 	 number of mismatches
- 6. 	 gapopen 	 number of gap openings
- 7. 	 qseq      Aligned part of query sequence
- 8. 	 sseq      Aligned part of subject sequence
- 9. 	 sstart 	 start of alignment in subject
- 10. 	 send 	 end of alignment in subject
- 11. 	 evalue 	 expect value
- 12. 	 sstrand   Subject Strand (plus or minus)
 
 pero ora devo retrace back i contigs to cosa sono
 
@@ -1008,15 +993,13 @@ for dataset in AsnicarF_2017 BackhedF_2015 BengtssonPalmeJ_2015 BritoIL_2016 CM_
 
 per vedere se match da qualche parte, magari è duplicoso il fail, che magari è il motivo x cui è così tanto grande, ma non credo.
 
-update 25/09: ha finito quel ciclo ma non lì'ha trovato dentro nessun coso, che sia sbagliato? no, non lo è, il ciclo funziona, ho provato a farlo per un coso 
-bo
-
 intanto alcuni di sti file tra ALL_CONTIGS e i vari databse nelle cartelle, li voglio cancellare, xke sntroppi lol.
 
-intanto faccio uno script remove_duplicates per rimuovere duplicati da quel file, che occuperà un po' di memoria lol. 
- update 25/09: mai fatto quello script
+intanto faccio uno script remove_duplicates per rimuovere duplicati da quel file, che occuperà un po' di memoria lol.
 
-no ma c'è qlcs che non va, 1.6T , ci sta che pesi cis , i contigs.dfasta pesano qualche decina di mega, 
+no ma c'è qlcs che non va, 1.6T è troppo dovrebbero essere qualche decina di giga forse centinaio. ma neanche,m le altre cartelle sono qualche KB l'una
+però si invece, ci sta che pesi cis xke  il peso di mezzzo megfa delle cart4lelle, è solo della cartella,
+ i contigs.dfasta pesano qualche decina di mega, 
 e ce ne sono 17432 dentro all_contigs_names_rows (creata ora da all_contigs_names_list per contare le rows facilmente),
  ma 390 milioni dentro all_contig_names 
 e è giusto il primo xke sono raccolte per sample i contigs quindi dovrebbero essere meno che i bins..
@@ -1033,171 +1016,11 @@ I need some sort of indexing to go through files faster. Anche per check if a pu
 si protrebbe guardare anche ilcoverage  per le sequensze che hai.
 
 
+Allora 
+mente locale mente locale mente lcoalleeeeo 
 
 Rimuovi tutti i vari ALl_contigs eccecc
 
 è tutto troppo grande, e prova a fare il blast in modo sequenziale su 17k files. MA ATTENZIONE PERCHE non sono !7k , ma circa 7k, xke i 17k sono tutti quelli sia metaspades che megahit per entrambi, quindi sono 'doppi', invece prendili singolarmente, e runna singolarmente contro ognuno di quegli altri.
 poi magari dividi le tue databasecontigs in 5, e runnalo cinque volte cosi fai 5 volte piu veloce. devistare attento che l'output sia giusto e che ci sia nome di database, sample, contig. e devi rule out quello che è se stesso, e poi devi anche magari dopo fare un filtraggio per checckare che su quel contig non ci sia un crispr array che non sia un crispr di qualcun altro.
 ma rimuovili alla fine i vari fails. anche se all_contig_names e all_contgs_names_list non so se voglio eliminarli però si xke ci sono dei duplicati all'interno lol
-
-----
-on a side note, a quicker way to filter out shit, would be to look at the coverage, e prendere qll comn coverage più alto. anche se la cosa del coverage è sempre un po' relativa alla size del sample (metagenome) però ci sta 
-
-fatto e messo nel ipynb una scritta che lo dice quali sono quelle con cov + alto. si potrebbe sistematizzare per tte quelle nell'albero.
-------
-
-TODO assolutamente TODO: recuperare le altre sequenze del cluster, oltre ai centroidi, e vedere se tipo nel gruppo da 949 ci sono più sequenze.
-^fallo dopo pranzo
-
-#25/09/2019
-costruito $data/list_of_sampless3_name: cosi
-
-more S3Segata.csv | cut -d, -f3 > datanamestmp  
-more S3Segata.csv | cut -d, -f4 > datanamestmp
-sed 's/$/_/' datanamestmp > datanamestmp2  #aggiungere _ alla fine d datasetname (percheè dopo quando mergerò le due colonne, siccome le voglio mergiare con '__', ma posso usare un carattere solo, prima aggiungo un '_' alla fine della prima colonna
-paste datanamestmp2 samplenamestmp  -d '_'i > list_of_sampless3_name
-more list_of_sampless3_name | uniq list_of_sampless3
-rm *tmp*
-rm list_of_sampless3_name
-mv list_of_sampless3 list_of_samples_s3name
-
-ho messo in standby la cosa della ricerca della PAM:
-$cs/4saddfsgl/pamsearch/blastsearch_for_PAM_in_all_contigs_for_featureid 
-è quasi finita, manca di creare un dizionario che ha come keys i s3datsetnames e come valori liste dei samples,
- che abbiano o meno la parola megahit (senza la parola megahit àè facile, ma ci sono sample per i quali non esiste l'assembli senza megahit mentre ci sono sample per i quali esistono entrambe) e quindi devo rifarmi ai filename discpreancies per aggiungere megahit dove necessario e cambiare il datasetname in wdatasetname. avrò csi un blasnlauncher, poi dovrò fare un bashcript per creare un folder dentro $data/4.../pam/out/csa9sampleid/ dentro il quale metterò i circa 8k blastn outputs, e runnare il blastnlauncher line by line e fare i blastn outputs di cui sopra.
-
-ora devo fare un wrapper carino per le cose da presentare domani alle 2, e magari ora torno a guardare tracrRNA
-
-sto tornand oa guardare tracrRNA, e per estrarmi la sequenza del locus, vorrei recuperare il contigname  eguardare de ntro originalsamples , ma li ci sn vari files, e quello con la sequenza nucleotidica è il .fna, che per ha i contignames con nomi diversi dal contigname, che il contigname lo estrassi tempo fa pens orporpio dai crispr, che avevo girat osul ALLreconstractegenomes che è la cartella divisa in SGB,m e dentro ha file del tipo genomename.fa, che dovrebbero essere esatamente uguali ai corrispettivi .fnna, ma coi contignames giusti
-no, l'ho preso dall'anotazine di cas9 di prokka, che ha il nome del contig dentro di se
-facendo un diff tra i due files sembra proprio così, mmbabeh
-
-fatto tracrRNA l'estrazione del locus. magari domattina posso vedere se riesco a cavare qualcosa, ma devo concentrarmi sulla visualizzazione per domani
-
-  
-
-#26/09/2015
-#meeting per presentare sequenze.
-
-fatto un notebook che si chiama 26_09 blabla, ma scaricando l'html le immagini 
-
-
-jupyter nbextension enable export_embedded   # da lanciare prima di jupyter-nobeook x esportare un html con le immagini m ma in realta no fuinzoione
-
-#1/10/2019
-tracrRNA
-
-
-ricorda todo di recuperare le seq entro i clusters
-
-devo fare il controllo con spyogenes genome.
-
-dp pranzo:
-prendi il tuo locussino, e fai prove
-
-dp pranzo:
-prendi il tuo locussino, e fai prove
-
-ho provato col comple,menteare, e non fa, col reverse comlmenteare fa, ma BECCA il revferse complementare del repeat. BElla. devo provare a farlo con una search cosa più looose, bella. e pooii xke nel control non trova neanceh i direct repeats? O.
-
-fermati e pensa
-
-scaricato anceh il genoma di S aureus del paper di s aureus in cui spiegano come trovano il tracrRNA
-provato a cercare il racr ma non si trova, mentre le repeat si si trovano. 
-
-provato anche a fare in locale una cosa con ARNold per trovare Rho terminators, ma solo su Spy, e quindi è prematuro ancora. questo è in standby per ora
-
- comunque su sau trova un po troppi repeats, rispetto a quelli che ho oio, ma va bene
-quello che va male p che mi sn preso ola seq di aa della proteina cas9 dal paper di aureus, e ho provato acercarla dentro suddetto genoma, ma senza troppo successo. xke greppandola non c'è proprio, ma manco dei pezzettini,ma manco piccoli. E blastandocela contro, uguale, nulla
-
-ora provo col tracrRNA direttamente dal paper ma ovviamente non c'è mneanche lui. cosi come non ci sono neanche le (la?) repeats del paper
-
-cmq presa anche Sau_ctrl_Cas9 direttamente da uniprot, che è motlo simile a quella del paper,. ma qll del paper      non va bene xke è ottimizzata x mammalian cells. ma cmq blastandole contro quel genooma di aureus nn si trovano nessuna delle due. c'è  qlcs di strano i nquel genoma secondo me
-
-#con spy, devo rifare lo stesso. 
-#
-poi il blast del tracrRNA ha portato a qualcosa. hmm. qualcoas di bizzarro? bo
-#
-#
-# 3 ottobre
-#forse trovato un tracr di Spy?
-sto lavorando con Spy, visto che c'è Cas9,NP_269215.1,854751,858857
-
-Cas1,NP_269216.1,858857,859726
-
-e  CRISPR 860819,861215	
-e blast mi trova una sequenza di 25 nt a 854433, belllllllllllllllllllla
-# 4 ottobre
- dai riusciamoci
-rifacciamo lo stesso che abbiamo fatto ier  per s.py, per aureus, cioé:
-
-- scariocare il gff file e vedere come sic chiamano cas9 cas1 e cas2  e salvarci le posizioni (questi hanno la sigla di RefSeq di solito)
-- guardare se  c'è traccia di tracer (pun intended)= blastando i repeats
-- guardare se si trovano terminatori di catena
-- guardare l'sgRNA di aureus
-
-sto salvando dentro  /shares/CIBIO-Storage/CM/scratch/tmp_projects/signorini_cas/7tracrRNA
-i terminators trovati da ARNold per gli 8 genomi selezionati.
- sto guardando LPEAHA SGB 15299. e mi sembra di aver proprio trovato qualcosa.
-
-lunedi faccio stem loops cosi, e vedo se matcha. Devo capire: la direzione, l'inizio e la fine. anche se in teoria, la direzione è quella giusta, xke Cas9 si trova sul reverse complement strand. quindi dovrebbe partire dal repeat al terminator. però sembrerebbe fare il contrario in realtà xke arnold inizia da tipo 14719, mentre la antirepeat è a 14729	14751  .però è strano che cas9 sia sulllo strand opposto, mentre i match del crispr array matchano tutti sullo strand plus. se il tracrRNA dev essere sempre sullo strand opposto rispetto a crispr, ma crispr non necessariamente è sullo stesso strand di Cas9, allora ci sta, e unendo le due sequenze, il tracr RNA di quello è
-voglio farmi uno script che mi faccia accedere velocemente a un genoma, un contig, un dato range di posizioni, da dovunque io sia.
-
-
-no a side note, facendo ctrl+f di
-GCAACCATAATAGTTCTTGGTA
-
- che è un pezzo di terminatore di 15299, viene un match su un possible antirepeat, guardalo lunedi-.
-#05/10
-transterm non funge, vbb, torno a guardare tracrRNA di spy intanto, voglio vedere com'è fatto il repeat (avendo il sgRNA), x caprie quanta parte di repeat si lega al tracr.
-
-sto provando a aggeggiare delle cosine, tutto su s.py, tt salvato nell ipynb, seconod me c'è una parte di maturazione di tracrRNA da prendere in considerazione, e una parte di spaiamento, pure.
-
-che l'antirepeat non si appaia sempre così bene al repeat, ragion x  cui in alcune delle mie sequenze, non si trova nemmeno l'antiepeat.
-
-#8 /10
-non ho scritto tanto sul log in sti giorni è tutto dentro i notebook in 7tracrRNA, cmq sto facendo un .py semiautomatico per trovare il tracrRNA.
-
-#9/10
-# buongiornissimo! FLJLKKHA_00012 ha 2 cas9 ! anzi, ha 2 active, working cas loci completi!!!! ecco xke non quadrava! , c'è un problemino nella pipeline, and we did not take this into account, xke ne scrive uno solo. lol. cmq il tracr dovrebbe averne
-# ORA QUADRA CHENON QUADRI
-#e ha il tracr solo di una erò
-#
-#da fare: finisci di trovare sti tracrRNA, e poi fai un disegnino di sti tracrRNA, usando ancjte
-http://unafold.rna.albany.edu/?q=mfold/download-mfold
- e bellapettuttiz
-per questi otto, faccio prima a fare tutto a mano.
-
-
-dopo dovrebbe essere interessante anche fare un summary table per vedere DOVE si trovano si tracrRNA nel genoma in media, xke è già la seconda volta che li trovo intorno al 14k nt!
-
-
-leggiti il papre che hai aperto d a qlc parte dove c'è uno studio strutturale penso di quella cas9 che inizia per c che non hai mai guardato
-la tasca di reazsione com è fatta?
-studi al riguardo?
-il taglio durante la maturazsone del tracr e cr RNA  lascia un nucleotide spaiato fuori.
-si può vedere?
-
-e poi fare un MSA di tutti questi tracrRNA trovati a mano (che devo salvare dentro dei faillini carini carò)
-
-
-domattina allinea i 3 che ti vengono, e vedi qnt so diversi fra loroe  con spcas9, e vedi il paper di diversity of tracrRNA coas ti dice al riguardo.
-
-anche un allineamento delle repeats, pe vede un poco che fanno, e tipo a che pam corrispondono?
-#10 10 2019
-
-fatti una buona idea sul loro algoritmo per cercare tracrRNA, e poi dì a Adrian qll che pensi, magari il nostro può essere migliore? Magari BBBU!
-
-Magari magari magari magari magari se noi trovassimo più tracrRNA, fare UN FACHING STUDIO A TAVOLINO AVREMMO UN SACCO DI DATI CAZZOOOOOOOo.
-UN SACCO
-un
-sa
-cc
-cco
-un fottio di faching tracrRNA altro che un database di 55.
-
-
-quelli del gruppo 87 tendon a a vere  2 cas, ma nessun tracr
-
-DOMANI a parte ched devi prendere il biglietto per roma tu ti trascuri troppo lorenzo, e lo sai. sticazzi del tracrRNA prima la salute vatti a fare le cazzo di analisi al ginocchio, e alla spalla, e compra il cazzo di biglietto.
-a parte quello, domani prova a fare il disegnino per uno dei 3 cosi che vengono
