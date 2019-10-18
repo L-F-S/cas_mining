@@ -9,14 +9,14 @@ import sys
 import numpy as np
 import pandas as pd
 
-def Schirmer_2016(sample,from_anno=False):
+def Schirmer_2016(genomename,from_anno=False):
     names={"SchirmerM_2016__G88886__bin.2":"SchirmerM_2016__G88886__bin","SchirmerM_2016__G88887__bin.10":"SchirmerM_2016__G88887__bin","SchirmerM_2016__G88911__bin.27":"SchirmerM_2016__G88911__bin","SchirmerM_2016__G89138__bin.29":"SchirmerM_2016__G89138__bin"}
     if not from_anno:
-        if sample in names.keys():
-            print("Maledetto schirmer che hai i nomi diversi!")
-            return names[sample]
+        if genomename in names.keys():
+#            print("Maledetto schirmer che hai i nomi diversi!")
+            return names[genomename]
         else:
-            return sample
+            return genomename 
 
 def analysis_has_megahit(analysis):
     """takes as input: "prokka", "pilercr", "minced", "old_anno" returns a BOOL indicating whether this has megahit in the name"""
@@ -103,22 +103,31 @@ def get_originalsamplename_froms3name_of_genome(genomename, dataset):
         working_genomename=change_to_megahit(working_genomename)
     return working_genomename, working_dataset
 
+def master_filename_discrepancies(dataset,genomename):
+    # dataset and genomename are working dataset and genomename
+    if dataset.startswith("ZeeviD"):  #TODO guarda se funziona quando finisci di girare minced_runner
+        s3_dataset="ZeeviD_2015"
+        s3_genomename=genomename
+        try:
+            genomename=genomename.replace("ZeeviD_2015", "ZeeviD_2015_B")
+            prokkafile_ofsample=open(annodir+"/justminced/ZeeviD_2015_B/"+genomename+".crisprcas.gff.minced")
+            prokkafile_ofsample.close()
+            dataset="ZeeviD_2015_B"
+        except:
+            genomename=genomename.replace("ZeeviD_2015_B", "ZeeviD_2015_A")
+            dataset="ZeeviD_2015_A"
+    else:
+        s3_dataset=dataset
+        s3_genomename=genomename
+        dataset=s3(s3_dataset,r=True) # get working dataset name from s3 dataset name
+        genomename=genomename.replace(s3_dataset, working_dataset)
 
-if __name__=="__main__":
-    wdataset="ZeeviD_2015"
-    s3dataset=s3(wdataset)
-    print(s3dataset)
-#    import pandas as pd
-#    tabledir="/shares/CIBIO-Storage/CM/scratch/tmp_projects/signorini_cas/3tabellazza"
-#    DF=pd.read_csv(tabledir +"/"+wdataset+"/crisprcas_hits_table_"+wdataset+".csv", index_col=0) 
-#    for index, genome in DF.iterrows():
-#        genomename=genome["Genome Name"]
-#        wname, wdataset=get_originalsamplename_froms3name_of_genome(genomename,s3dataset)
-#
-#        path="/shares/CIBIO-Storage/CM/scratch/tmp_projects/epasolli_darkmatter/allcontigs/"+wdataset+"/metabat/genomes_comp50_cont05/prokka/"+wname
-#        print(path)
-#        os.chdir(path)
-#        f=open(path+"/"+wname+".faa")
-#        f.close()
+    if dataset_has_megahit(dataset,genomename):
+        genomename=change_to_megahit(genomename)
+
+    samplename = genomename.split("__")[1]
+                                      
+    return dataset, genomename, samplename, s3_dataset, s3_genome
+#if __name__=="__main__":
 #
 

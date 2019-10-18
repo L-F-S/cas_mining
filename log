@@ -1201,3 +1201,28 @@ quelli del gruppo 87 tendon a a vere  2 cas, ma nessun tracr
 
 DOMANI a parte ched devi prendere il biglietto per roma tu ti trascuri troppo lorenzo, e lo sai. sticazzi del tracrRNA prima la salute vatti a fare le cazzo di analisi al ginocchio, e alla spalla, e compra il cazzo di biglietto.
 a parte quello, domani prova a fare il disegnino per uno dei 3 cosi che vengono
+
+
+
+quando faccio le strutture con RNAfold o RNA structure, per il terminator uso RNAfold e levo le 4 cose dopo TTTTT, evengono due lups, e aggiungo le cose prima che ci sono nel mario (cioe mappo con la sequenza datami dai papers)
+
+tutte le cas9 che sto guardando credo siano di tipo C.
+MA POTREI (DOVREI!!) Fare una cosa piu grande, una filogenesi di TUTTTE LE CAS9 CHE HO, E VEDERE CHE MOLECOLE HANNO INTORNO, CHE LUNGHEZZE HANNO INTORNO, CHE Cas9 sono!
+questa è assolutamente una cosa che nessuno ha fatto mai in questa scala.
+
+e poi potrei impacchettare la mia pipeline, e fare tipo the mostcomplete CRISPRCAStracrRNAeverything pipeline ever.
+oppure fare un pacchetto paiton.
+
+LPEAHEG tracrRNA
+
+dubbio sul loop
+xke se allineo antirepeat+mario conro repeat, e lascio solo la tail, solo la tail da sola non mi fa due loop
+se invece allineo solo antirepeat con repeat, questi matchano bene, ma solo nella parte finale del repeat, mentre io  vorrei quella iniziale ->
+domanda:
+com'è fatto il tracrRNA di n.menigntidis 1 e 2?
+
+finale stasera: MSA di repeats e di tracrRNA di quei 3 da soli, quei tre con nm, quei tre con nm e sp
+
+other todo per domani: gli rna fold, trovare dove di quei mille paper, dove dice l'inizio del terminator, e vedere se faccio RNAfold da quell'inizio.
+
+e fare il MSA
