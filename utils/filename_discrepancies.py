@@ -120,14 +120,14 @@ def master_filename_discrepancies(dataset,genomename):
         s3_dataset=dataset
         s3_genomename=genomename
         dataset=s3(s3_dataset,r=True) # get working dataset name from s3 dataset name
-        genomename=genomename.replace(s3_dataset, working_dataset)
+        genomename=genomename.replace(s3_dataset, dataset)
 
     if dataset_has_megahit(dataset,genomename):
         genomename=change_to_megahit(genomename)
 
     samplename = genomename.split("__")[1]
                                       
-    return dataset, genomename, samplename, s3_dataset, s3_genome
+    return dataset, genomename, samplename, s3_dataset, s3_genomename
 #if __name__=="__main__":
 #
 

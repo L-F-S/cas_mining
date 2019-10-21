@@ -37,6 +37,6 @@ subset_of_genomes=DF
 
 genomes_with_that_feature=subset_of_genomes[subset_of_genomes.prokka_cas.str.contains(feature)==True]
 print("Found ", genomes_with_that_feature.shape[0], " genomes with that feature.")
-genomes_with_that_feature.to_csv("/shares/CIBIO-Storage/CM/scratch/tmp_projects/signorini_cas/5caslocitable/"+s3dataset+"/"+s3dataset+"_known_"+feature+"_variants_table.csv")
+genomes_with_that_feature.to_csv("/shares/CIBIO-Storage/CM/scratch/tmp_projects/signorini_cas/5caslocitable/"+s3dataset+"/"+s3dataset+"_known_"+feature+"_genomes.csv")
 ##############################
 

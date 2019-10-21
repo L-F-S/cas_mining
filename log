@@ -1226,3 +1226,14 @@ finale stasera: MSA di repeats e di tracrRNA di quei 3 da soli, quei tre con nm,
 other todo per domani: gli rna fold, trovare dove di quei mille paper, dove dice l'inizio del terminator, e vedere se faccio RNAfold da quell'inizio.
 
 e fare il MSA
+
+
+# 18/10/2019
+ sto modificando il 5caslocitable/2afflocusroba x aggiungere i contig 'doppi', e sto vedendo che tipo BritoIL_2016__M1.1.ST__bin.108 ha addirittura due cas9 sullo stesso contig. DIOCANE. ma vbb tanto non è utile BritoIL_2016__M1.1.ST__bin.108  QUINDi x ora stica
+
+# n so che giorno e tipo 21 ottobvrew
+l output v2 ddeve avere lo strand di tutti
+fatto bene il cas9 position (persalabattaglia)
+e magari creare un ID per tracrRNA?
+add localizzazione sul corpo e westernizzazione nei metadati.  e cose precise sullo studio
+aggiungere ai readme il genomename.fa e .gff  (e automatizzare i readmes)

@@ -41,8 +41,9 @@ Columns:
 FILES:
 |
 |1build_known_effector_cas_table.py # These 4 files, executed sequentially, create a table of Cas9 (Cpf1) loci.
-|2fill_known_effector_cas_table.py  # to run:
-|3add_locusinfo.py                  # python 3add_locusinfo.py (or 1buil.., 2fill..) <datasetname> Cas9 (or Cpf1
+|2fill_known_effector_cas_table.py  # to run the first 3:
+|3add_locusinfo.py                  # python 3add_locusinfo.py (or 1buil., 2fill..) <wdatasetname> Cas9 (or Cpf1
+                                    # ZeeviD is just ZeeviD, without A and B. you can use 'floderloop'
 |4addSGB_info.py                    # <-Merge all datasets (utils/merge_datasets.py) before running 4addSGB..
 |
 |Mining for a nice Cas9 9-08 polished summary.ipynb  prova.png  # py notebooks to extract the sequences of
