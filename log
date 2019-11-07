@@ -1237,3 +1237,8 @@ fatto bene il cas9 position (persalabattaglia)
 e magari creare un ID per tracrRNA?
 add localizzazione sul corpo e westernizzazione nei metadati.  e cose precise sullo studio
 aggiungere ai readme il genomename.fa e .gff  (e automatizzare i readmes)
+
+#3 nov
+trovato errore nell'output: AJHGD... il tracrrna non viene quando lo provo a fare con outputv1 ???
+risolto.
+scrivi (nel readme? gnooo?) le cose che scriverai su slack nel coso versione 1.1 tipo.
