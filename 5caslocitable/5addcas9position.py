@@ -37,14 +37,17 @@ hits_table=pd.read_csv(tabledir+"/crisprcas_hits_table.csv", index_col=0)
 
 
 previous_dataset="pippo"
+prokka_cas9_list=[]
 for index, genome in DF.iterrows():
         genomename=genome["Genome Name"] #TODO Be careful for filename discrepancies, especially with ZeeviD files and with _megahit_ underscores!
         if previous_dataset!=genome["Study"]:
             print(genome["Study"])
             previous_dataset=genome["Study"]
         prokka_cas9 = get_feature_pos(genome["Seq ID"], genomename)
-        DF["prokka_cas9"]=""
-        DF.at[index,"prokka_cas9"]=prokka_cas9
+        if np.shape(prokka_cas9)!=(3,):
+            print(prokka_cas9,"\n\n------------------")
+        prokka_cas9_list.append( prokka_cas9)
 #        print("trovati: usgb, estim, level_estim:", uSGB, estim, level_estim)
+DF["prokka_cas9"]=pd.Series(prokka_cas9_list, index=DF.index)
 DF.to_csv(outdir+"known_"+feature+"prokkacas9_variants_table.csv")  #this is NOT  overwriting. occhio
 

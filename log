@@ -1246,3 +1246,18 @@ scrivi (nel readme? gnooo?) le cose che scriverai su slack nel coso versione 1.1
 #8 nov
 #
 lanciati i mapping su tmux bowtie (o bowtie)
+#25 Nov si risorge dalle tenebre     
+#
+#che cosa stavo facendo prima che mi venisse la mononucleosi? Allora
+
+ah si, forse voglio vedere, oltre al terminatore, se c'è una sequenza di iniziatore tipo, per il tRNA
+#26 nov
+FLJKK
+riguardiamolo, e sviluppaimo una modifica per il tracrRNA search che taki into account il fatto di avere 2 active working crisprcas loci..
+fixato 5caslocitable/5addprokkablalba, in modo che funga anche per BritoIL_2016__M1.1.ST__bin.108, che ha addirittura DUE cas loci sullo stesso contig. perà i cas1 e cas2 non vanno bene adesso..
+allora 3addaaslocs info: non va bene, perché per ogni genomename trova prokkacas1 e prokkacas2, invece ciò che deve fare è di trovarlo per ogni Cas9, ERGO, bisogna prima trovare la cas9, e poi quelli.
+e per i prokkacas sullo stesso contig ? eeeh difficilotto, nel senso, come si fa? devi comparare le posizioni di cas9 e prendere il piu vicino. e cmq c'è un margine di errore...
+
+casmining/utils/SGB funge se lo chiami con bash SGB ma non se lo chiami da PATH. xke??
+
+
