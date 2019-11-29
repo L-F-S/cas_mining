@@ -1,12 +1,13 @@
 # Fri Nov 29 11:23:26 CET 2019
 # Made by L-F-S
 # At the University Of Trento, Italy
+#
+# Define the Cas Locus as a Class, for easier output handling. test
+# in vista di un miner veloce che lo usi per spostarsi agilmente tra
+# le funzioni
 
-import os
+
 import sys
-import numpy as np
-import pandas as pd
-import matplotlib.pyplot as plt
 
 sys.path.insert(0, '/home/lorenzo.signorini/cas_mining/utils/')
 import filename_discrepancies
