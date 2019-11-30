@@ -6,9 +6,12 @@
 # Made by L-F-S
 # At the University Of Trento, Italy
 import argparse
+import sys
+sys.path.insert(0, '/home/lorenzo.signorini/cas_mining/9casminer_v2/IO/')
+import cas_miner_IO as cmIO
 
 parser=argparse.ArgumentParser(\
-                               description="Extract effector Cas loci from metagenomic datai",\
+                               description="Extract effector Cas loci from metagenomic data",\
                                formatter_class=argparse.MetavarTypeHelpFormatter)
 #TODO proably dentro il type del parser ci puoi mettere le funzioni tue
 parser.add_argument("-feature", type=str, help="feature name (default: Cas9)", choices=["Cas9","Cpf1"], default="Cas9")
@@ -16,7 +19,7 @@ parser.add_argument("-species", type=str, help="species or taxonomiical level (a
 parser.add_argument("-uSGB", type=str, help="look for unknown (u), known (k) or both (b) SGBs (default: b)", choices=["u","k","b"], default="b")
 parser.add_argument("-SGB", type=int, help="look for a specific SGB(s). Space separated")
 parser.add_argument("-genome", type=str, help="look for a specific genome(s). Space separated")
-parser.add_argument("-length", type=str, help="Min and Max length. input: min max. (default: TODO)")
+parser.add_argument("-length", type=int, nargs="*", help="filter by sequence length. Accepted input: <n>, <nmin> <nmax>")
 parser.add_argument("-active", type=str, help="Active locus. An active locus is defined as having all proteins and sequences for its feature and type. (default: y)", choices=["y","n"], default=True)
 args = parser.parse_args()
 
@@ -24,14 +27,11 @@ args = parser.parse_args()
 
 print("Importing modules..")
 import os
-import sys
 import numpy as np
 import pandas as pd
 #import matplotlib.pyplot as plt
 from Bio import SeqIO
 sys.path.insert(0, '/home/lorenzo.signorini/cas_mining/utils/')
-sys.path.insert(0, '/home/lorenzo.signorini/cas_mining/9casminer_v2/IO/')
-import cas_miner_IO as cmIO
 outpath="/shares/CIBIO-Storage/CM/scratch/tmp_projects/signorini_cas/5caslocitable/out/"
 datadir="/shares/CIBIO-Storage/CM/scratch/tmp_projects/signorini_cas/"
 

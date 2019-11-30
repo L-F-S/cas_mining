@@ -75,14 +75,32 @@ def subste_by_active(data, UI):
     return data.dropna(how="any")
 
 def subset_by_length(data, UI):
+    """UI is one of: <None>, <int-int>, <int> """
     if UI:
-        nmin=int(UI.split(" ")[0])
-        nmax=int(UI.split(" ")[1])
-        sorted_feature_counts=data["Seq"].str.count("").sort_values()
-        length_intreval=sorted_feature_counts[sorted_feature_counts>=nmin]
-        length_intreval=length_intreval[length_intreval<=nmax]
-        subset=data.loc[length_intreval.index]
-        return subset
+       # split=UI.split("")
+        split=UI
+        try:
+            int(split[0])
+        except:
+            raise Exception("Input must be an integer!")
+        if len(split)==2:
+            nmin=int(split[0])
+            nmax=int(split[1])
+            sorted_feature_counts=data["Seq"].str.count("").sort_values()
+            length_intreval=sorted_feature_counts[sorted_feature_counts>=nmin]
+            length_intreval=length_intreval[length_intreval<=nmax]
+            subset=data.loc[length_intreval.index]
+            return subset
+        elif len(split)==1:
+            nmin=int(split[0])
+            nmax=nmin
+            sorted_feature_counts=data["Seq"].str.count("").sort_values()
+            length_intreval=sorted_feature_counts[sorted_feature_counts>=nmin]
+            length_intreval=length_intreval[length_intreval<=nmax]
+            subset=data.loc[length_intreval.index]
+            return subset
+        else:
+            raise Exception("length must be one number or two numbers separated by \'-\'")
     return data
 
 def subste_by_genome(data, UI):

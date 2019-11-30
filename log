@@ -1257,7 +1257,20 @@ riguardiamolo, e sviluppaimo una modifica per il tracrRNA search che taki into a
 fixato 5caslocitable/5addprokkablalba, in modo che funga anche per BritoIL_2016__M1.1.ST__bin.108, che ha addirittura DUE cas loci sullo stesso contig. perà i cas1 e cas2 non vanno bene adesso..
 allora 3addaaslocs info: non va bene, perché per ogni genomename trova prokkacas1 e prokkacas2, invece ciò che deve fare è di trovarlo per ogni Cas9, ERGO, bisogna prima trovare la cas9, e poi quelli.
 e per i prokkacas sullo stesso contig ? eeeh difficilotto, nel senso, come si fa? devi comparare le posizioni di cas9 e prendere il piu vicino. e cmq c'è un margine di errore...
+magari puoi forkare su git questa carella e provare a fare la v2..
+ma vedo che (guardando la lunghezza di knownCas9-variants vs knownCas9prokkacas9_vairnats (che sn uguali, ma lì'avevo predetto), che avevo già listato ogni cas9, con 2...py interessante, devo rifarlo proprio da zero, meglio.
 
-casmining/utils/SGB funge se lo chiami con bash SGB ma non se lo chiami da PATH. xke??
+aggiunt casmining/utils/SGB 
+per far fungere: se cerchi info sull'sgbi 123, scrivi:    SGB 123
 
+
+#29
+no allora BISOGNA PER FORZA vedere nei dati cosa succede a SGB 8769, perchè 
+quando faccio il rapporto dei genomi quelli coi cas loci sono piu del totale ?????????
+ci dev esse un errore nello script. anzi controlla che nel caso del
+ cas9_summary fosse di nuovo 8769 quello ballerino.
+che sia perché ha piu loci sullo stesso genoma? sempre il solito problemino..
+cosa carina scoperta: coprobacillus, ha un solo genoma, con un active working  cas locus di lunghezza tipo 999-1049
+#CAS MINER DEBUGGING
+tipo length ora funge, ma vorrei sapere, se vado a cercare le cas9 tra 999 e 1049 , mi sembra me ne trovi poche,lunedi apro il notebook e vedo..
 
