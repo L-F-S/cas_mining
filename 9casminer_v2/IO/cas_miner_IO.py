@@ -6,7 +6,7 @@
 # feature, oppre se invece processo anche i data, come in tutte le altre tipo,
 # e allora diventa un attimino più stile che fa tutto questa
 
-#import os
+# import os
 import sys
 import numpy as np
 import re
@@ -46,8 +46,10 @@ def subset_by_unknownSGB(data,UI):
 
 def subset_by_SGB(data, UI):
     """ subset only data belonging to that SGB"""
-    SGB=int(UI)
-    return data[data["SGB ID"]==SGB]
+    if UI:
+        SGB=int(UI)
+        return data[data["SGB ID"]==SGB]
+    return data
 
 def subset_by_species(data, UI):
     """subset data relative to that species
@@ -100,11 +102,14 @@ def subset_by_length(data, UI):
             subset=data.loc[length_intreval.index]
             return subset
         else:
-            raise Exception("length must be one number or two numbers separated by \'-\'")
+            raise Exception("length must be one number or two numbers separated by whitespace")
     return data
 
-def subste_by_genome(data, UI):
-    return data[data.genome==UI]
+def subset_by_genome(data, UI):
+    """ subset only data belonging to that genome"""
+    if UI:
+        return data[data["Genome Name"]==UI]
+    return data
 
 def subset_by_type():
     return "TODO"

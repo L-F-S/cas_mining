@@ -1,60 +1,63 @@
-
-
 #  <h1><center>Data mining for a working Cas9 variant.</center></h1>
 # First created Thu Jul 11 09:51:15 CEST 2019
 # This is a slightly older version, refer to the Cpf1 pipleine for a more updated version.
 # Made by L-F-S
 # At the University Of Trento, Italy
 import argparse
+from os import remove
 import sys
 sys.path.insert(0, '/home/lorenzo.signorini/cas_mining/9casminer_v2/IO/')
 import cas_miner_IO as cmIO
 
 parser=argparse.ArgumentParser(\
-                               description="Extract effector Cas loci from metagenomic data",\
+                               description="++++++++++++    Extract effector Cas loci from metagenomic data.    ++++++++++++ 01/12/2019: Only extracts Effector Cas sequence :(",\
                                formatter_class=argparse.MetavarTypeHelpFormatter)
 #TODO proably dentro il type del parser ci puoi mettere le funzioni tue
+#todo add pltting options, es le lengths distrib
+parser.add_argument("-v", action="store_true", help="verbose output")
 parser.add_argument("-feature", type=str, help="feature name (default: Cas9)", choices=["Cas9","Cpf1"], default="Cas9")
+parser.add_argument("-active", type=str, help="Active locus. An active locus is defined as having all proteins and sequences for its feature and type. (default: y)", choices=["y","n"], default="y")
 parser.add_argument("-species", type=str, help="species or taxonomiical level (accepted input: [<Genus species>, <any_taxa_name>]) CASE INSENSITIVE")
 parser.add_argument("-uSGB", type=str, help="look for unknown (u), known (k) or both (b) SGBs (default: b)", choices=["u","k","b"], default="b")
 parser.add_argument("-SGB", type=int, help="look for a specific SGB(s). Space separated")
 parser.add_argument("-genome", type=str, help="look for a specific genome(s). Space separated")
-parser.add_argument("-length", type=int, nargs="*", help="filter by sequence length. Accepted input: <n>, <nmin> <nmax>")
-parser.add_argument("-active", type=str, help="Active locus. An active locus is defined as having all proteins and sequences for its feature and type. (default: y)", choices=["y","n"], default=True)
+parser.add_argument("-length", type=int, nargs="*", help="filter by sequence length, or a range of lengts. Accepted input: <n>, <nmin> <nmax>")
+parser.add_argument("-ki", action="store_true", help="FLAG: do not cluster identical sequences, but keep them separated")
+parser.add_argument("-o", type=str, help="Set output path. Default: /shares/CIBIO-Storage/CM/scratch/tmp_projects/signorini_cas/5caslocitable/out/", default="/shares/CIBIO-Storage/CM/scratch/tmp_projects/signorini_cas/5caslocitable/out/")
 args = parser.parse_args()
 
+def vprint(string,argument=None):
+    if argument:
+        if args.v:
+            print(string)
 
-
-print("Importing modules..")
+vprint("Importing modules..",True)
 import os
 import numpy as np
 import pandas as pd
 #import matplotlib.pyplot as plt
-from Bio import SeqIO
 sys.path.insert(0, '/home/lorenzo.signorini/cas_mining/utils/')
-outpath="/shares/CIBIO-Storage/CM/scratch/tmp_projects/signorini_cas/5caslocitable/out/"
+outpath=args.o
 datadir="/shares/CIBIO-Storage/CM/scratch/tmp_projects/signorini_cas/"
 
 # # 1. Data:
 # ## 1.1 load information about SGBs (species)
+vprint("loading data..")
 SGB_table=pd.read_csv("/shares/CIBIO-Storage/CM/scratch/tmp_projects/signorini_cas/S4Segata.csv", index_col=0)
 # ## 1.2 load information about Cas9s
 feature=args.feature
 cas_dataset=pd.read_csv("/shares/CIBIO-Storage/CM/scratch/tmp_projects/signorini_cas/5caslocitable/known_"+feature+"_variants_table.csv", index_col=0)
 
-
-# There are 33978 Cas9s in the whole dataset of 154723 genomes.
-# This dataset was created following step 5, from the original Crisprcas_hits_table.csv. Every line is a different Cas9. Here is information about the sequence, the contig (piece of contiguous DNA in one genome),  other cas features on the same contig, and phylogenetical information, printed out for the first 10 Cas9s:
-
 # # 2. Data filtering: Extract a list of the shortest working cas9 from most abundant and most unknown genomes.
 
 # ## 2.1 Filter by: active locus
-# An active locus is defined by having at least 1 CRISPR array, 1 Cas1, 1 Cas2, and 1 effector Cas
 
 #Drop Nan rows
 if args.active=="y":
+    vprint("selecting active loci..", True)
     cas_dataset=cas_dataset.dropna(how="any")
 # Subset by species
+vprint("Selecting species (or taxonomical level)...", args.species)
 cas_dataset=cmIO.subset_by_species(cas_dataset, args.species)
 # ## 2.2 Filter by: working active locus
 # A working locus is defined by being an active locus with a Cas9 of a length falling within the peak of the distribution
@@ -67,29 +70,22 @@ cas_dataset=cmIO.subset_by_species(cas_dataset, args.species)
 #    plt.plot()
 
 # The length intreval where there seems to be a working protein is around (1050,1170) , (1330,1450) and maybe (1500,1580). We shall define these intrevals as working lengths.
-
+# filter by SGB:
+vprint("Filtering by SGB...", args.SGB)
+cas_dataset=cmIO.subset_by_SGB(cas_dataset,args.SGB)
 # ## 2.3-2.4 Filter by: sequence length of 949-1099 amino acid, unknown SGB
-# An unknown SGB is an SGB with no reference genome in literature.
-
+vprint("Filtering by length...", args.length)
 cas_dataset=cmIO.subset_by_length(cas_dataset, args.length)
-#sorted_activecas9counts=activecas9s["Seq"].str.count("").sort_values()
-#
-#nmin=int(intreval.split(" ")[0])
-#nmax=int(intreval.split(" ")[1])
-#
-#
-#working_intreval=sorted_activecas9counts[sorted_activecas9counts>=nmin]
-#working_intreval=working_intreval[working_intreval<=nmax]
-#active_working_cas9s=activecas9s.loc[working_intreval.index]
-
+# filter by unknown SGB An unknown SGB is an SGB with no reference genome in literature.
+vprint("Filtering by uSGB...", args.uSGB)
 cas_dataset=cmIO.subset_by_unknownSGB(cas_dataset,args.uSGB)#[active_working_cas9s.uSGB=="Yes"]
-print("Total number of "+args.feature+":\t", len(cas_dataset.index),\
-      "\n", args)
+# filter by genome
+vprint("Filtering by genome name...", args.genome)
+cas_dataset=cmIO.subset_by_genome(cas_dataset, args.genome)
+print("\nDONE!\n\n[TODO:it's actually the total number of genomes,there might be  more than one cas per genome]\n\t--->    Total number of "+args.feature+":\t", len(cas_dataset.index),"  <---",\
+      "\n\n- Parameters:\n", args)
 
-
-# There are 628 active and working Cas9s from unknown species.
-
-# ## 2.5 Filter by: most abundant SGB
+# ## show  most abundant SGB
 
 print("Let us check which SGBs are the most abundant among the Cas loci we have filtered so far...")
 
@@ -102,72 +98,77 @@ SGB_abundance["Genomes relative abundance"]=SGB_abundance["# Genomes"]/SGB_abund
 print(SGB_abundance)
 
 
-# All SGBs have a pretty high relative abundance, except for 15286 a, 14454 and 9280. And 8769 does not make any sense.Check that later.
-#
-# Let us keep all the loci from the SGBs with 10 or more genomes (each one of these genomes contains a working, active cas9 and belongs to the same species), that is, the first 12 SGBs.
-#
-#
-# But, first, let's check whether all samples are coming from different datasets:
-
-# In[50]:
-
-
-#returns SGBs with samples that only come from one dataset, if any.
-#for SGB in SGB_abundance_in_dataset.index:
-#    first_dataset=True
-#    diff=False
-#    for ind, Cas9 in cas_dataset.iterrows():
-#        if Cas9["SGB ID"]==SGB:
-#            dataset=Cas9["Genome Name"].split("__")[0]
-#            if not first_dataset:
-#                if dataset != temp_unique_dataset:
-#                    diff=True
-#            else:
-#                temp_unique_dataset=dataset
-#                first_dataset=False
-#    if not diff:
-#        print("SGB",SGB,"genomes all come from dataset",dataset)
-#
-
-# This might indicate a certain degree of replication in the data for that dataset.
 
 # # 3 Data Clustering
 # ## 3.1 Cluster together identical sequences in the same SGB
 # for the 12 most abundant unknown SGBs with a working active Cas9s
 
+# 3. Sequences CLUSTERING
+# cluster identical sequences
+#todo if args.ki:
+print("Extracting "+ feature + "sequences and creating fasta files...")
+from Bio.SeqRecord import SeqRecord
+from Bio import SeqIO
+from Bio.Seq import Seq
+from itertools import groupby
+
+#define names for file name:
+speciesstr, SGBstr, lengthstr, activestr, genomestr, = "","", "", "", ""
+kistr="_identical"
+uSGBstr="_"+args.uSGB+"SGB"
+if args.species:
+    species="_"+args.species
+if args.SGB:
+    SGBstr="_"+args.SGB+"SGB"
+if args.length:
+    lengthstr="_".join([str(n) for n in args.length])
+if args.active=="y":
+    activestr="_active"
+if args.genome:
+    genomestr="_args.genome"
+if args.ki:
+    genomestr=""
+
+def seq_getter(s): return str(s.seq)
+
+all_identical_fasta_entries=""
+
+for SGB in np.unique(cas_dataset["SGB ID"]):
+    if args.v:
+        print("Extracting sequences for SGB: ", SGB)
+    current_SGB=cas_dataset[cas_dataset["SGB ID"]==SGB]
+    alignments=[]
+    for index, row in current_SGB.iterrows():
+        tempseq=SeqRecord(Seq(row.Seq), id=str(row["SGB ID"])+"__"+row["Seq ID"]+"__"+row["Genome Name"], description=row["Genome Name"]+"__"+row["Seq ID"]+"__"+str(row["SGB ID"]))
+        alignments.append(tempseq)
+
+    #write fasta for every SGB
+    filename=outpath+args.feature+"/temp.faa"
+    SeqIO.write(alignments, filename, "fasta")
+    #read from that fasta and group identical sequences somehow
+    if args.v:
+        print("Merging Identical sequences for SGB: ", str(SGB))
+    records = list(SeqIO.parse(filename,'fasta'))
+    records.sort(key=seq_getter)
+    n=0
+    for seq,equal in groupby(records, seq_getter):
+        ids = ';'.join(s.id for s in equal)
+        N=ids.count(';')+1
+
+        line=">"+ids+";length"+str(len(seq))+";#sequences"+str(N)+"\n"+seq+"\n"
+        all_identical_fasta_entries+=line
+    remove(filename)
+
+filename2= outpath+args.feature+"/"+args.feature+"_sequences_"+lengthstr+uSGBstr+SGBstr+activestr+speciesstr+genomestr+kistr+".faa"
+f=open(filename2,"w")
+f.write(all_identical_fasta_entries)
+f.close()
+sequences=list(SeqIO.parse(filename2,'fasta'))
+print("There are", len(sequences),"unique sequences")
 #
-#def seq_getter(s): return str(s.seq)
-#cons_table_949_1048=""
-#for SGB in [9340, 15299, 8767, 15095, 8769, 9710, 9281, 9311, 14454, 4329, 8774, 15286]:
-#    current_SGB=active_working_unknwon_cas9s[active_working_unknwon_cas9s["SGB ID"]==SGB]
-#    alignments=[]
-#    for index, row in current_SGB.iterrows():
-#        tempseq=SeqRecord(Seq(row.Seq), id=str(row["SGB ID"])+"__"+row["Seq ID"]+"__"+row["Genome Name"], description=row["Genome Name"]+"__"+row["Seq ID"]+"__"+str(row["SGB ID"]))
-#        alignments.append(tempseq)
-#
-#    #write fasta for every SGB
-#    filename="SGB"+str(SGB)
-#    SeqIO.write(alignments, outpath+filename+".faa", "fasta")
-#
-#    #read from that fasta and group identical sequences somehow
-#    fastafile=outpath+filename+".faa"
-#    records = list(SeqIO.parse(fastafile,'fasta'))
-#    records.sort(key=seq_getter)
-#    n=0
-#    for seq,equal in groupby(records, seq_getter):
-#        ids = ';'.join(s.id for s in equal)
-#        N=ids.count(';')+1
-#
-#        line=">"+ids+";length"+str(len(seq))+";#sequences"+str(N)+"\n"+seq+"\n"
-#        cons_table_949_1048+=line
-#filename2= outpath+"949_1099_aa_Cas9_sequences_from_active_loci_from_12_most_abundant_most_unknown_species_identical"
-#f=open(filename2+".faa","w")
-#f.write(cons_table_949_1048)
-#f.close()
-#sequences=list(SeqIO.parse(outpath+"949_1099_aa_Cas9_sequences_from_active_loci_from_12_most_abundant_most_unknown_species_identical.faa",'fasta'))
-#print("There are", len(sequences),"unique sequences in 12 SGBs")# clusters","("+str(len(without_9710))+" without 9710 SGB) at "+identity_score+" identity.")
-#
-#
+for record in  sequences:
+    print(record.id)
+    print(record.seq)
 ## ## 3.3 Sequences clustering
 ## Cluster together sequences of up to 90% similarity, and extract one representative sequence for each cluster.
 ## Different clustering algorithms are available,the one that works the easiest was fast uclust https://drive5.com/usearch/manual/uclust_algo.html. Uclust performs centroid-based clustering and returns the centroid of each cluster as representative sequence.
