@@ -6,7 +6,7 @@
 import argparse
 from os import remove
 import sys
-sys.path.insert(0, '/home/lorenzo.signorini/cas_mining/9casminer_v2/IO/')
+sys.path.insert(0, 'IO/')
 import cas_miner_IO as cmIO
 
 parser=argparse.ArgumentParser(\
