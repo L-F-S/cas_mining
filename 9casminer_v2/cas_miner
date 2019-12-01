@@ -1,0 +1,6 @@
+#!/bin/bash
+# Sun Dec 1 15:48:11 UTC 2019
+# Made by L-F-S
+# At the University Of Trento, Italy
+
+python cas9_miner.py $@

@@ -147,7 +147,7 @@ for SGB in np.unique(cas_dataset["SGB ID"]):
     SeqIO.write(alignments, filename, "fasta")
     #read from that fasta and group identical sequences somehow
     if args.v:
-        print("Merging Identical sequences for SGB: ", str(SGB))
+       vprint("[TODO ki does not work yet]\nMerging Identical sequences for SGB: ", str(SGB))
     records = list(SeqIO.parse(filename,'fasta'))
     records.sort(key=seq_getter)
     n=0
