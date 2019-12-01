@@ -117,7 +117,7 @@ speciesstr, SGBstr, lengthstr, activestr, genomestr, = "","", "", "", ""
 kistr="_identical"
 uSGBstr="_"+args.uSGB+"SGB"
 if args.species:
-    species="_"+args.species
+    speciesstr="_"+args.species
 if args.SGB:
     SGBstr="_"+args.SGB+"SGB"
 if args.length:
