@@ -23,3 +23,4 @@ print("Genome Name:", cas_dataset[cas_dataset["Seq ID"]==seqid]["Genome Name"].i
 print("SGB: ", cas_dataset[cas_dataset["Seq ID"]==seqid]["SGB ID"].iloc[0])
 print("Sequence length: ",len(cas_dataset[cas_dataset["Seq ID"]==seqid]["Seq"].iloc[0]))
 print(cas_dataset[cas_dataset["Seq ID"]==seqid]["minced_CRISPR"].iloc[0])
+print(feature+" sequence:\n",cas_dataset[cas_dataset["Seq ID"]==seqid]["Seq"].iloc[0])

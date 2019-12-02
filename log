@@ -1315,9 +1315,11 @@ e comunque,
 #vedi che c'è cdampilobacter,
 #vedi la dsitribuziomne delle  lunghezze
 #confronta con la reference, magari facendo un MSA!
+# aggiungi polot che funga col porting di ssh
 ## alla fine: plot lunghezze, albero filogenetico (anche con reference!) e
 #DISEGNINO DEL LOCUS.............
 #... e dopo.. output del locus pronto da friggere...oppure prima...
+#
 #
 #8769:
 #ha due loci Cas9
