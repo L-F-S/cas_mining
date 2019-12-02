@@ -1266,19 +1266,22 @@ per far fungere: se cerchi info sull'sgbi 123, scrivi:    SGB 123
 
 #29
 no allora BISOGNA PER FORZA vedere nei dati cosa succede a SGB 8769, perchè 
-quando faccio il rapporto dei genomi quelli coi cas loci sono piu del totale ?????????
-ci dev esse un errore nello script. anzi controlla che nel caso del
+quando faccio il rapporto dei genomi quelli coi cas loci sono piu del totale, perché
+ho piu di una cas9 per genoma.
  cas9_summary fosse di nuovo 8769 quello ballerino.
 che sia perché ha piu loci sullo stesso genoma? sempre il solito problemino..
 cosa carina scoperta: coprobacillus, ha un solo genoma, con un active working  cas locus di lunghezza tipo 999-1049
 #CAS MINER DEBUGGING
 tipo length ora funge, ma vorrei sapere, se vado a cercare le cas9 tra 999 e 1049 , mi sembra me ne trovi poche,lunedi apro il notebook e vedo..
-#
+#################################################################################
 #a cosa mi serve avere risp immediata?
 # c'è specie x?  risp: SGB specie x
 # che specie è SGB 123? risp: SGB 123
 # quanto sono grandi i dati?
-# questo genoma che SGB è?/che sppecie è?
+# questo genoma(o Cas9 ID!!!) che SGB è?/che sppecie è?
+# Questo SGB che ha ste cas, quante sono e quanto abbondanti,
+# che lunghezza hanno? plot length distribution of these! fatto su cmdline
+# 
 #
 #2/12/2019
 #hO riguardato un po' gli script di 2crisprcasanno  e 3 tabellazza xke devpo
@@ -1295,3 +1298,40 @@ e probabilmente la cosa completa sarebbe di aggiungere la seq di ogni crispr ass
 apparently BritoIL_2016__M1.1.ST__bin.108 has 2 cas9s in the SAME locus.
 
 I need to device something more malleable, like a class.
+
+# farne un case study?
+Streptococcus gallolyticus.
+other interesting anymal..
+no in reatla solo  BritoIL_2016__M1.1.ST__bin.108 aveva due cas2 sullo stess  contig, ma una era lunga 95 AA, mentre l'altra 1000
+e comunque, 
+
+#case study:
+#gallolytics:
+#
+#Interessante x me xke mostra un possibile caso limite di errore
+#
+#campiolbacter:
+#
+#vedi che c'è cdampilobacter,
+#vedi la dsitribuziomne delle  lunghezze
+#confronta con la reference, magari facendo un MSA!
+## alla fine: plot lunghezze, albero filogenetico (anche con reference!) e
+#DISEGNINO DEL LOCUS.............
+#... e dopo.. output del locus pronto da friggere...oppure prima...
+#
+#8769:
+#ha due loci Cas9
+#
+#dai, facciamo il riconoscimento di due cas9 per locus,  e ricreiamo il
+#dataset. basta
+#
+#ankjeFLJKLJKKA (SGB 9311) è interessante
+
+Creati scripts:
+SGBofbin  
+Usage: SGBofbin <S3genomename> 
+out: info sul bin e tassonomia di quel genoma
+
+seqIDmetadata
+Usage: seqIDmetadata <effectorcasSeqID>
+out: info sequence length, genome, contig, SGB ecc

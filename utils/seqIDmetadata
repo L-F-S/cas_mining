@@ -1,0 +1,10 @@
+#!/bin/bash
+# Mon Dec 2 15:04:53 CET 2019
+# Made by L-F-S
+# At the University Of Trento, Italy
+# wrapper to call python seqIDmetadata from everywhere
+#
+# USAGE:
+# ./seqIDmetadata <effectorcassequecneID>
+
+python ~/cas_mining/utils/SeqIDmetadata.py $1

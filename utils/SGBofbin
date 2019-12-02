@@ -1,0 +1,11 @@
+#!/bin/bash
+# Mon Dec 2 13:49:26 UTC 2019
+# Made by L-F-S
+# At the University Of Trento, Italy
+# Usage SGBofbin <fullbinname>  #(S3 name)
+
+SGBname=$(more /shares/CIBIO-Storage/CM/scratch/tmp_projects/signorini_cas/S3Segata.csv | grep $1 | cut -d, -f12)
+
+echo -e "SGB: $SGBname"
+
+SGB ",$SGBname,"

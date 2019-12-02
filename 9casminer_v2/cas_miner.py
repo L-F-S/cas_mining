@@ -18,7 +18,7 @@ parser=argparse.ArgumentParser(\
 parser.add_argument("-v", action="store_true", help="verbose output")
 parser.add_argument("-feature", type=str, help="feature name (default: Cas9)", choices=["Cas9","Cpf1"], default="Cas9")
 parser.add_argument("-active", type=str, help="Active locus. An active locus is defined as having all proteins and sequences for its feature and type. (default: y)", choices=["y","n"], default="y")
-parser.add_argument("-species", type=str, help="species or taxonomiical level (accepted input: [<Genus species>, <any_taxa_name>]) CASE INSENSITIVE")
+parser.add_argument("-species", type=str, nargs="*", help="species or taxonomiical level (accepted input: [<Genus species>, <any_taxa_name>]) CASE INSENSITIVE")
 parser.add_argument("-uSGB", type=str, help="look for unknown (u), known (k) or both (b) SGBs (default: b)", choices=["u","k","b"], default="b")
 parser.add_argument("-SGB", type=int, help="look for a specific SGB(s). Space separated")
 parser.add_argument("-genome", type=str, help="look for a specific genome(s). Space separated")
@@ -60,16 +60,6 @@ if args.active=="y":
 # Subset by species
 vprint("Selecting species (or taxonomical level)...", args.species)
 cas_dataset=cmIO.subset_by_species(cas_dataset, args.species)
-# ## 2.2 Filter by: working active locus
-# A working locus is defined by being an active locus with a Cas9 of a length falling within the peak of the distribution
-#input("Would you like to plot length distributions?")
-#if False:
-#    activecas9counts=activecas9s["Seq"].str.count("")
-#    plt.figure(figsize=(20*0.8,20*0.8))
-#    plt.hist(activecas9counts ,bins=80)
-#    plt.xticks(np.arange(0, 1700, step=50))
-#    plt.plot()
-
 # The length intreval where there seems to be a working protein is around (1050,1170) , (1330,1450) and maybe (1500,1580). We shall define these intrevals as working lengths.
 # filter by SGB:
 vprint("Filtering by SGB...", args.SGB)
@@ -83,13 +73,13 @@ cas_dataset=cmIO.subset_by_unknownSGB(cas_dataset,args.uSGB)#[active_working_cas
 # filter by genome
 vprint("Filtering by genome name...", args.genome)
 cas_dataset=cmIO.subset_by_genome(cas_dataset, args.genome)
-print("\nDONE!\n\n[TODO:it's actually the total number of genomes,there might be  more than one cas per genome]\n\t--->    Total number of "+args.feature+":\t", len(cas_dataset.index),"  <---",\
+print("\nDONE!\n\n\t--->    Total number of "+args.feature+":\t", len(cas_dataset.index),"  <---",\
       "\n\n- Parameters:\n", args)
 
 # ## show  most abundant SGB
 
 print("Let us check which SGBs are the most abundant among the Cas loci we have filtered so far...")
-
+#TODO this works only se c'è una cas9 per genoma, se no puo dare abbondanze relative > 1
 
 SGB_abundance_in_dataset=cas_dataset.groupby(["SGB ID"]).count().sort_values(by="Seq ID", ascending=False)["Seq ID"]
 SGB_abundance_in_dataset=SGB_abundance_in_dataset.rename("# Genomes") #with act work cas9
@@ -98,7 +88,14 @@ SGB_abundance=pd.DataFrame(SGB_abundance_in_dataset).merge(SGB_rel_ab_in_dataset
 SGB_abundance["Genomes relative abundance"]=SGB_abundance["# Genomes"]/SGB_abundance["# Reconstructed genomes"]
 print(SGB_abundance)
 
-
+print("\nPlotting length distributions...")
+#import matplotlib.pyplot as plt
+cas_dataset_counts=cas_dataset["Seq"].str.count("")
+print(cas_dataset_counts.value_counts().sort_index())  #TODO queste sono tutte, sticazzi di clusterizzare identiche
+#plt.figure(figsize=(20*0.8,20*0.8))
+#plt.hist(cas_dataset_counts,bins=80)
+#plt.xticks(np.arange(0, 1700, step=50))
+#plt.plot()
 
 # # 3 Data Clustering
 # ## 3.1 Cluster together identical sequences in the same SGB
@@ -118,7 +115,7 @@ speciesstr, SGBstr, lengthstr, activestr, genomestr, = "","", "", "", ""
 kistr="_identical"
 uSGBstr="_"+args.uSGB+"SGB"
 if args.species:
-    speciesstr="_"+args.species
+    speciesstr="_"+("_").join(args.species)
 if args.SGB:
     SGBstr="_"+args.SGB+"SGB"
 if args.length:
@@ -160,16 +157,17 @@ for SGB in np.unique(cas_dataset["SGB ID"]):
         all_identical_fasta_entries+=line
     remove(filename)
 
-filename2= outpath+args.feature+"/"+args.feature+"_sequences_"+lengthstr+uSGBstr+SGBstr+activestr+speciesstr+genomestr+kistr+".faa"
+filename2= outpath+args.feature+"/"+args.feature+"_sequences"+lengthstr+uSGBstr+SGBstr+activestr+speciesstr+genomestr+kistr+".faa"
 f=open(filename2,"w")
 f.write(all_identical_fasta_entries)
 f.close()
 sequences=list(SeqIO.parse(filename2,'fasta'))
 print("There are", len(sequences),"unique sequences")
 #
-for record in  sequences:
-    print(record.id)
-    print(record.seq)
+if args.v:
+    for record in  sequences:
+        print(record.id)
+        print(record.seq)
 ## ## 3.3 Sequences clustering
 ## Cluster together sequences of up to 90% similarity, and extract one representative sequence for each cluster.
 ## Different clustering algorithms are available,the one that works the easiest was fast uclust https://drive5.com/usearch/manual/uclust_algo.html. Uclust performs centroid-based clustering and returns the centroid of each cluster as representative sequence.

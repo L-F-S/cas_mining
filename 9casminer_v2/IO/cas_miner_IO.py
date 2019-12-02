@@ -57,7 +57,7 @@ def subset_by_species(data, UI):
             <Genus species>
             <any_taxonomical_grade>"""
     if UI:
-        gen_spec=UI.split(" ")
+        gen_spec=UI
         if len(gen_spec) == 2:
             genus=gen_spec[0][0].upper()+gen_spec[0][1:]
             species=gen_spec[1]
