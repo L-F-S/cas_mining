@@ -7,6 +7,8 @@
 # python 1build_known_effector_cas_table.py <datasetname> <effector_cas_name>
 # <effector_cas_name> can be Cas9 or Cpf1 (as of 17/09/2019)
 
+# Output: a subset of crisprcas_hits_table
+
 import os
 import sys
 import numpy as np
@@ -31,7 +33,7 @@ feature=sys.argv[2]  #TOD  #TODOO
 # OPTIONAL TODO : subsample for a single SGB
 #chosen_SGB=15286  # Cibiobacter SGB
 #single_SGB=tabellazza[tabellazza["SGB ID"]==chosen_SGB]
-#subset_of_genomes=single_SGB 
+#subset_of_genomes=single_SGB
 
 subset_of_genomes=DF
 

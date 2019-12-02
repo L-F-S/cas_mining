@@ -14,6 +14,7 @@ parser=argparse.ArgumentParser(\
                                formatter_class=argparse.MetavarTypeHelpFormatter)
 #TODO proably dentro il type del parser ci puoi mettere le funzioni tue
 #todo add pltting options, es le lengths distrib
+#TODO: build C2c1, loci..test C2c3, Cas13a1, Cas13a2, Cas13b
 parser.add_argument("-v", action="store_true", help="verbose output")
 parser.add_argument("-feature", type=str, help="feature name (default: Cas9)", choices=["Cas9","Cpf1"], default="Cas9")
 parser.add_argument("-active", type=str, help="Active locus. An active locus is defined as having all proteins and sequences for its feature and type. (default: y)", choices=["y","n"], default="y")

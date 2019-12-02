@@ -3,4 +3,4 @@
 # Made by L-F-S
 # At the University Of Trento, Italy
 
-python cas9_miner.py $@
+python cas_miner.py $@

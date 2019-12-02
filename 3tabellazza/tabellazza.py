@@ -5,7 +5,7 @@
 # Takes as input $data/S3Segata/S3Segata_<dataset>.csv, (which are the tables from the paper, split by datasets) and returns a new table with 4 more columns: CRISPR_pilercr, CRISPR_minced, CRISPR_prokka, cas_prokka, containing gff3 formatted annotations of interesting CRISPRCas  things. Saves the new tables in $data/3tabellazza/<dataset>/cripr_hits_table_<dataset>.csv
 #
 #       USAGE:
-#       
+#
 #       python tabellazza.py <datasetname>
 #
 
@@ -23,7 +23,7 @@ overall_time = time.time()
 #    return {key:value for (key,value) in [(i+1,pd.Series(np.random.randn(df.shape[0]), index=df.index)) for i in range(np.random.randint(2,6))]
 
 def make_a_gff_like_annotation_from_pilercr_output(pilercrfile):
-    # ma forse anche un po' piu accurato del minced, tipo +/- per dire l'orientazione? ma sticazzi in 
+    # ma forse anche un po' piu accurato del minced, tipo +/- per dire l'orientazione? ma sticazzi in
     # realta' .
     # minced entry:
     # NODE_152_length_7120_cov_13.0000_ID_1969        minced:0.4.0   repeat_region   56      683     10      .     .ID=CRISPR1;rpt_type=direct;rpt_family=CRISPR;rpt_unit_seq=ATTGTAGTTCCCTAATTTTTTTTGGTATGTTATAAT
@@ -38,14 +38,14 @@ def make_a_gff_like_annotation_from_pilercr_output(pilercrfile):
     gff_type='repeat_region'
     gff_start='.' #= Position entry in .pilecr.out file
     gff_end='.'  # position+length of .pilercr.ou file
-    gff_score='.' # nel nostro caso è il numero di copie # copies   
+    gff_score='.' # nel nostro caso è il numero di copie # copies
     gff_strand='.'
     gff_phase='.'   # not interesting for us. It shall remain empty.
     gff_attributes = '.' #  list of feature attributes in the format tag=value;tag2=value2
     ######################################################################################
     # the following are tags inside the attributes column:
     attr_ID="ID="#TODO puo esee anche2 (0 3?)
-    attr_rpt_type="rpt_type=direct" 
+    attr_rpt_type="rpt_type=direct"
     attr_rpt_family="rpt_family=CRISPR"
     attr_rpt_unit_seq="rpt_unit_seq="
     for line in pilercrfile.readlines():
@@ -67,7 +67,7 @@ def make_a_gff_like_annotation_from_pilercr_output(pilercrfile):
                 gff_line_totale_che_comprende_piu_crispr_se_ci_sono +=  ">"+gff_sequid+"\t"+gff_source+"\t"+gff_start+"\t"+gff_end+"\t"+gff_score+"\t"+gff_strand+"\t"+gff_phase+"\t"+attr_ID+";"+attr_rpt_type+";"+attr_rpt_family+";"+attr_rpt_unit_seq+"\t"
    #             print(gff_line_totale_che_comprende_piu_crispr_se_ci_sono)
                 siamo_alla_line_che_ci_interessa=False
-        
+
             if line.startswith("="):
                 siamo_alla_line_che_ci_interessa=True
 
@@ -94,7 +94,7 @@ def gather_crispr_info_from_PilerCR(df,dataset,CRISPRdir,S3_alternative_dataset_
     print("Done. Elapsed time: ", str(time.time()-start_time))
     return pd.Series(CRISPR_from_pilercr_for_all_samples, index=df.index), count_bins
 
-def gather_crispr_info_from_minced(df,dataset, CRISPRdir,S3_alternative_dataset_name): # WORKNIG! ma, TODO: occhio agli input di ZeeviD e agli output dei cosi sbajad 
+def gather_crispr_info_from_minced(df,dataset, CRISPRdir,S3_alternative_dataset_name): # WORKNIG! ma, TODO: occhio agli input di ZeeviD e agli output dei cosi sbajad
     start_time=time.time()
     print("adding minced CRISPR entries...")
     os.chdir(os.path.join(CRISPRdir,S3_alternative_dataset_name))
@@ -130,16 +130,16 @@ def gather_crispr_info_from_prokka(df,annodir,dataset,S3_alternative_dataset_nam
             os.chdir("../ZeeviD_2015_B")
             sample=filename_discrepancies.change_to_megahit(sample)
             try:
-                sample=sample.replace("ZeeviD_2015", "ZeeviD_2015_B") 
+                sample=sample.replace("ZeeviD_2015", "ZeeviD_2015_B")
                 prokkafile_ofsample=open(sample+".crisprcas.gff.minced")
                # print(sample, "uweuwe")
             except:
                 os.chdir("../ZeeviD_2015_A")
-                sample=sample.replace("ZeeviD_2015_B", "ZeeviD_2015_A") 
+                sample=sample.replace("ZeeviD_2015_B", "ZeeviD_2015_A")
                 prokkafile_ofsample=open(sample+".crisprcas.gff.minced")
                # print(sample, "uweuwe")
-                
-#                sample, letter=filename_discrepancies.is_this_sample_in_ZeeviD(dataset,sample) 
+
+#                sample, letter=filename_discrepancies.is_this_sample_in_ZeeviD(dataset,sample)
  #               if dataset[-1] != letter:
   #                  continue
         else:
@@ -177,11 +177,11 @@ def gather_cas_info_from_prokka(df,annodir,dataset,S3_alternative_dataset_name):
         if dataset.startswith("ZeeviD"): #nomenclature exy34yception
             sample=filename_discrepancies.change_to_megahit(sample)
             try:
-                sample=sample.replace("ZeeviD_2015", "ZeeviD_2015_B") 
+                sample=sample.replace("ZeeviD_2015", "ZeeviD_2015_B")
                 prokkafile_ofsample=open(sample+".cas.gff")
                # print(sample, "uweuwe")
             except:
-                sample=sample.replace("ZeeviD_2015_B", "ZeeviD_2015_A") 
+                sample=sample.replace("ZeeviD_2015_B", "ZeeviD_2015_A")
                 prokkafile_ofsample=open(sample+".cas.gff")
                # print(sample, "uweuwe")
         else:
@@ -189,7 +189,7 @@ def gather_cas_info_from_prokka(df,annodir,dataset,S3_alternative_dataset_name):
                 if not (dataset == "ZeeviD_2015_A" or dataset == "ZeeviD_2015_B"):
                     sample=sample.replace(S3_alternative_dataset_name, dataset)
                 else:
-                    sample, letter=filename_discrepancies.is_this_sample_in_ZeeviD(dataset,sample) 
+                    sample, letter=filename_discrepancies.is_this_sample_in_ZeeviD(dataset,sample)
                     if dataset[-1] != letter:
                         continue
             if filename_discrepancies.analysis_has_megahit("prokka"):
@@ -249,20 +249,20 @@ def gather_cas_info_from_uniref(df,dataset,S3_alternative_dataset_name):
 
 ##################################################################################################################
 #
-#                                               MAIN        
+#                                               MAIN
 #
 #################################################################################################################
 
 def main(from_minced):
-    dataset=sys.argv[1] 
+    dataset=sys.argv[1]
     print("++++++++++++++++\nadding CRISPR cas info to dataset: ", dataset)
-    outdir="/shares/CIBIO-Storage/CM/scratch/tmp_projects/signorini_cas/3tabellazza/"+dataset 
+    outdir="/shares/CIBIO-Storage/CM/scratch/tmp_projects/signorini_cas/3tabellazza/"+dataset
     CRISPRdir="/shares/CIBIO-Storage/CM/scratch/tmp_projects/signorini_cas/1crisprsearch/out"
     annodir="/shares/CIBIO-Storage/CM/scratch/tmp_projects/signorini_cas/2casanno"
     S3_alternative_dataset_name=filename_discrepancies.s3(dataset)
     input_table="/shares/CIBIO-Storage/CM/scratch/tmp_projects/signorini_cas/3tabellazza/" + dataset +"/crisprcas_hits_table_"+dataset+".csv"    #S3Segata_split/S3_subs_"+S3_alternative_dataset_name  #TODO cambia con tabellazze splittate. leva  tutti i punti dall uno al 4 a ggiungi un 5 punto
     print("S3 datasetname = ", S3_alternative_dataset_name)
-    df=pd.read_csv(input_table, index_col=0) 
+    df=pd.read_csv(input_table, index_col=0)
     print(df.columns)
     print("initial dataset (rows, cols): ", df.shape)
     print("overall S3 index of current dataset's bins: from ",df.index[0],"to: ", df.index[-1])
@@ -272,7 +272,7 @@ def main(from_minced):
     pilercr_entry, pilercr_bins=gather_crispr_info_from_PilerCR(df,dataset,CRISPRdir,S3_alternative_dataset_name)
     df["pilercr_CRISPR"]=pilercr_entry
     print(pilercr_entry.shape,  "entries added")
-#    
+#
 ##2. add CRISPR loci from the minced CRISPR (if coming from a run with default parameters, these are equal to prokka annotation, therefore from_minced should be set = False)
 #
 #    if from_minced==True:
@@ -281,8 +281,8 @@ def main(from_minced):
 #        print(minced_entry.shape, " entries added")
 #
 #
-#         
-#   
+#
+#
 ##3. add CRISPR loci from prokka
 #    is_ZeeviD_A, is_ZeeviD_B = False, False
 #    if dataset == "ZeeviD_2015_A":
@@ -294,22 +294,22 @@ def main(from_minced):
 #    prokkacrispr,prokka_crispr_bins=gather_crispr_info_from_prokka(df,annodir,dataset,S3_alternative_dataset_name, is_ZeeviD_A, is_ZeeviD_B)
 #    print(prokkacrispr.shape, " entries added")
 #    df["prokka_CRISPR"]=prokkacrispr
-#   
-##4. add cas loci from prokka 
-#    
+#
+##4. add cas loci from prokka
+#
 #    prokkacas, prokka_cas_bins=gather_cas_info_from_prokka(df,annodir,dataset,S3_alternative_dataset_name)
 #    print(prokkacas.shape, " entries added")
 #    df["prokka_cas"]=prokkacas
 
 ##5. add cas loci from uniref
-#    
+#
 #    unirefcas=gather_cas_info_from_uniref(df,dataset,S3_alternative_dataset_name)
 #    print(unirefcas.shape, " entries added")
 #    df["uniref_cas"]=unirefcas
 #
 
-# Print summary info and write to file 
-#    print("--------------------\nN of bins doublecheck:\npilercr:\t{} bins\nminced: \t{} bins\nprokkaCRISPR:\t{} bins\nprokkaCas:\t{} bins\n-------------------".format(pilercr_bins,minced_bins,prokka_crispr_bins,prokka_cas_bins)) 
+# Print summary info and write to file
+#    print("--------------------\nN of bins doublecheck:\npilercr:\t{} bins\nminced: \t{} bins\nprokkaCRISPR:\t{} bins\nprokkaCas:\t{} bins\n-------------------".format(pilercr_bins,minced_bins,prokka_crispr_bins,prokka_cas_bins))
  #   if not pilercr_bins==minced_bins==prokka_cas_bins==prokka_crispr_bins:
   #      print("ERROOOORRRR!!!!! N of bins varying across algorithms")
     print(df.columns)

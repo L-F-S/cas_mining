@@ -1229,13 +1229,13 @@ e fare il MSA
 
 
 # 18/10/2019
- sto modificando il 5caslocitable/2afflocusroba x aggiungere i contig 'doppi', e sto vedendo che tipo BritoIL_2016__M1.1.ST__bin.108 ha addirittura due cas9 sullo stesso contig. DIOCANE. ma vbb tanto non è utile BritoIL_2016__M1.1.ST__bin.108  QUINDi x ora stica
+ sto modificando il 5caslocitable/2afflocusroba x aggiungere i contig 'doppi', e sto vedendo che Gtipo BritoIL_2016__M1.1.ST__bin.108 ha addirittura due cas9 sullo stesso contig. DIOCANE. ma vbb tanto non è utile BritoIL_2016__M1.1.ST__bin.108  QUINDi x ora stica
 
 # n so che giorno e tipo 21 ottobvrew
 l output v2 ddeve avere lo strand di tutti
 fatto bene il cas9 position (persalabattaglia)
 e magari creare un ID per tracrRNA?
-add localizzazione sul corpo e westernizzazione nei metadati.  e cose precise sullo studio
+add localizzazione sul corpo e westernizzazione nei metadati.  e cose precise sullo studion
 aggiungere ai readme il genomename.fa e .gff  (e automatizzare i readmes)
 
 #3 nov
@@ -1279,3 +1279,19 @@ tipo length ora funge, ma vorrei sapere, se vado a cercare le cas9 tra 999 e 104
 # che specie è SGB 123? risp: SGB 123
 # quanto sono grandi i dati?
 # questo genoma che SGB è?/che sppecie è?
+#
+#2/12/2019
+#hO riguardato un po' gli script di 2crisprcasanno  e 3 tabellazza xke devpo
+#rifare 5buildcaslocitable, e sono stato furbo per annotatre le crispr
+#associated proteins, mi era venuto il dubbio che avessi greppato CAS, invece
+#ho greppato CRISPR | grep protein,. quiindi Cpf1, C2c1 ecc se sono annotate c
+#isono  tutte
+#Ora: si cerca di modificare lo step5, per take into account due complete cas9
+#loci nello stesso genoma, nello stesso contig.
+
+xke, si aggiunge cas9 riga per riga, ma bisogna aggiungergli iCRISPR e i CAS relativi per bene..
+e probabilmente la cosa completa sarebbe di aggiungere la seq di ogni crispr associated protein
+
+apparently BritoIL_2016__M1.1.ST__bin.108 has 2 cas9s in the SAME locus.
+
+I need to device something more malleable, like a class.
