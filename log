@@ -1346,7 +1346,7 @@ e comunque,
 #subsamplato, e a seconda di quello che voglio fare, faccio i checks, tipo se
 #voglio raggruppare SGB identici faccio un dizionario di sequenze per sgb e
 #alla fine mergio quelle identiche, però questo richiede tempo, lo faccio dopo
-#giovedi. sisi.
+#giovedi. sisi.G
 #TODO nei metadata dell'output per ogni Cas9loccus, aggiungere se quel genoma
 #ha più di un locus. magari creare una descrizioncina
 
@@ -1373,4 +1373,34 @@ out: info sequence length, genome, contig, SGB ecc
 #################################
 	il Cas9 ID identifica UN SOLO LOCUS. E FUNZIONA BENE :)
 ##################################@sl
-#guarda i TODO
+#guarda i TODOo
+#TODO finisci il tracdrna di fjlka devi riscrivere il dizionariocas_position in
+#modo da eliminare la chiamata a tabellazsza, dovresti poterlo fare. e cambiare
+#tutti i 7findtracer come il fjlkaa
+#TODO  check if 5 casloci/5prokkacas position also works for Cpf1 [C2ns1...]
+#TODO chiedi a Adri se è normale che la sequenza sia diversa in/ SGB/genomename
+#e in originalsample.fsa tipo
+#no xke il comando 
+#diff BritoIL_2016__M1.29.ST__bin.30.fa
+#/scratchCM/tmp_projects/epasolli_darkmatter/allcontigs/BritoIL_2016/metabat/genomes_com
+#p50_cont05/prokka/BritoIL_2016__M1.29.ST__bin.30/BritoIL_2016__M1.29.ST__bin.30.fsa
+#mi conferma che sn identici, a meno di nome del contig quindi è sempre qlcs
+#che nn va nel codice
+#
+#TODO: qualcosa di sbagliato accade quando checcki la posizione di cas9 nel
+#genoma, traduce male il primo aminoacido , e solo il primo parrebbe ... hm,
+#xke lo start codon è TTG (da controllare, e lui lo translata come L,mentre
+#evidentemente prokka l'ha annotato come M). Yeah, I'm geuessing TTG or GTG
+#will be translated to methionine ina complete gene by prokka. ok, se fidamo, e
+#cancelliamo ttti i check vari, e teniamo solo cas9_aa
+#
+#
+#        #estrai la posizione di cas9 dal contig, e traducila. teniamolo per
+#        conoscenza,
+#                #ma non va tradotto brutalmente con biopython, xke lo start
+#                codon potrebbe essere TTG o altro
+#                        #e lui lo tradurrebbe come qlcs di diverso da M (come
+#                        in questo caso di FLJKKA)
+#                                #solo che ora dobbiam risolvere come capire
+#                                l'orientamento di Cas9... forse
+#                                        # va bene cosi. fallo venerdi sera
