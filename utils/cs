@@ -1,0 +1,20 @@
+#!/bin/bash
+# Tue Dec 3 11:36:22 CET 2019
+# Made by L-F-S
+# At the University Of Trento, Italy
+# cd to folders insite /cas_mining beginning with a nubmer
+# usage: cs <number>
+
+cd /home/lorenzo.signorini/cas_mining
+if [ $# -lt 1 ]; then 
+	true
+else
+
+for i in *; do if [[ $i == $1* ]];
+then 
+	cd $i
+else
+	true
+	fi
+done    
+fi

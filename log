@@ -1296,8 +1296,15 @@ xke, si aggiunge cas9 riga per riga, ma bisogna aggiungergli iCRISPR e i CAS rel
 e probabilmente la cosa completa sarebbe di aggiungere la seq di ogni crispr associated protein
 
 apparently BritoIL_2016__M1.1.ST__bin.108 has 2 cas9s in the SAME locus.
+ma  in reaòltà una è tipo 95 aa, quindi probly è un errore,
+è piu interessante FLJKKA
+
 
 I need to device something more malleable, like a class.
+
+FLJKKA è britoil e ha due loci. Fljkka è britoìl e ha due loci. flicca è britoil e ha due loci
+
+
 
 # farne un case study?
 Streptococcus gallolyticus.
@@ -1328,6 +1335,20 @@ e comunque,
 #dataset. basta
 #
 #ankjeFLJKLJKKA (SGB 9311) è interessante
+#il cugino di fljkka_12? quello sullo stesso genome? chi è? quamnto è simile a
+#lui?
+#devo unire cas_miner con find tracr_RNA (fljikka), tipo
+#aggiungere una lista che mi salvi le varie CAs9 Seq ID (tipo quando ciclo per
+#cercare gli SGB identici/ per crare un multiple fasta file. Forse devo
+#demultiplexare queste due funzioni in due cicli diversi? Forse si. o forse
+#faccio un unico ciclo che fa vaarie cose però indipendenti fra loro, sisi.
+#e invece di ciclare per SGB, tipo ciclo su ogni riga del mio cas_dataset
+#subsamplato, e a seconda di quello che voglio fare, faccio i checks, tipo se
+#voglio raggruppare SGB identici faccio un dizionario di sequenze per sgb e
+#alla fine mergio quelle identiche, però questo richiede tempo, lo faccio dopo
+#giovedi. sisi.
+#TODO nei metadata dell'output per ogni Cas9loccus, aggiungere se quel genoma
+#ha più di un locus. magari creare una descrizioncina
 
 Creati scripts:
 SGBofbin  
@@ -1337,3 +1358,19 @@ out: info sul bin e tassonomia di quel genoma
 seqIDmetadata
 Usage: seqIDmetadata <effectorcasSeqID>
 out: info sequence length, genome, contig, SGB ecc
+
+#3/12
+#
+#visto che in realta 3addlocusinfo va bene! divide per contigs! l ho scritto
+#nell'header, ma lo fa di suo. era solo che dentro i  gli ipydb di tracrRNA non
+#prendevo in considerazione questa cosa, e andavo per genomename invec eche per
+#contigname. dopo pranzo, provo arifare il ciclo for bene.
+#e a riguardare la differenza tra known cas... e knowncasprokkacas9 x x vede se
+#è veramet eutile..
+#magari è utile rifare 3addlocusinfo per aggiungere la sequenza (o un puntatore
+#ad essa... di cas1, cas2..)
+
+#################################
+	il Cas9 ID identifica UN SOLO LOCUS. E FUNZIONA BENE :)
+##################################@sl
+#guarda i TODO

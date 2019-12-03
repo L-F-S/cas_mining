@@ -1,19 +1,21 @@
-#!/bin/bash
 # Fri Aug 2 09:59:19 CEST 2019
 # Made by L-F-S
 # At the University Of Trento, Italy
-import os
 import sys
 import numpy as np
 import pandas as pd
 from Bio import SeqIO
-from Bio import SeqIO
 sys.path.insert(0, '/home/lorenzo.signorini/cas_mining/utils/')
 import filename_discrepancies
-
+# 02/12/2019 update: add locus info of CRISPR and cas INSIDE THE SAME CONTIG
+#      there are microbes with more that one working Cas9 locus
+#    ASSUMPTION: the two loci are on separate contigs
+#    if there are more than one cas9 on the same contig, it will be written
+#   as the same locus, and the locus will be duplicated. TODO: can add a
+#   duplciaiton check at the end
 
 #TODO big todo: pilercr has missing 'stop' position in handmade gff annotation :,(.
-# USAGE: python 3add_blbabla.py dataset feature [Cas9, Cpf1..]
+# USAGE: python 3add_locusinfo.py dataset feature [Cas9, Cpf1..]
 ####################################################################################################
 #                                                 functions
 
@@ -69,11 +71,14 @@ def dataframe_row_iterator():
         genomename=cas9series["Genome Name"] #TODO Be careful for filename discrepancies, especially with ZeeviD files and with _megahit_ underscores!
         SGB=cas9series["SGB ID"]
         contig=cas9series["Contig"]
-        print("\n-----------------------------------------------------\nGenome Name:",cas9series["Genome Name"],"\n-----------------------------------------------------\n")
+        if genomename=="BritoIL_2016__M1.29.ST__bin.30":
+            print("\n-----------------------------------------------------\nGenome Name:",cas9series["Genome Name"],"\n-----------------------------------------------------\n")
+            print(contig)
         working_genomename, working_dataset=filename_discrepancies.get_originalsamplename_froms3name_of_genome(genomename, s3dataset)
 
         for side_feature in ["pilercr_CRISPR","minced_CRISPR","prokka_cas1", "prokka_cas2"]: #TODO cambia qui la feature che vuoi trovare!
-            print(side_feature)
+            if genomename=="BritoIL_2016__M1.29.ST__bin.30":
+                print(side_feature)
             if not side_feature in list_of_series_of_features.keys():
                 list_of_series_of_features[side_feature]=[]
 

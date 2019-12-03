@@ -21,14 +21,14 @@ CAS TABLE STRUCTURE:
 Each row represents an "Effector cas" (i.e. Cas9 or Cpf1) locus
 
 Columns:
-       Seq ID          # added by 2add_locusinfo.py Seq ID from prokka annotation
-       Seq Description # added by 2add_locusinfo.py Seq description from prokka annotation
-       Seq             # added by 2add_locusinfo.py str amino acid sequence of Cas9 (or Cpf1) for that locus    
-       Contig          # added by 2add_locusinfo.py str of contig name (eg. NOODE_145_length_37113_cov_85.6201)
-       Genome Name     # added by 2add_locusinfo.py same as S3 from https://doi.org/10.1016/j.cell.2019.01.001
-       Study           # added by 2add_locusinfo.py same as S3 from https://doi.org/10.1016/j.cell.2019.01.001 
-       Sample Name     # added by 2add_locusinfo.py same as S3 from https://doi.org/10.1016/j.cell.2019.01.001
-       SGB ID          # added by 2add_locusinfo.py same as S3 from https://doi.org/10.1016/j.cell.2019.01.001
+       Seq ID          # added by 2fill_known_effector_cas_table.py Seq ID from prokka annotation
+       Seq Description # added by 2fill_known_effector_cas_table.py Seq description from prokka annotation
+       Seq             # added by 2fill_known_effector_cas_table.py str amino acid sequence of Cas9 (or Cpf1) for that locus    
+       Contig          # added by 2fill_known_effector_cas_table.py str of contig name (eg. NOODE_145_length_37113_cov_85.6201)
+       Genome Name     # added by 2fill_known_effector_cas_table.py same as S3 from https://doi.org/10.1016/j.cell.2019.01.001
+       Study           # added by 2fill_known_effector_cas_table.py same as S3 from https://doi.org/10.1016/j.cell.2019.01.001 
+       Sample Name     # added by 2fill_known_effector_cas_table.py same as S3 from https://doi.org/10.1016/j.cell.2019.01.001
+       SGB ID          # added by 2fill_known_effector_cas_table.py same as S3 from https://doi.org/10.1016/j.cell.2019.01.001
        pilercr_CRISPR #added by 3add_locusinfo.py python-syntaxed list of 1 3-tuple (why? idk) [(ID, startpos, endpos)] eg. "[(ID=CRISPR1,40172,12)]"
        minced_CRISPR  #added by 3add_locusinfo.py same as pilercr_CRISPR, but there is no ID.
        prokka_cas1    #added by 3add_locusinfo.py same as pilercr_CRISPR
