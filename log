@@ -1098,7 +1098,7 @@ prendi il tuo locussino, e fai prove
 dp pranzo:
 prendi il tuo locussino, e fai prove
 
-ho provato col comple,menteare, e non fa, col reverse comlmenteare fa, ma BECCA il revferse complementare del repeat. BElla. devo provare a farlo con una search cosa più looose, bella. e pooii xke nel control non trova neanceh i direct repeats? O.
+ho provato col comple,menteare, e non fa, col reverse comlmeGnteare fa, ma BECCA il revferse complementare del repeat. BElla. devo provare a farlo con una search cosa più looose, bella. e pooii xke nel control non trova neanceh i direct repeats? O.
 
 fermati e pensa
 
@@ -1140,8 +1140,17 @@ sto salvando dentro  /shares/CIBIO-Storage/CM/scratch/tmp_projects/signorini_cas
 i terminators trovati da ARNold per gli 8 genomi selezionati.
  sto guardando LPEAHA SGB 15299. e mi sembra di aver proprio trovato qualcosa.
 
-lunedi faccio stem loops cosi, e vedo se matcha. Devo capire: la direzione, l'inizio e la fine. anche se in teoria, la direzione è quella giusta, xke Cas9 si trova sul reverse complement strand. quindi dovrebbe partire dal repeat al terminator. però sembrerebbe fare il contrario in realtà xke arnold inizia da tipo 14719, mentre la antirepeat è a 14729	14751  .però è strano che cas9 sia sulllo strand opposto, mentre i match del crispr array matchano tutti sullo strand plus. se il tracrRNA dev essere sempre sullo strand opposto rispetto a crispr, ma crispr non necessariamente è sullo stesso strand di Cas9, allora ci sta, e unendo le due sequenze, il tracr RNA di quello è
-voglio farmi uno script che mi faccia accedere velocemente a un genoma, un contig, un dato range di posizioni, da dovunque io sia.
+lunedi faccio stem loops cosi, e vedo se matcha. Devo capire: la direzione, 
+l'inizio e la fine. anche se in teoria, la direzione è quella giusta, xke Cas9 
+si trova sul reverse complement strand. quindi dovrebbe partire dal repeat
+ al terminator. però sembrerebbe fare il contrario in realtà xke arnold
+ inizia da tipo 14719, mentre la antirepeat è a 14729	14751  .però è strano 
+che cas9 sia sulllo strand opposto, mentre i match del crispr array matchano
+ tutti sullo strand plus. se il tracrRNA dev essere sempre sullo strand 
+opposto rispetto a crispr, ma crispr non necessariamente è sullo stesso strand 
+di Cas9, allora ci sta, e unendo le due sequenze, il tracr RNA di quello è
+voglio farmi uno script che mi faccia accedere velocemente a un genoma, un 
+contig, un dato range di posizioni, da dovunque io sia.
 
 
 no a side note, facendo ctrl+f di
@@ -1179,7 +1188,6 @@ il taglio durante la maturazsone del tracr e cr RNA  lascia un nucleotide spaiat
 si può vedere?
 
 e poi fare un MSA di tutti questi tracrRNA trovati a mano (che devo salvare dentro dei faillini carini carò)
-
 
 domattina allinea i 3 che ti vengono, e vedi qnt so diversi fra loroe  con spcas9, e vedi il paper di diversity of tracrRNA coas ti dice al riguardo.
 
@@ -1274,13 +1282,20 @@ cosa carina scoperta: coprobacillus, ha un solo genoma, con un active working  c
 #CAS MINER DEBUGGING
 tipo length ora funge, ma vorrei sapere, se vado a cercare le cas9 tra 999 e 1049 , mi sembra me ne trovi poche,lunedi apro il notebook e vedo..
 #################################################################################
-#a cosa mi serve avere risp immediata?
-# c'è specie x?  risp: SGB specie x
-# che specie è SGB 123? risp: SGB 123
-# quanto sono grandi i dati?
-# questo genoma(o Cas9 ID!!!) che SGB è?/che sppecie è?
+
+		a cosa mi serve avere risp immediata?
+		COSA DEVONO FARE I MIEI PROGRAMMI?
+
+##############################################################################
+
+# c'è specie x?  risp: SGB specie x V 
+# che specie è SGB 123? risp: SGB 123 V  
+# quanto sono grandi i dati? V
+# questo genoma(o Cas9 ID!!!) che SGB è?/che sppecie è? 
 # Questo SGB che ha ste cas, quante sono e quanto abbondanti,
 # che lunghezza hanno? plot length distribution of these! fatto su cmdline
+# vUOI SALVARE IL DATASET SUBSAMPLATO FOR LATER USE?
+# com è il locus/ sequenza /tutto di Seq ID?
 # 
 #
 #2/12/2019
@@ -1326,6 +1341,10 @@ e comunque,
 ## alla fine: plot lunghezze, albero filogenetico (anche con reference!) e
 #DISEGNINO DEL LOCUS.............
 #... e dopo.. output del locus pronto da friggere...oppure prima...
+#guada se cas14 c'è ? :P
+#aggiungere reference,
+#omg aggiungere ricerca per similarità con sequenza? tipo un blast
+#aggiungerci un blast stareimalo lol
 #
 #
 #8769:
@@ -1404,3 +1423,26 @@ out: info sequence length, genome, contig, SGB ecc
 #                                #solo che ora dobbiam risolvere come capire
 #                                l'orientamento di Cas9... forse
 #                                        # va bene cosi. fallo venerdi sera
+#TODO fermati e leggi tutti i todo!
+#TODO nell otttica di fare una review completa:
+#vai dentro data/2casanno/justcasanno, dove hai raccolto tutte le annotazioni
+#di tutte le proteine che hanno CRISPR associated nel nome, e le assegni tutte
+#ad un tipo e fai una cosa comprensiva. e quelle che non hanno tipo, tipo fli
+#dai nuovi tipoi..
+# basta fare un
+# for file in *; do echo -------------------$file; more $file | cut -d";" -f4;
+#  more $file | cut -d $'\t' -f4,5;
+# done
+# TODO cos è ygbt per esempio, tra queste casseees esotiche????
+# è solo molto lungo il ciclo xke lo fa su tutti i files... ma otttieni nomi e
+# posizioni di tutte le CRISPR related cas proteins lool.. e ce ne sn alcune
+# esotiche
+# e perche tabellazza.py non le riporta io mi chiedo dunque..?
+ATTENZIONE
+fatto il tracrPipeline per il secondo caslocus di fljlkka, e sembr ache si sia
+ un bellissimo tracr di 70 nucleotidii, glie lo dico domani.
+..solo che è più corta...
+#5/12/2019
+#per far ele immagini dallo script, è piu facile si ti impari come montare in
+#locale la tua macchina e motni tuttel e path che ti servono  (l avevi fatto
+#allinizio forse??)

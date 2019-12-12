@@ -30,7 +30,10 @@ echo import pandas as pd>>$1
 echo import matplotlib.pyplot as plt>>$1
 echo >>$1
 echo sys.path.insert\(0, \'/home/lorenzo.signorini/cas_mining/utils/\'\)>>$1
+echo sys.path.insert\(0, \'/home/lorenzo.signorini/cas_mining/9casminer_v2/IO/\'\)>>$1
+echo sys.path.insert\(0, \'/home/lorenzo.signorini/cas_mining/9casminer_v2/\'\)>>$1
 echo import filename_discrepancies >>$1
+echo import locus >>$1
 echo >>$1
 echo >>$1
 echo dataset=\"SmitsSA_2017\" \#sys.argv[1] \#TODO switch test dataset>>$1

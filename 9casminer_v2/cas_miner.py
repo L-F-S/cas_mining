@@ -4,10 +4,7 @@
 # Made by L-F-S
 # At the University Of Trento, Italy
 import argparse
-from os import remove
 import sys
-sys.path.insert(0, 'IO/')
-import cas_miner_IO as cmIO
 
 parser=argparse.ArgumentParser(\
                                description="++++++++++++    Extract effector Cas loci from metagenomic data.    ++++++++++++ 01/12/2019: Only extracts Effector Cas sequence :(",\
@@ -18,6 +15,7 @@ parser=argparse.ArgumentParser(\
 parser.add_argument("-v", action="store_true", help="verbose output")
 parser.add_argument("-feature", type=str, help="feature name (default: Cas9)", choices=["Cas9","Cpf1"], default="Cas9")
 parser.add_argument("-active", type=str, help="Active locus. An active locus is defined as having all proteins and sequences for its feature and type. (default: y)", choices=["y","n"], default="y")
+parser.add_argument("-noplots", action="store_true", help="Do not print plots")
 parser.add_argument("-species", type=str, nargs="*", help="species or taxonomiical level (accepted input: [<Genus species>, <any_taxa_name>]) CASE INSENSITIVE")
 parser.add_argument("-uSGB", type=str, help="look for unknown (u), known (k) or both (b) SGBs (default: b)", choices=["u","k","b"], default="b")
 parser.add_argument("-SGB", type=int, help="look for a specific SGB(s). Space separated")
@@ -31,15 +29,17 @@ def vprint(string,argument=None):
     if argument:
         if args.v:
             print(string)
-
-vprint("Importing modules..",True)
 import os
+from os import remove
 import numpy as np
 import pandas as pd
+sys.path.insert(0, 'IO/')
+import cas_miner_IO as cmIO
+import get_ID_info
 #import matplotlib.pyplot as plt
 sys.path.insert(0, '/home/lorenzo.signorini/cas_mining/utils/')
 outpath=args.o
-datadir="/shares/CIBIO-Storage/CM/scratch/tmp_projects/signorini_cas/"
+datadir="/home/lorenzo/server/data"#"/shares/CIBIO-Storage/CM/scratch/tmp_projects/signorini_cas/"
 
 # # 1. Data:
 # ## 1.1 load information about SGBs (species)
@@ -52,7 +52,7 @@ cas_dataset=pd.read_csv("/shares/CIBIO-Storage/CM/scratch/tmp_projects/signorini
 # # 2. Data filtering: Extract a list of the shortest working cas9 from most abundant and most unknown genomes.
 
 # ## 2.1 Filter by: active locus
-
+print("Filtering database...")
 #Drop Nan rows
 if args.active=="y":
     vprint("selecting active loci..", True)
@@ -92,10 +92,12 @@ print("\nPlotting length distributions...")
 #import matplotlib.pyplot as plt
 cas_dataset_counts=cas_dataset["Seq"].str.count("")
 print(cas_dataset_counts.value_counts().sort_index())  #TODO queste sono tutte, sticazzi di clusterizzare identiche
-#plt.figure(figsize=(20*0.8,20*0.8))
-#plt.hist(cas_dataset_counts,bins=80)
-#plt.xticks(np.arange(0, 1700, step=50))
-#plt.plot()
+#if not args.noplots:
+#    import matplotlib.pyplot as plt
+#    plt.figure(figsize=(20*0.8,20*0.8))
+#    plt.hist(cas_dataset_counts,bins=80)
+#    plt.xticks(np.arange(0, 1700, step=50))
+#    plt.plot()
 
 # # 3 Data Clustering
 # ## 3.1 Cluster together identical sequences in the same SGB
@@ -117,7 +119,7 @@ uSGBstr="_"+args.uSGB+"SGB"
 if args.species:
     speciesstr="_"+("_").join(args.species)
 if args.SGB:
-    SGBstr="_"+args.SGB+"SGB"
+    SGBstr="_"+str(args.SGB)+"SGB"
 if args.length:
     lengthstr="_".join([str(n) for n in args.length])
 if args.active=="y":
@@ -130,7 +132,7 @@ if args.ki:
 def seq_getter(s): return str(s.seq)
 
 all_identical_fasta_entries=""
-
+temp_seq_ID=[]#TODO implement a faster version che forse non serve fare questa cosa 6/12/2019, forse è ridondante ma lo metto x la demo
 for SGB in np.unique(cas_dataset["SGB ID"]):
     if args.v:
         print("Extracting sequences for SGB: ", SGB)
@@ -138,6 +140,7 @@ for SGB in np.unique(cas_dataset["SGB ID"]):
     alignments=[]
     for index, row in current_SGB.iterrows():
         tempseq=SeqRecord(Seq(row.Seq), id=str(row["SGB ID"])+"__"+row["Seq ID"]+"__"+row["Genome Name"], description=row["Genome Name"]+"__"+row["Seq ID"]+"__"+str(row["SGB ID"]))
+        temp_seq_ID.append(row["Seq ID"])
         alignments.append(tempseq)
 
     #write fasta for every SGB
@@ -163,11 +166,23 @@ f.write(all_identical_fasta_entries)
 f.close()
 sequences=list(SeqIO.parse(filename2,'fasta'))
 print("There are", len(sequences),"unique sequences")
+
+print("Clustering sequences..")
 #
 if args.v:
     for record in  sequences:
         print(record.id)
         print(record.seq)
+
+print("There are", len(sequences),"unique sequences")
+print("\n")
+print("+"*80)
+print("Extracting Information about single loci...")
+print("\n")
+for seqid in temp_seq_ID:
+    get_ID_info.get_ID_info(seqid, args.feature, args.v)
+
+
 ## ## 3.3 Sequences clustering
 ## Cluster together sequences of up to 90% similarity, and extract one representative sequence for each cluster.
 ## Different clustering algorithms are available,the one that works the easiest was fast uclust https://drive5.com/usearch/manual/uclust_algo.html. Uclust performs centroid-based clustering and returns the centroid of each cluster as representative sequence.
@@ -521,10 +536,5 @@ if args.v:
 #
 #
 #fig.savefig("prova.pdf", format="pdf")
-#
-#
-## In[ ]:
-#
-#
 #
 #
