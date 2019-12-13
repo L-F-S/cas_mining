@@ -18,6 +18,7 @@ parser.add_argument("-active", type=str, help="Active locus. An active locus is 
 parser.add_argument("-noplots", action="store_true", help="Do not print plots")
 parser.add_argument("-species", type=str, nargs="*", help="species or taxonomical level (accepted input: [<Genus species>, <any_taxa_name>]) CASE INSENSITIVE")
 parser.add_argument("-uSGB", type=str, help="look for unknown (u), known (k) or both (b) SGBs (default: b)", choices=["u","k","b"], default="b")
+parser.add_argument("-veryunknown", type=str, help="look for SGBs with no taxonomical identification (default: y)", choices=["y","n"], default="y")
 parser.add_argument("-SGB", type=int, help="look for a specific SGB(s). Space separated")
 parser.add_argument("-genome", type=str, help="look for a specific genome(s). Space separated")
 parser.add_argument("-length", type=int, nargs="*", help="filter by sequence length, or a range of lengts. Accepted input: <n>, <nmin> <nmax>")
@@ -73,13 +74,15 @@ cas_dataset=cmIO.subset_by_unknownSGB(cas_dataset,args.uSGB)#[active_working_cas
 # filter by genome
 vprint("Filtering by genome name...", args.genome)
 cas_dataset=cmIO.subset_by_genome(cas_dataset, args.genome)
+# filter by veryunknownness
+vprint("filtering by very unknownnwes..", args.veryunknown)
+cas_dataset=cmIO.subset_by_very_unknown(cas_dataset, args.veryunknown)
+#TODO NON FA!!
 print("\nDONE!\n\n\t--->    Total number of "+args.feature+":\t", len(cas_dataset.index),"  <---",\
       "\n\n- Parameters:\n", args)
-
 # ## show  most abundant SGB
 
 print("Let us check which SGBs are the most abundant among the Cas loci we have filtered so far...")
-#TODO this works only se c'è una cas9 per genoma, se no puo dare abbondanze relative > 1
 genomes_in_SGB={}
 for n, cas9series in cas_dataset.iterrows():
         if not cas9series["SGB ID"] in genomes_in_SGB.keys():
@@ -87,14 +90,12 @@ for n, cas9series in cas_dataset.iterrows():
         genomes_in_SGB[cas9series["SGB ID"]].append(cas9series["Genome Name"])
 genomes_in_SGB2={SGB:len(np.unique(genomenames)) for (SGB, genomenames) in genomes_in_SGB.items()}
 
-#SGB_abundance_in_dataset=cas_dataset.groupby(["SGB ID"]).count().sort_values(by="Seq ID", ascending=False)["Seq ID"]
-#SGB_abundance_in_dataset=SGB_abundance_in_dataset.rename("# Genomes") #with act work cas9
 SGB_abundance_in_dataset=pd.Series(genomes_in_SGB2, index=genomes_in_SGB.keys(), name="# Genomes").sort_values(ascending=False).rename_axis('SGB ID')
 SGB_rel_ab_in_dataset=pd.DataFrame(SGB_table[SGB_table["SGB ID"].isin(SGB_abundance_in_dataset.index)][["SGB ID","# Reconstructed genomes"]])
 SGB_abundance=pd.DataFrame(SGB_abundance_in_dataset).merge(SGB_rel_ab_in_dataset, left_on='SGB ID', right_on='SGB ID')
 SGB_abundance["Genomes relative abundance"]=SGB_abundance["# Genomes"]/SGB_abundance["# Reconstructed genomes"]
 print(SGB_abundance.head(20))
-
+SGB_abundance.to_csv(outpath+"test_SGBlist.csv","csv")
 print("\nPlotting length distributions...")
 #import matplotlib.pyplot as plt
 cas_dataset_counts=cas_dataset["Seq"].str.count("")
@@ -135,6 +136,7 @@ if args.genome:
     genomestr="_args.genome"
 if args.ki:
     genomestr=""
+#TODO add veryunknownnesss
 
 def seq_getter(s): return str(s.seq)
 

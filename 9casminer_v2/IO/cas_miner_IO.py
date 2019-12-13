@@ -51,6 +51,57 @@ def subset_by_SGB(data, UI):
         return data[data["SGB ID"]==SGB]
     return data
 
+def subset_by_very_unknown(data, UI):
+    """ subset only data belonging to that SGB"""
+    if UI:
+        return data[data["Estimated taxonomy"]=="Other"]
+    return data
+
+def subset_by_species(data, UI):
+    """subset data relative to that species
+    accepted input (case insensitive):
+            <Genus species>
+            <any_taxonomical_grade>"""
+    if UI:
+        gen_spec=UI
+        if len(gen_spec) == 2:
+            genus=gen_spec[0][0].upper()+gen_spec[0][1:]
+            species=gen_spec[1]
+            line=genus+"_"+species
+        elif len(gen_spec) == 1:
+            line=gen_spec[0]
+        else:
+           raise Exception("ERROR: -species: \naccepted input (case INSENSITIVE):\n\t<Genus species>\n\t<any_taxonomical_grade>")
+
+        return data[data["Estimated taxonomy"].str.contains(line, flags=re.IGNORECASE)]
+    return data
+
+def subste_by_active(data, UI):
+    if UI:
+        if UI.lower()=="n":
+            return data
+    return data.dropna(how="any")
+
+def subset_by_length(data, UI):
+    """UI is one of: <None>, <int-int>, <int> """
+    if UI:
+       # split=UI.split("")
+        split=UI
+        try:
+            int(split[0])
+        except:
+            raise Exception("Input must be an integer!")
+        if len(split)==2:
+            nmin=int(split[0])
+            nmax=int(split[1])
+            sorted_feature_counts=data["Seq"].str.count("").sort_values()
+            length_intreval=sorted_feature_counts[sorted_feature_counts>=nmin]
+            length_intreval=length_intreval[length_intreval<=nmax]
+            subset=data.loc[length_intreval.index]
+            return subset
+        elif len(split)==1:
+            nmin=int(split[0])
+            nmax=nmin
 def subset_by_species(data, UI):
     """subset data relative to that species
     accepted input (case insensitive):

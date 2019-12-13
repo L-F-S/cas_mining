@@ -1446,3 +1446,34 @@ fatto il tracrPipeline per il secondo caslocus di fljlkka, e sembr ache si sia
 #per far ele immagini dallo script, è piu facile si ti impari come montare in
 #locale la tua macchina e motni tuttel e path che ti servono  (l avevi fatto
 #allinizio forse??)
+#
+13/12/2019
+devo dare 5 sequenze interesasnti a V. siksnys di cui non trovo il tracrRNA,
+ e ho pensato invece di dargliene 5 tutte uguali, di tornare indietro allo step di selezionare
+l'sgb piu prevalente, che non mi sembra così così importante
+as long as ce n'è + 
+d uno di genoma insomma, e quindi di aggiungerci altri genomi un poco IGNOTI, e
+fare una filogenesinina anche con loro, e vedere come sono messi, e magari provare
+a prendere il tracr anche da loro, e poi se non ce l'hanno, mandarli a sequenziare a sichni
+facendo 
+SGB ,Yes,Other,-, | cut -d, -f2 printo il nome di SGB di ognuno degli SGB 
+NON CATEGORIZZATI manco a lvl di phylum (chissà che roba è), e vediamo nu puogh..
+
+potrei fare l'equivalente di quel comando li su python, e prendere quelli instead
+...
+DOPO PRANZAO:
+lancia clustal, fai albero (con mega?) o prinatlo su jalview ,e guarda sti
+nuovi cois, se sono carini, prova  atrovare rtacr in fretta,e se non c'è dagliene due a Anna
+ c''è qualcosa ceh non vaaaa nel clusteringg
+erano 38 sequenze, ora sono solo 4 !!!!
+cosa ho sbaglaitooooo
+ah no be xke ora sto lavorando solo col dataset di completely unknown, ci sta ci sta ci sta lol
+sono meno, va bene così, ma io le voglio tutte iniseme, quindi
+A MANO, LE PASTO TUTTE INSIEME, LE 38 VECCHIE PIU LE NUOVE.
+AH BASTA CHE FACCIO UNA COSA SOLO CON LE NUOV E SENZA REFERENCE E POI LE UNISCO
+
+AH BASTA CCHE METTO SOLO LE UOVE BELLA
+cat 9aCsfalf1musi_centroid97_moreunknown.faa MSA_clusters97_and_ref.faa > MSA_clusters97_and_ref_and_unknown.faa
+
+
+
