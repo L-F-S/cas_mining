@@ -1,4 +1,5 @@
 
+
 # Made by L-F-S
 # At the University Of Trento, Italy
 #
@@ -170,7 +171,7 @@ class locus:
 
 class CRISPRarray:
     def __init__(self, locus=None, feature=None, spacers=None, repeats=None, contigname=None,\
-                 genomename=None, datasetname=None,repstartpos=None):
+                 genomename=None, datasetname=None,repstartpos=None, path=None):
         self.locus=locus
         self.feature=feature
         self.spacers=spacers
@@ -179,6 +180,7 @@ class CRISPRarray:
         self.genomename=genomename
         self.datasetname=datasetname
         self.repstartpos=repstartpos  #TODO  da levar esecodnoeme infuturo
+        self.path=path
 
     def get_CRISPR_array(self, v=True, algorithm="minced"):
         """Retrieve Crispr array position, spacers, and repeats
@@ -204,6 +206,7 @@ class CRISPRarray:
         if algorithm=="minced":
             orig_genomename, orig_dataset=filename_discrepancies.get_originalsamplename_froms3name_of_genome(genomename,dataset)
             mincedCRISPRfilename=datadir+"1crisprsearch/out/"+dataset+"/"+genomename+".fa.minced.out"
+            self.path=mincedCRISPRfilename
             f=open(mincedCRISPRfilename, "r")
             is_the_right_contig=False
             for line in f.readlines():

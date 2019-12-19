@@ -1140,6 +1140,9 @@ sto salvando dentro  /shares/CIBIO-Storage/CM/scratch/tmp_projects/signorini_cas
 i terminators trovati da ARNold per gli 8 genomi selezionati.
  sto guardando LPEAHA SGB 15299. e mi sembra di aver proprio trovato qualcosa.
 
+
+questo era per provare
+
 lunedi faccio stem loops cosi, e vedo se matcha. Devo capire: la direzione, 
 l'inizio e la fine. anche se in teoria, la direzione è quella giusta, xke Cas9 
 si trova sul reverse complement strand. quindi dovrebbe partire dal repeat
@@ -1474,6 +1477,35 @@ AH BASTA CHE FACCIO UNA COSA SOLO CON LE NUOV E SENZA REFERENCE E POI LE UNISCO
 
 AH BASTA CCHE METTO SOLO LE UOVE BELLA
 cat 9aCsfalf1musi_centroid97_moreunknown.faa MSA_clusters97_and_ref.faa > MSA_clusters97_and_ref_and_unknown.faa
+#17/12/2019
+#
+seuqenze da dare a  sexnys gli diamo queste piu una quinta
+ da cercare ora fra le nuove totally unknown che abbaimo fatto l'ultima volta
+DAL NUOVO ALBERO CHE ABBIAMO FATTO CON MEGA
+    1,CPMHNJAN_01529,LiJ_2014__O2.UC47-1__bin.10                                                                                     
+  2 2,OBKKDPJE_00146,BritoIL_2016__M2.46.ST__bin.47                                                                                  
+  3 3,FLJLKKHA_00273,BritoIL_2016__M1.29.ST__bin.30                                                                                  
+  4 4,AKIPNPCL_00899,CosteaPI_2017__SID713A009-11-90-0__bin.81   
+leviamo 
+FLJKKA
+e mettiamoci altri 2 completamente unknown:
+proviamo:
+
+AOPFDEBE_00006  sembra avere tracr, quindi no
+MKCMDOMJ_00229  CANNOT FIND repeat: è il nuovo 3.
+FBDDNBEO_00645  ha un tracr con terminatore e coso precisi appiccicati al crispr
+ma sembra bello, è il primo del gruppo strano di cui trovo un tracrRNA!! bello!
 
 
+eeeee ho appena trovato un bug nel codice: cercando di ripetere 7tracrRNA per sti due nuvi cosi
+ho visto che non mi viene un tracrRNA del primo, ma nnn trova matsc col blast
+mi sn insospettito, il 'general blabla' l'ho preso da fljkka, ho porvato a rirunnarlo
+ da una copia di CJIFIJLGO, sempre stessa cosa, ho provato allora a rirunnarlo usando un 
+nuovo seqid che era accanto a CJFILGO, e quindi che era very likely to have blast
+e niente, e vedi che tracr.blastout è un file vuoto, mentre dovrebbe almeno
+matchare i repeats...
+OK, manca il mkaeblastdb step!! devo capire xke non è più funzionante in
+automatico..
+quindi in pratica soluzione: printare e runnare manualmente i due comandi
+di blast (OPPURE DOPO: TROVA IL MODO DI LANCIARLI FAST DA PYTHON)
 
