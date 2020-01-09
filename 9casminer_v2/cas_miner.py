@@ -7,7 +7,7 @@ import argparse
 import sys
 
 parser=argparse.ArgumentParser(\
-                               description="++++++++++++    Extract effector Cas loci from metagenomic data.    ++++++++++++ 01/12/2019: Only extracts Effector Cas sequence :(",\
+                               description="++++++++++++    Extract effector Cas loci from metagenomic data.    ++++++++++++",\
                                formatter_class=argparse.MetavarTypeHelpFormatter)
 #TODO proably dentro il type del parser ci puoi mettere le funzioni tue
 #todo add pltting options, es le lengths distrib

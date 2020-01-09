@@ -1495,6 +1495,8 @@ AOPFDEBE_00006  sembra avere tracr, quindi no
 MKCMDOMJ_00229  CANNOT FIND repeat: è il nuovo 3.
 FBDDNBEO_00645  ha un tracr con terminatore e coso precisi appiccicati al crispr
 ma sembra bello, è il primo del gruppo strano di cui trovo un tracrRNA!! bello!
+CDGFJFMD_00819  ha fino a blast, ma poi ha due possibili terminatori! Uno a monte
+ uno a valle? entrambi papabili
 
 
 eeeee ho appena trovato un bug nel codice: cercando di ripetere 7tracrRNA per sti due nuvi cosi
@@ -1508,4 +1510,18 @@ OK, manca il mkaeblastdb step!! devo capire xke non è più funzionante in
 automatico..
 quindi in pratica soluzione: printare e runnare manualmente i due comandi
 di blast (OPPURE DOPO: TROVA IL MODO DI LANCIARLI FAST DA PYTHON)
+TODO: far funzionare 'terminator on plus strand'
 
+#2020
+anno nuovo, devo recuperare PER OGNI CLUSTER DI CUI NON TROVO tracrRNA, le 
+sequenze delle altre proteine ne klcluster, per vedere se i loro genomi hanno
+tracr.
+
+ho cambiato il comando di uclust, per salvare (uno per file) anche le sequenz enon 
+centroide del cluster. sono tanti, devo trovare un modo di risalire, per ogni seq
+di cui non trovo il tracr, back to il suo cluster, e fare una ricerca entro quello.
+.
+
+non ho modo di saperlo, dev o grepparlo con
+
+grep -H 'FLJLKKHA' 9aCsfalf1musi_MSAall97_moreunknown.faa*
