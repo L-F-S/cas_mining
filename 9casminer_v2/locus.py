@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 
 
 # Made by L-F-S
@@ -103,9 +104,9 @@ class locus:
 #
 #        # access contig:
 #
-#        for record in SeqIO.parse(genomefilename,"fasta"):  #c'è modo di non fare questo 'ciclo'?
+#        for record in SeqIO.parse(genomefilename,"fasta"):  #c'e' modo di non fare questo 'ciclo'?
 #            if record.id.startswith(contigname):
-#                   #test se effettivamente la seq di cas è dove voglio io
+#                   #test se effettivamente la seq di cas e' dove voglio io
 #
 #                SeqIO.write(record, "/shares/CIBIO-Storage/CM/scratch/tmp_projects/signorini_cas/7tracrRNA/tempblastdb", "fasta")
 #                print("CRISPR si trova", cas_position["CRISPR"])
@@ -118,7 +119,9 @@ class locus:
 #                temp_alt_cas9stop=101700
 #                cas9start=cas_position[feature][0]
 #                cas9stop=cas_position[feature][1]
-#                cas9_nnseq=record.seq[cas9start-1:cas9stop-3] #gff should have a 1-based positional annotation (ma sto andando a occhio finchè non sono uguali, è già un oggetto Bio.Seq
+#                cas9_nnseq=record.seq[cas9start-1:cas9stop-3] #gff should have
+#                a 1-based positional annotation (ma sto andando a occhio
+#                finche non sono uguali, e' già un oggetto Bio.Seq
 #                my_translated_cas9=cas9_nnseq.transcribe().translate()
 #                print(len(cas9_nnseq)/3,len(cas9_aa))
 #                if my_translated_cas9==cas9_aa:

@@ -1,0 +1,26 @@
+--------------------------------------------------------------------------------
+                                     Sequence ID                                   
+                                   FBDDNBEO_00645                                  
+--------------------------------------------------------------------------------
+
+-> Contig Name:	 NODE_2092_length_11346_cov_6.0000_ID_47560
+-> Genome Name:	 ZeeviD_2015__PNP_Main_471__bin.13
+-> Dataset Name:	 ZeeviD_2015
+-> SGB ID:	 8770
+-> Sequence length:	 1034
+-> Positions:	 {'Cas9': [1663, 4767], 'Cas1': [776, 1666], 'Cas2': [378, 728], 'CRISPR': [27, 260]}
+TODO: Finding tracr_RNA
+
+----------------------------------------------------------------------
+         tracrRNA sequence for Cas9 protein id FBDDNBEO_00645
+----------------------------------------------------------------------
+
+- Length:  87
+
+----------------------------------------------------------------------
+Saving output in: /shares/CIBIO-Storage/CM/scratch/tmp_projects/signorini_cas/9output/
+----------------------------------------------------------------------
+
+Writing Cas9 amino acid sequence to Cas9_FBDDNBEO_00645.faa
+Writing tracrRNA to tracrRNA_FBDDNBEO_00645.ffn
+Writing  CRISPRarray to CRISPR_FBDDNBEO_00645.ffn

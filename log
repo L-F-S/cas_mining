@@ -1525,3 +1525,77 @@ di cui non trovo il tracr, back to il suo cluster, e fare una ricerca entro quel
 non ho modo di saperlo, dev o grepparlo con
 
 grep -H 'FLJLKKHA' 9aCsfalf1musi_MSAall97_moreunknown.faa*
+
+MA PRIMA fare cose di Aiello.
+co0piata pipeline da giulia,
+sta girando i primi due step su cm5 tmux, ma in realtà il primo non funge (ma forse nn serve?)
+
+hai aprlato con quelli della facility, e in pratica ti han dato retta sul fatto
+che i campioni siano un po' amplificati.
+
+campioni JON e L16 sono guide diverse, PUC è una benchmark della proteina non 
+mutata.
+ c'è un problema con trimgalore, e in particolare con cutadapt, che non funziona piu cutadapt xle si è scazzato python
+e quindi devo usare un different tool per fare trimming.
+sto pome lo trovo lol
+
+#10/01
+ gira lo step 2 della pipeline per Aiello su cibio4 tmux. dovrebbe finire entro domani
+dello step 2, ho installato  cudadapt ma con  pip xke con conda -c install è lentissimissimo
+e aggiunta la path (è .local/bin, un posto strano ma ok)
+
+#13/10
+da fare 
+1- controllare pedissequamente per ogni sample gli output di step 1 e 2
+soprattutto la qualità (fastQC)
+2- dire a Aiello e  altri che senza paired end non si possono vedere indel,
+ma solo mutazioni puntiformi
+3- fare MAPPING ssssstep3
+
+1:
+dati raw
+ovviamente hanno un livello di duplicazione altissima. sono sequenze di 201 nt,
+con reads di 201 nt. 1.8 milioni di reads. quindi in pratica sono 1.8 milioni 
+di reads uguali.
+penso che farò un mapping deduplicato  e uno senza deduplicazione ulteriore
+dati puliti:
+non ha funzionato fastqc del trimgalore coi dati puliti, l'ho rifatto
+sono praticamente guali, ne è stata tolta qualcuna brutta. dati perfetti insomma.
+o mappiamoli e vediamo che fa
+
+creati gli mpileup. seguendo Aiello pipeline
+sembrano a occhio tutte molto poco mutate.
+
+fatto anche la versione deduplicata, ma non so io li  terrei i duplicati. bu, 
+che mi cambia le percentuali levarli.
+
+, tutte sotto 0.000qlcs di mutazione (qlle non deduplicate), tranne alcune sotto 0.00qlcs, e di solito
+queste sono sempre le stesse posizioni (tipo 41,42,50, almeno ho controllato a 
+occhio le prime, ma vbb..) bisogna costruire un modello
+#16/01/2020
+#
+ricercando i tracer sulle due sequenz eche parevano averli, è venuto fuori i solti dubbi
+e intrighi sulle direzioni e le cose,
+e ho scoperto che tip oarnold guarda lo STRAND + e -, ma diciamo che su ognuna
+delle due direzioni non guarda la DIREZIONE INTERNAQ, nel senso sullo strand + va da sx verso dx
+sullo strand - va da dx verso sin, ma io dico ci possono essere terminatori anche
+sullo strand + na da dx verso sx? direi di si no? BU? QUal è la direzione di 
+trascrizione? cioé forse + vuol dire che la trascriz va solo in una direzione? io credo sia
+abbastanza arbitrario in realtà.
+
+ok, dubbio risolto, non ha senso. quello che leggo è x definizione 5'3', e
+se c'è una cosa in direz opposta è per forza sul lato opposto, xke il DNA è
+polarizzato, cioé le basi sono orientate verso una direzione, e la polimerasi legge
+lungo quella direzione e basta
+
+da risolvere: github non committa i file che mi interessanooo
+
+#24/01/2020
+allora 1) aggiunto pezzo intracrRNA finder, per cui se l'antirepeat è in realta
+sul + strand, allora cambia anche la repeat, e mette quella sul - strand.
+In quel caso, però...forse va aggiunto il fatto che magari se il BLAST prende solo un pezzettino,
+(o forse in ogni caso) bisogna andare a monte (o a valle) della repeat,
+per vedere se ci sn altri epzzettini che matchano tipo. todo da fare ancora, xke nel caso
+tipo di FBDNEO, mi sa che antirepeat e repeat sono SULLO STESSO STRAND, ma in direzioni diverse
+e poi chiedi a michele cosa succede sessattamente con le sequenze di doolix
+per capire esattamente cosa fanono con le tue sequenze.
