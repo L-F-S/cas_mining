@@ -62,7 +62,7 @@ def get_ID_info(seqid, feature,v, outdir,tracrRNA):
     f.close()
     if args.t:
         print("Writing tracrRNA to tracrRNA_"+seqid+".ffn")
-        f=open(outdir+seqid+"/tracrRNA_"+seqid+".faa","w")
+        f=open(outdir+seqid+"/tracrRNA_"+seqid+".ffn","w")
         f.write(">tracrRNA_"+seqid+"\n"+tracrRNA)
         f.close()
     print("Writing  CRISPRarray to CRISPR_"+seqid+".ffn")
