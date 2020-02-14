@@ -13,6 +13,7 @@ import sys
 
 sys.path.insert(0, '/home/lorenzo.signorini/cas_mining/utils/')
 import filename_discrepancies
+from Bio.Seq import Seq
 
 
 outdir="/shares/CIBIO-Storage/CM/scratch/tmp_projects/signorini_cas/Nstep" #TODO add nstepdir
@@ -166,5 +167,10 @@ class CRISPRarray:
             print("TODO")
         else:
             raise Exception("Allowed algorithms: minced, pilercr")
+
+    def rev_comp(self):
+        self.spacers = [str(Seq(spacer).reverse_complement()) for spacer in self.spacers]
+        self.repeats = [str(Seq(repeat).reverse_complement()) for repeat in self.repeats]
+
 
 

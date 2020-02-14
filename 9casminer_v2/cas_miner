@@ -4,7 +4,7 @@
 # At the University Of Trento, Italy
 if [ $# -lt 1 ]; then
 
-	python cas_miner.py -h
+	python /home/lorenzo.signorini/cas_mining/9casminer_v2/cas_miner.py -h
 else
-python cas_miner.py $@
+python /home/lorenzo.signorini/cas_mining/9casminer_v2/cas_miner.py $@
 fi

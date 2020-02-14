@@ -1,0 +1,10 @@
+#!/bin/bash
+# Sun Dec 1 15:48:11 UTC 2019
+# Made by L-F-S
+# At the University Of Trento, Italy
+if [ $# -lt 1 ]; then
+
+	python /home/lorenzo.signorini/cas_mining/9casminer_v2/get_ID_info.py -h
+else
+python /home/lorenzo.signorini/cas_mining/9casminer_v2/get_ID_info.py $@
+fi
