@@ -1,8 +1,18 @@
-# Fri Dec 6 10:18:34 CET 2019
+
 # Made by L-F-S
 # At the University Of Trento, Italy
+# lorenzo.signorini@alumni.unitn.it
+
+"""
+For usage information:
 
 
+python get_ID_info.py -h
+
+
+"""
+#TODO onc eI automatize tracrfinding, we will be able to make this into a
+#uuseful tool
 import os
 import sys
 import pandas as pd
@@ -13,7 +23,7 @@ import locus
 sys.path.insert(0, '/home/lorenzo.signorini/cas_mining/utils/')
 import filename_discrepancies
 
-def get_ID_info(seqid, feature,v, outdir,tracrRNA):
+def get_ID_info(seqid, feature,v, outdir,tracrRNA, crarraysrtand):
     datadir="/shares/CIBIO-Storage/CM/scratch/tmp_projects/signorini_cas/" #TODO add nstepdir
     annodir="/shares/CIBIO-Storage/CM/scratch/tmp_projects/signorini_cas/2casanno/crisprcasanno"
     caslocus=locus.locus(seqid,feature)
@@ -42,7 +52,7 @@ def get_ID_info(seqid, feature,v, outdir,tracrRNA):
     caslocus.CRISPRarray=tmp #Magari slightly redundant to have that locus
     caslocus.fetch_positions(cas_dataset)
     print("-> Positions:\t",caslocus.positions)
-    print("TODO: Finding tracr_RNA")
+    #print("TODO: Finding tracr_RNA")
     caslocus.tracrRNA=tracrRNA
     if args.t:
         print("\n----------------------------------------------------------------------")
@@ -55,19 +65,25 @@ def get_ID_info(seqid, feature,v, outdir,tracrRNA):
     print("\n----------------------------------------------------------------------")
     print("Saving output in: "+outdir)
     print("----------------------------------------------------------------------\n")
-    os.popen("mkdir "+outdir+seqid)
+    if not os.path.exists(outdir+seqid):
+            os.makedirs(outdir+seqid)
     print("Writing "+feature+" amino acid sequence to "+feature+"_"+seqid+".faa")
     f=open(outdir+seqid+"/"+feature+"_"+seqid+".faa","w")
     f.write(">"+seqid+"\n"+caslocus.seq)
     f.close()
-    if args.t:
-        print("Writing tracrRNA to tracrRNA_"+seqid+".ffn")
-        f=open(outdir+seqid+"/tracrRNA_"+seqid+".ffn","w")
-        f.write(">tracrRNA_"+seqid+"\n"+tracrRNA)
-        f.close()
+    # if args.t:
+    #     print("Writing tracrRNA to tracrRNA_"+seqid+".ffn")
+    #     f=open(outdir+seqid+"/tracrRNA_"+seqid+".ffn","w")
+    #     f.write(">tracrRNA_"+seqid+"\n"+tracrRNA)
+    #     f.close()
     print("Writing  CRISPRarray to CRISPR_"+seqid+".ffn")
+    #todo aggiunere un tag (crispr+ o -, x capire su che strand ècrispr,
+    #e eventualmente prendere il revcomp dell'array, e scrivere quello invece
+    #del fyle di minced...
+    #quindi forse salvare anche il numero di repeats e bo altre info
+    #di minced? forse no.
     os.popen("cp "+tmp.path+" "+outdir+seqid+"/CRISPR_"+seqid+".ffn")
-    print("Writing"+feature+"nucleotidic sequence to "+feature+"_seqid"+".ffn")
+    print("Writing"+feature+" nucleotidic sequence to "+feature+"_seqid"+".ffn")
     #chiaramente appiccicato da un altro file
     genomename, dataset=filename_discrepancies.get_originalsamplename_froms3name_of_genome(caslocus.genomename,caslocus.datasetname)
     s3_genomename=caslocus.genomename
@@ -100,16 +116,22 @@ def get_ID_info(seqid, feature,v, outdir,tracrRNA):
 
 
 if __name__=="__main__":
-    parser=argparse.ArgumentParser(description="Print information about a specific effector Cas Sequence ID. (Input: <Seq ID>)")
+    parser=argparse.ArgumentParser(description="Print information about a \
+                                   specific effector Cas Sequence ID. (Input: <Seq ID>)")
     parser.add_argument("-v", action="store_true", help="verbose output")
     parser.add_argument("ID", type=str, help="sequence ID")
     parser.add_argument("-f", type=str, help="effector Cas name (default= Cas9)", default="Cas9")
     parser.add_argument("-o", type=str, help="output directory, default =/shares/CIBIO-Storage/CM/scratch/tmp_projects/signorini_cas/9output", default="/shares/CIBIO-Storage/CM/scratch/tmp_projects/signorini_cas/9output/")
     parser.add_argument("-t", type=str, help="tracRNA sequence")
+    parser.add_argument("-s", type=str, help="tracrRNA strand. Possible values= +, -")
+    parser.add_argument("-c", type=str, help="actual CRISPRarray strand (as discovered via previous tracrRNA analysis)\
+                        . Input \'+\' if CRISPRarray strand is the same annotated from minced algorithm (forward strand), \'-\' if reverse strand.")
     args=parser.parse_args()
     outdir=args.o
     seqid =args.ID
     feature=args.f
     tracrRNA=args.t
+    tracrStrand=args.s
+    crarraystrand=args.c
 
-    get_ID_info(seqid, feature,args.v,outdir,tracrRNA)
+    get_ID_info(seqid, feature,args.v,outdir,tracrRNA,crarraystrand)

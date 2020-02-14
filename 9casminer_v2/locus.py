@@ -95,81 +95,6 @@ class locus:
                                    }
         self.positions=cas_position
 
-#    def BLAST_antirepeats(self):
-#        genomefilename= "/shares/CIBIO-Storage/CM/scratch/tmp_projects/epasolli_darkmatter/allcontigs/ALLreconstructedgenomes/"+str(SGB)+"/"+genomename+".fa"
-#        print("+"*80)
-#        print(cas_position)
-#        print("Retrieving locus")
-#
-#
-#        # access contig:
-#
-#        for record in SeqIO.parse(genomefilename,"fasta"):  #c'e' modo di non fare questo 'ciclo'?
-#            if record.id.startswith(contigname):
-#                   #test se effettivamente la seq di cas e' dove voglio io
-#
-#                SeqIO.write(record, "/shares/CIBIO-Storage/CM/scratch/tmp_projects/signorini_cas/7tracrRNA/tempblastdb", "fasta")
-#                print("CRISPR si trova", cas_position["CRISPR"])
-#                print("Cas9 si trova", cas_position[feature])
-#                print("Cas2 si trova", cas_position["Cas2"])
-#                print("Cas1 si trova", cas_position["Cas1"])
-#
-#                 #estrai la posizione di cas9 dal contig, e traducila
-#                temp_alt_cas9start=98503
-#                temp_alt_cas9stop=101700
-#                cas9start=cas_position[feature][0]
-#                cas9stop=cas_position[feature][1]
-#                cas9_nnseq=record.seq[cas9start-1:cas9stop-3] #gff should have
-#                a 1-based positional annotation (ma sto andando a occhio
-#                finche non sono uguali, e' già un oggetto Bio.Seq
-#                my_translated_cas9=cas9_nnseq.transcribe().translate()
-#                print(len(cas9_nnseq)/3,len(cas9_aa))
-#                if my_translated_cas9==cas9_aa:
-#                    print("Cas locus on plus strand")
-#                    plus=True
-#                if not my_translated_cas9==cas9_aa:
-#                  #try reverse complement
-#                    cas9_nnseq=record.seq[cas9start+2:cas9stop]
-#                    my_translated_cas9=cas9_nnseq.reverse_complement().transcribe().translate()
-#                    print("Cas locus on minus strand")
-#                print("Is Cas9 translated from the genome equal to the orignal annotation?", my_translated_cas9==cas9_aa)
-#                print(my_translated_cas9)
-#                print("+"*80)
-#                print(cas9_aa)
-#                alignments = pairwise2.align.localxx(my_translated_cas9,cas9_aa)
-#                    print(pairwise2.format_alignment(*alignments[0]))
-#
-#                            #opzione 1 blast
-#                                  #1. salva np.uniq(repeats) in un fasta file: build temporary query file for blastn search
-#
-#                                          print("let's now blast the repeat against  the genome")
-#                                                  blast_folder="/shares/CIBIO-Storage/CM/scratch/tmp_projects/signorini_cas/7tracrRNA/"
-#                                                          os.chdir(blast_folder)
-#                                                                  tempfile=open("temp_repeat_seq", "w")
-#                                                                          tempfile.close()
-#                                                                                  tempfile=open("temp_repeat_seq", "a")
-#                                                                                          for n, repeat in enumerate([Seq(sequence) for sequence in np.unique(repeats)]):
-#                                                                                                          tempfile.write(">rpt"+str(n+1)+"|"+contigname+"|"+genomename+"|"+seqid+"\n"+str(repeat)+"\n")
-#                                                                                                                  tempfile.close()
-#
-#                                                                                                                          #2. Blast query file against db
-#                                                                                                                                  print("Running blastn of query file agianst all contigs")
-#
-#                                                                                                                                          #3. make db file
-#                                                                                                                                                  dbfile="/shares/CIBIO-Storage/CM/scratch/tmp_projects/signorini_cas/7tracrRNA/tempblastdb"
-#                                                                                                                                                          os.system("makeblastdb -in "+dbfile+" -parse_seqids  -dbtype nucl")
-#
-#
-#
-#                                                                                                                                                                  blastoutfile="/shares/CIBIO-Storage/CM/scratch/tmp_projects/signorini_cas/7tracrRNA/"\
-#                                                                                                                                                                              +str(SGB)+"__"+seqid+"__"+genomename+"__"+feature+".trcr.blastout"
-#                                                                                                                                                                          blastn_command = "blastn -out "+blastoutfile+" -outfmt \"6  qseqid sseqid pident qlen length mismatch gapopen qseq sseq sstart send evalue sstrand\" -query temp_repeat_seq -db "+dbfile+" -evalue 0.001 -word_size 11 -penalty -2"
-#                                                                                                                                                                                  print(blastn_command)
-#                                                                                                                                                                                          os.system(blastn_command)
-#                                                                                                                                                                                                 # os.system("rm
-#                                                                                                                                                                                                 # /shares/CIBIO-Storage/CM/scratch/tmp_projects/signorini_cas/7tracerRNA/temp*")
-#
-
 
 
 class CRISPRarray:
@@ -214,8 +139,8 @@ class CRISPRarray:
             is_the_right_contig=False
             for line in f.readlines():
                 if is_the_right_contig:
-                    if v:
-                        print(line)
+#                     if v:
+#                         print(line)
                     if line[0]== "1" or line[0]== "2" or line[0]== "3" or \
                             line[0]== "4" or line[0]== "5" or line[0]== "6" or\
                             line[0]== "7" or line[0]== "8" or line[0]== "9" or\
