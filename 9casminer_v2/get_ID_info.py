@@ -28,7 +28,7 @@ def get_ID_info(seqid, feature,v, saveout, outdir,tracrRNA, tracrstrand, crarray
     datadir="/shares/CIBIO-Storage/CM/scratch/tmp_projects/signorini_cas/" #TODO add nstepdir
     annodir="/shares/CIBIO-Storage/CM/scratch/tmp_projects/signorini_cas/2casanno/crisprcasanno"
     caslocus=locus.locus(seqid,feature)
-    cas_dataset=pd.read_csv("/shares/CIBIO-Storage/CM/scratch/tmp_projects/signorini_cas/5caslocitable/known_"+feature+"prokkacas9_variants_table.csv", index_col=0)
+    cas_dataset=pd.read_csv("/shares/CIBIO-Storage/CM/scratch/tmp_projects/signorini_cas/5caslocitable/known_"+feature+"_variants_table.csv", index_col=0)
     caslocus.set_SGB(cas_dataset)
     caslocus.set_contigname(cas_dataset)
     caslocus.set_genomename(cas_dataset)
@@ -73,7 +73,8 @@ def get_ID_info(seqid, feature,v, saveout, outdir,tracrRNA, tracrstrand, crarray
 
         CRISPRheader="REPEAT"+" "*(len(caslocus.CRISPRarray.repeats[0])-len("REPEAT"))+" SPACER"+" "*(len(caslocus.CRISPRarray.spacers)-len("SPACERS"))+"\n"
         print("CRISPR array sequence for "+ seqid+" "+feature+".")
-        print("CRISPR array on REVERSE strand.")
+        if crarraystrand==-1:
+            print("CRISPR array on REVERSE strand.")
         print(CRISPRheader)
         CRISPRarraysequence=""
         for i in range(len(caslocus.CRISPRarray.repeats)):
@@ -155,7 +156,7 @@ if __name__=="__main__":
     parser.add_argument("-v", action="store_true", help="verbose output")
     parser.add_argument("ID", type=str, help="sequence ID")
     parser.add_argument("-f", type=str, help="effector Cas name (default= Cas9)", default="Cas9")
-    parser.add_argument("-o", type=str, help="output directory, default =/shares/CIBIO-Storage/CM/scratch/tmp_projects/signorini_cas/9output", default="/shares/CIBIO-Storage/CM/scratch/tmp_projects/signorini_cas/9output/")
+    parser.add_argument("-o", type=str, help="output directory, default =/shares/CIBIO-Storage/CM/scratch/tmp_projects/signorini_cas/9output/<feature>", default="/shares/CIBIO-Storage/CM/scratch/tmp_projects/signorini_cas/9output/")
     parser.add_argument("-d", action="store_true",  help="Save sequence output")
     parser.add_argument("-t", type=str, help="tracRNA sequence")
     parser.add_argument("-s", type=str, help="tracrRNA strand. Possible values= +, -")
@@ -163,12 +164,16 @@ if __name__=="__main__":
                         . Input \'+1\' if CRISPRarray strand is the same annotated from minced algorithm (forward strand), \'-1\' if reverse strand.")
     parser.add_argument("-r", type=str, help="repeat sequence matching tracrRNA")
     args=parser.parse_args()
-    outdir=args.o
     seqid =args.ID
     feature=args.f
+    outdir=args.o+feature+"/"
     tracrRNA=args.t
     tracrstrand=args.s
     crarraystrand=args.c
     repeat=args.r
+
+    if not os.path.exists(outdir):
+            os.makedirs(outdir)
+
 
     get_ID_info(seqid, feature,args.v,args.d,outdir,tracrRNA, tracrstrand, crarraystrand,repeat)

@@ -2,6 +2,10 @@
 # Made by L-F-S
 # At the University Of Trento, Italy
 
+""""
+currently only tested on Cas9
+"""
+
 import os
 import sys
 import numpy as np
@@ -25,10 +29,10 @@ def get_feature_pos(seqid, genomename):
             print(split_single_side_feature)
             idd, start, end=split_single_side_feature[8].split(";")[0], split_single_side_feature[3],split_single_side_feature[4]
     tupla=(idd,start,end)
-    return tupla 
+    return tupla
 
 ###############################################################################################################
-#                           MAIN                                                                   
+#                           MAIN
 feature=sys.argv[1]
 outdir="/shares/CIBIO-Storage/CM/scratch/tmp_projects/signorini_cas/5caslocitable/"
 tabledir="/shares/CIBIO-Storage/CM/scratch/tmp_projects/signorini_cas/3tabellazza"

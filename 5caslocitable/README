@@ -29,6 +29,7 @@ Columns:
        Study           # added by 2fill_known_effector_cas_table.py same as S3 from https://doi.org/10.1016/j.cell.2019.01.001 
        Sample Name     # added by 2fill_known_effector_cas_table.py same as S3 from https://doi.org/10.1016/j.cell.2019.01.001
        SGB ID          # added by 2fill_known_effector_cas_table.py same as S3 from https://doi.org/10.1016/j.cell.2019.01.001
+       Pos             # added by 2fill_known_effector_cas_table.py same as S3 from https://doi.org/10.1016/j.cell.2019.01.001
        pilercr_CRISPR #added by 3add_locusinfo.py python-syntaxed list of 1 3-tuple (why? idk) [(ID, startpos, endpos)] eg. "[(ID=CRISPR1,40172,12)]"
        minced_CRISPR  #added by 3add_locusinfo.py same as pilercr_CRISPR, but there is no ID.
        prokka_cas1    #added by 3add_locusinfo.py same as pilercr_CRISPR
@@ -43,7 +44,8 @@ FILES:
 |1build_known_effector_cas_table.py # These 4 files, executed sequentially, create a table of Cas9 (Cpf1) loci.
 |2fill_known_effector_cas_table.py  # to run the first 3:
 |3add_locusinfo.py                  # python 3add_locusinfo.py (or 1buil., 2fill..) <wdatasetname> Cas9 (or Cpf1
-                                    # ZeeviD is just ZeeviD, without A and B. you can use 'floderloop'
+                                    # ZeeviD is just ZeeviD, without A and B.
+				    # you can use 'folderloop'
 |4addSGB_info.py                    # <-Merge all datasets (utils/merge_datasets.py) before running 4addSGB..
 |
 |Mining for a nice Cas9 9-08 polished summary.ipynb  prova.png  # py notebooks to extract the sequences of

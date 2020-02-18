@@ -18,7 +18,7 @@ parser.add_argument("-active", type=str, help="Active locus. An active locus is 
 parser.add_argument("-noplots", action="store_true", help="Do not print plots")
 parser.add_argument("-species", type=str, nargs="*", help="species or taxonomical level (accepted input: [<Genus species>, <any_taxa_name>]) CASE INSENSITIVE")
 parser.add_argument("-uSGB", type=str, help="look for unknown (u), known (k) or both (b) SGBs (default: b)", choices=["u","k","b"], default="b")
-parser.add_argument("-veryunknown", type=str, help="look for SGBs with no taxonomical identification (default: y)", choices=["y","n"], default="y")
+parser.add_argument("-veryunknown", action="store_true", help="look for SGBs with no taxonomical identification")
 parser.add_argument("-SGB", type=int, help="look for a specific SGB(s). Space separated")
 parser.add_argument("-genome", type=str, help="look for a specific genome(s). Space separated")
 parser.add_argument("-length", type=int, nargs="*", help="filter by sequence length, or a range of lengts. Accepted input: <n>, <nmin> <nmax>")
@@ -49,7 +49,7 @@ SGB_table=pd.read_csv("/shares/CIBIO-Storage/CM/scratch/tmp_projects/signorini_c
 # ## 1.2 load information about Cas9s
 feature=args.feature
 cas_dataset=pd.read_csv("/shares/CIBIO-Storage/CM/scratch/tmp_projects/signorini_cas/5caslocitable/known_"+feature+"_variants_table.csv", index_col=0)
-
+print(len(cas_dataset.index))
 # # 2. Data filtering: Extract a list of the shortest working cas9 from most abundant and most unknown genomes.
 
 # ## 2.1 Filter by: active locus
@@ -61,22 +61,28 @@ if args.active=="y":
 # Subset by species
 vprint("Selecting species (or taxonomical level)...", args.species)
 cas_dataset=cmIO.subset_by_species(cas_dataset, args.species)
+print(len(cas_dataset.index))
 # The length intreval where there seems to be a working protein is around (1050,1170) , (1330,1450) and maybe (1500,1580). We shall define these intrevals as working lengths.
 # filter by SGB:
 vprint("Filtering by SGB...", args.SGB)
 cas_dataset=cmIO.subset_by_SGB(cas_dataset,args.SGB)
+print(len(cas_dataset.index))
 # ## 2.3-2.4 Filter by: sequence length of 949-1099 amino acid, unknown SGB
 vprint("Filtering by length...", args.length)
 cas_dataset=cmIO.subset_by_length(cas_dataset, args.length)
+print(len(cas_dataset.index))
 # filter by unknown SGB An unknown SGB is an SGB with no reference genome in literature.
 vprint("Filtering by uSGB...", args.uSGB)
 cas_dataset=cmIO.subset_by_unknownSGB(cas_dataset,args.uSGB)#[active_working_cas9s.uSGB=="Yes"]
+print(len(cas_dataset.index))
 # filter by genome
 vprint("Filtering by genome name...", args.genome)
 cas_dataset=cmIO.subset_by_genome(cas_dataset, args.genome)
+print(len(cas_dataset.index))
 # filter by veryunknownness
 vprint("filtering by very unknownnwes..", args.veryunknown)
 cas_dataset=cmIO.subset_by_very_unknown(cas_dataset, args.veryunknown)
+print(len(cas_dataset.index))
 #TODO NON FA!!
 print("\nDONE!\n\n\t--->    Total number of "+args.feature+":\t", len(cas_dataset.index),"  <---",\
       "\n\n- Parameters:\n", args)
@@ -89,13 +95,12 @@ for n, cas9series in cas_dataset.iterrows():
                      genomes_in_SGB[cas9series["SGB ID"]]=[]
         genomes_in_SGB[cas9series["SGB ID"]].append(cas9series["Genome Name"])
 genomes_in_SGB2={SGB:len(np.unique(genomenames)) for (SGB, genomenames) in genomes_in_SGB.items()}
-
 SGB_abundance_in_dataset=pd.Series(genomes_in_SGB2, index=genomes_in_SGB.keys(), name="# Genomes").sort_values(ascending=False).rename_axis('SGB ID')
 SGB_rel_ab_in_dataset=pd.DataFrame(SGB_table[SGB_table["SGB ID"].isin(SGB_abundance_in_dataset.index)][["SGB ID","# Reconstructed genomes"]])
 SGB_abundance=pd.DataFrame(SGB_abundance_in_dataset).merge(SGB_rel_ab_in_dataset, left_on='SGB ID', right_on='SGB ID')
 SGB_abundance["Genomes relative abundance"]=SGB_abundance["# Genomes"]/SGB_abundance["# Reconstructed genomes"]
 print(SGB_abundance.head(20))
-SGB_abundance.to_csv(outpath+"test_SGBlist.csv","csv")
+#SGB_abundance.to_csv(outpath+"test_SGBlist.csv","csv") TODO NON FUNGE? nn so xke
 print("\nPlotting length distributions...")
 #import matplotlib.pyplot as plt
 cas_dataset_counts=cas_dataset["Seq"].str.count("")
@@ -170,6 +175,7 @@ for SGB in np.unique(cas_dataset["SGB ID"]):
     remove(filename)
 
 filename2= outpath+args.feature+"/"+args.feature+"_sequences"+lengthstr+uSGBstr+SGBstr+activestr+speciesstr+genomestr+kistr+".faa"
+print("saving sequences in", filename2)
 f=open(filename2,"w")
 f.write(all_identical_fasta_entries)
 f.close()
@@ -186,10 +192,11 @@ if args.v:
 print("There are", len(sequences),"unique sequences")
 print("\n")
 print("+"*80)
-print("Extracting Information about single loci...")
-print("\n")
-for seqid in temp_seq_ID:
-    get_ID_info.get_ID_info(seqid, args.feature, args.v)
+#TODO qua sotto:
+# print("Extracting Information about single loci...")
+# print("\n")
+# for seqid in temp_seq_ID:
+#     get_ID_info.get_ID_info(seqid, args.feature, args.v)
 
 
 ## ## 3.3 Sequences clustering
