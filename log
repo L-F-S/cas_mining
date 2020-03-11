@@ -1614,3 +1614,10 @@ cosa sono i terminatori di trascrixz batterici?
 cos'è il terminatore t7?
 crisprarray dovrà avere anche un terminatore no?
 
+# 18/02
+mammamia quante cose non so neanche se ha piu senso scrivere
+cmq rifatto il known_cpf1_variants aggiungendo la 'pos' column, which was not
+present before.
+domani: riguardati le sequneze che ahi estratto oggi, di cpf1, pero prendendo la leftmost half
+of the peak of the distribution, and maybe quickly MSA them to check they're allr ight and not
+truncated (especially the smallest one, and send them out i the world.

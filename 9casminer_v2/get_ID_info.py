@@ -34,6 +34,7 @@ def get_ID_info(seqid, feature,v, saveout, outdir,tracrRNA, tracrstrand, crarray
     caslocus.set_genomename(cas_dataset)
     caslocus.set_datasetname(cas_dataset)
     caslocus.set_sequence(cas_dataset)
+    caslocus.set_other_names(cas_dataset)
     print("-"*80+"\n"," "*int((80- len("Sequence ID"))/2)," Sequence ID",\
           " "*int((80- len("Sequence ID"))/2)+"\n",\
           " "*int((80- len("Sequence ID"))/2)+ seqid+\
@@ -42,6 +43,8 @@ def get_ID_info(seqid, feature,v, saveout, outdir,tracrRNA, tracrstrand, crarray
     print("-> Contig Name:\t",caslocus.contigname)
     print("-> Genome Name:\t",caslocus.genomename)
     print("-> Dataset Name:\t",caslocus.datasetname)
+    print("-> Epasolli Genome Name: ", caslocus.orig_genomename)
+    print("-> Epasolli Dataset Name: ", caslocus.orig_datasetname)
     print("-> SGB ID:\t",caslocus.SGB)
     print("-> Sequence length:\t",sequence_length)
 

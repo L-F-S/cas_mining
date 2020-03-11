@@ -25,7 +25,7 @@ class locus:
     def __init__(self, locusname=None, feature=None,seq=None,\
                  CRISPRarray=None,tracrRNA=None, locus_proteins=None,\
                  metadata=None,positions=None, directions=None,\
-                 contigname=None, genomename=None, datasetname=None):
+                 contigname=None, genomename=None, datasetname=None, orig_genomename=None, orig_datasetname=None):
         self.locusname=locusname
         self.feature=feature
         self.seq=seq
@@ -38,6 +38,9 @@ class locus:
         self.contigname=contigname
         self.genomename=genomename
         self.datasetname=datasetname
+        self.orig_genomename=orig_genomename
+        self.orig_datasetname=orig_datasetname
+#        filename_discrepancies.get_originalsamplename_froms3name_of_genome(genomename,dataset)
 
     def set_SGB(self, cas_dataset):
         """return SGB as a string. cas_dataset is  5cas_loci_table formatted table"""
@@ -48,8 +51,16 @@ class locus:
         self.contigname=str(cas_dataset[cas_dataset["Seq ID"]==self.locusname]["Contig"].iloc[0])
 
     def set_genomename(self, cas_dataset):
-        """return SGB as a string. cas_dataset is  5cas_loci_table formatted table"""
+        """return genomename as a string. cas_dataset is  5cas_loci_table formatted table"""
         self.genomename=str(cas_dataset[cas_dataset["Seq ID"]==self.locusname]["Genome Name"].iloc[0])
+
+    def set_other_names(self, cas_dataset):
+        """returns genomename and dataset name from inside epasolli's folder. cas_dataset is  5cas_loci_table formatted table"""
+        if not self.genomename:
+            self.set_genomename()
+        if not self.datasetname:
+            self.set_datasetname()
+        self.orig_genomename, self.orig_datasetname=filename_discrepancies.get_originalsamplename_froms3name_of_genome(self.genomename,self.datasetname)
 
     def set_datasetname(self, cas_dataset):
         """return SGB as a string. cas_dataset is  5cas_loci_table formatted table"""
