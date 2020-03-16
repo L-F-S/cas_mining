@@ -1621,3 +1621,22 @@ present before.
 domani: riguardati le sequneze che ahi estratto oggi, di cpf1, pero prendendo la leftmost half
 of the peak of the distribution, and maybe quickly MSA them to check they're allr ight and not
 truncated (especially the smallest one, and send them out i the world.
+
+#16/03
+##modify output format for the future.
+##something along:
+#
+# Cas Variants:
+#
+#	Cpf1
+#
+#	Cas9:
+#		Locusid:
+#			repeat,
+#			tracr
+#			cas sequence
+#			original genome
+#			original genome metadata
+#			MSA Cas9 vs known casses
+#			some data to explain how was this cas9 found
+#			(clustering bu)
