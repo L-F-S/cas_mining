@@ -29,6 +29,7 @@ sys.path.insert(0, '/home/lorenzo.signorini/cas_mining/utils/')
 import filename_discrepancies
 
 def get_ID_info(seqid, feature,v, saveout, outdir,tracrRNA, tracrstrand, crarraystrand,repeat):
+    info_text=""
     datadir="/shares/CIBIO-Storage/CM/scratch/tmp_projects/signorini_cas/" #TODO add nstepdir
     annodir="/shares/CIBIO-Storage/CM/scratch/tmp_projects/signorini_cas/2casanno/crisprcasanno"
     caslocus=locus.locus(seqid,feature)
@@ -39,18 +40,34 @@ def get_ID_info(seqid, feature,v, saveout, outdir,tracrRNA, tracrstrand, crarray
     caslocus.set_datasetname(cas_dataset)
     caslocus.set_sequence(cas_dataset)
     caslocus.set_other_names(cas_dataset)
-    print("-"*80+"\n"," "*int((80- len("Sequence ID"))/2)," Sequence ID",\
-          " "*int((80- len("Sequence ID"))/2)+"\n",\
+    temp_print="-"*80+"\n"+" "*int((80- len("Sequence ID"))/2)+" Sequence ID"+\
+          " "*int((80- len("Sequence ID"))/2)+"\n"+\
           " "*int((80- len("Sequence ID"))/2)+ seqid+\
-          " "*int((80- len("Sequence ID"))/2)+"\n"+"-"*80+"\n")
+          " "*int((80- len("Sequence ID"))/2)+"\n"+"-"*80+"\n"
+    info_text+=temp_print+"\n"
+    print(temp_print)
     sequence_length=len(caslocus.seq)
-    print("-> Contig Name:\t",caslocus.contigname)
-    print("-> Genome Name:\t",caslocus.genomename)
-    print("-> Dataset Name:\t",caslocus.datasetname)
-    print("-> Epasolli Genome Name: ", caslocus.orig_genomename)
-    print("-> Epasolli Dataset Name: ", caslocus.orig_datasetname)
-    print("-> SGB ID:\t",caslocus.SGB)
-    print("-> Sequence length:\t",sequence_length)
+    temp_print="-> Contig Name:\t"+caslocus.contigname
+    info_text+=temp_print+"\n"
+    print(temp_print)
+    temp_print="-> Genome Name:\t"+caslocus.genomename
+    info_text+=temp_print+"\n"
+    print(temp_print)
+    temp_print="-> Dataset Name:\t"+caslocus.datasetname
+    info_text+=temp_print+"\n"
+    print(temp_print)
+    temp_print="-> Epasolli Genome Name: "+ caslocus.orig_genomename
+    info_text+=temp_print+"\n"
+    print(temp_print)
+    temp_print="-> Epasolli Dataset Name: "+ caslocus.orig_datasetname
+    info_text+=temp_print+"\n"
+    print(temp_print)
+    temp_print="-> SGB ID:\t"+caslocus.SGB
+    info_text+=temp_print+"\n"
+    print(temp_print)
+    temp_print="-> " +feature+" sequence length:\t"+str(sequence_length)
+    info_text+=temp_print+"\n"
+    print(temp_print)
 
     if v:
         print("\n-> Sequence:\n\n", caslocus.seq)
@@ -62,11 +79,19 @@ def get_ID_info(seqid, feature,v, saveout, outdir,tracrRNA, tracrstrand, crarray
     #e una line qua: if v: printCIRSPRarray, e levare quel verboso la
     caslocus.CRISPRarray=tmp #Magari slightly redundant to have that locus
     caslocus.fetch_positions(cas_dataset)
-    print("-> Positions:\t",caslocus.positions)
-    #print("TODO: Finding tracr_RNA")
+    temp_print="-> Positions inside contig:\t"+str(caslocus.positions)
+    print(temp_print)
+    info_text+=temp_print+"\n"
     caslocus.tracrRNA=tracrRNA
     if args.t:
-        print("-> tracrRNA length:" ,len(caslocus.tracrRNA))
+        temp_print="-> tracrRNA length:\t"+str(len(caslocus.tracrRNA))
+        info_text+=temp_print+"\n"
+        print(temp_print)
+        temp_print="-> tracrRNA strand:\t"+args.s
+        info_text+=temp_print+"\n"
+        print(temp_print)
+        temp_print="-> CRISPRarray strand:\t"+str(args.c)
+        info_text+=temp_print+"\n"
 
     if v:
 # fai qui CRISPR
@@ -99,6 +124,10 @@ def get_ID_info(seqid, feature,v, saveout, outdir,tracrRNA, tracrstrand, crarray
         print("----------------------------------------------------------------------\n")
         if not os.path.exists(outdir+seqid):
                 os.makedirs(outdir+seqid)
+        print("Writing metadata to info_"+seqid+".txt")
+        f=open(outdir+seqid+"/info_"+seqid+".txt","w")
+        f.write(info_text)
+        f.close()
         print("Writing "+feature+" amino acid sequence to "+feature+"_"+seqid+".faa")
         f=open(outdir+seqid+"/"+feature+"_"+seqid+".faa","w")
         f.write(">"+seqid+"\n"+caslocus.seq)
@@ -151,17 +180,17 @@ def get_ID_info(seqid, feature,v, saveout, outdir,tracrRNA, tracrstrand, crarray
     #            Cas1_fasta_header=">"+Cas1ID+" "+record.description
     #            coso_non_capisco_piu_nulla[cosa]["Cas1"]=record.seq
     #            SeqIO.write(record, outputdir+"Cas1_"+seqid+cosa,"fasta")
-    print("Aligning Cas9 amino acid sequence with references")
-    ref_fasta="/shares/CIBIO-Storage/CM/scratch/tmp_projects/signorini_cas/references/uniprot_working_Cas9s.fasta"
-    cas9_aa_path=outdir+seqid+"/"+feature+"_"+seqid+".faa"
-    alignments=[]
-    for row in list(SeqIO.parse(cas9_aa_path,'fasta'))+list(SeqIO.parse(ref_fasta, 'fasta')):
-        tempseq=SeqRecord(row.seq, id=row.id, description="")
-        alignments.append(tempseq)
+        print("Aligning Cas9 amino acid sequence with references")
+        ref_fasta="/shares/CIBIO-Storage/CM/scratch/tmp_projects/signorini_cas/references/uniprot_working_Cas9s.fasta"
+        cas9_aa_path=outdir+seqid+"/"+feature+"_"+seqid+".faa"
+        alignments=[]
+        for row in list(SeqIO.parse(cas9_aa_path,'fasta'))+list(SeqIO.parse(ref_fasta, 'fasta')):
+            tempseq=SeqRecord(row.seq, id=row.id, description="")
+            alignments.append(tempseq)
 
-    SeqIO.write(alignments, outdir+seqid+"/msa.faa", "fasta")
-    cline= ClustalwCommandline("clustalw", infile=outdir+seqid+"/msa.faa", outfile=outdir+seqid+"/msa.aln")
-    os.system(str(cline))
+        SeqIO.write(alignments, outdir+seqid+"/msa.faa", "fasta")
+        cline= ClustalwCommandline("clustalw", infile=outdir+seqid+"/msa.faa", outfile=outdir+seqid+"/msa.aln")
+        os.system(str(cline))
 
 
 
