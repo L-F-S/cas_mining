@@ -1640,3 +1640,15 @@ truncated (especially the smallest one, and send them out i the world.
 #			MSA Cas9 vs known casses
 #			some data to explain how was this cas9 found
 #			(clustering bu)
+
+
+#17/03
+#fatto unuovo autput, un po' a manpo da aggiungere a get_ID_info:
+##aggiunto MSA,
+#da scaricare localmente e aggeggiare con jalview: da scrivere in un readme 
+#per matteo
+#da rivedere che le annotazioni dei domini funzionali siano fatte a modo e non
+#manchi nulla
+#da agginugere una descrizione
+#da aggoungere un coso automatico che rpinta le informazioni utili (oin
+#particulaer: anche strnad di crispr e tracr.

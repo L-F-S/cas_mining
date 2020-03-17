@@ -19,6 +19,10 @@ import sys
 import pandas as pd
 import argparse
 from Bio import SeqIO
+from Bio.Seq import Seq
+from Bio.SeqRecord import SeqRecord
+from Bio import AlignIO
+from Bio.Align.Applications import ClustalwCommandline
 
 import locus
 sys.path.insert(0, '/home/lorenzo.signorini/cas_mining/utils/')
@@ -147,6 +151,18 @@ def get_ID_info(seqid, feature,v, saveout, outdir,tracrRNA, tracrstrand, crarray
     #            Cas1_fasta_header=">"+Cas1ID+" "+record.description
     #            coso_non_capisco_piu_nulla[cosa]["Cas1"]=record.seq
     #            SeqIO.write(record, outputdir+"Cas1_"+seqid+cosa,"fasta")
+    print("Aligning Cas9 amino acid sequence with references")
+    ref_fasta="/shares/CIBIO-Storage/CM/scratch/tmp_projects/signorini_cas/references/uniprot_working_Cas9s.fasta"
+    cas9_aa_path=outdir+seqid+"/"+feature+"_"+seqid+".faa"
+    alignments=[]
+    for row in list(SeqIO.parse(cas9_aa_path,'fasta'))+list(SeqIO.parse(ref_fasta, 'fasta')):
+        tempseq=SeqRecord(row.seq, id=row.id, description="")
+        alignments.append(tempseq)
+
+    SeqIO.write(alignments, outdir+seqid+"/msa.faa", "fasta")
+    cline= ClustalwCommandline("clustalw", infile=outdir+seqid+"/msa.faa", outfile=outdir+seqid+"/msa.aln")
+    os.system(str(cline))
+
 
 
 
