@@ -19,14 +19,17 @@ import sys
 import pandas as pd
 import argparse
 from Bio import SeqIO
-from Bio.Seq import Seq
 from Bio.SeqRecord import SeqRecord
-from Bio import AlignIO
 from Bio.Align.Applications import ClustalwCommandline
 
 import locus
 sys.path.insert(0, '/home/lorenzo.signorini/cas_mining/utils/')
 import filename_discrepancies
+
+def vprint(string):
+    if args.v:
+        print(string)
+
 
 def get_ID_info(seqid, feature,v, saveout, outdir,tracrRNA, tracrstrand, crarraystrand,repeat):
     info_text=""
@@ -75,9 +78,7 @@ def get_ID_info(seqid, feature,v, saveout, outdir,tracrRNA, tracrstrand, crarray
     tmp.get_CRISPR_array()
     if crarraystrand==-1:
         tmp.rev_comp()
-    #todo da cambiare la riga sopra di me e aggiungere un metodo .print
-    #e una line qua: if v: printCIRSPRarray, e levare quel verboso la
-    caslocus.CRISPRarray=tmp #Magari slightly redundant to have that locus
+    caslocus.CRISPRarray=tmp
     caslocus.fetch_positions(cas_dataset)
     temp_print="-> Positions inside contig:\t"+str(caslocus.positions)
     print(temp_print)
@@ -93,31 +94,34 @@ def get_ID_info(seqid, feature,v, saveout, outdir,tracrRNA, tracrstrand, crarray
         temp_print="-> CRISPRarray strand:\t"+str(args.c)
         info_text+=temp_print+"\n"
 
-    if v:
-# fai qui CRISPR
-        if args.t:
-            print("\n----------------------------------------------------------------------")
-            print("         tracrRNA sequence for", feature,"protein id", seqid)
-            print("----------------------------------------------------------------------\n")
-            print(caslocus.tracrRNA)
-        if repeat:
-            print("Matching repeat:\n"+repeat)
+    CRISPRheader="REPEAT"+" "*(len(caslocus.CRISPRarray.repeats[0])-len("REPEAT"))+" SPACER"+" "*(len(caslocus.CRISPRarray.spacers)-len("SPACERS"))+"\n"
+    CRISPRstrandstring="CRISPR array on FORWARD strand"
+    if crarraystrand==-1:
+        CRISPRstrandstring="CRISPR array on REVERSE strand."
+    vprint("CRISPR array sequence for "+ seqid+" "+feature+".")
+    vprint(CRISPRstrandstring)
+    vprint(CRISPRheader)
+    CRISPRarraysequence=""
+    for i in range(len(caslocus.CRISPRarray.repeats)):
+        try:
+            caslocus.CRISPRarray.spacers[i]
+            line=caslocus.CRISPRarray.repeats[i]+" "+caslocus.CRISPRarray.spacers[i]
+            vprint(line)
+            CRISPRarraysequence+=line+"\n"
+        except:
+            line=caslocus.CRISPRarray.repeats[i]
+            vprint(line)
+            CRISPRarraysequence+=line+"\n"
+            break
+    if args.t:
+        vprint("\n----------------------------------------------------------------------")
+        vprint("         tracrRNA sequence for "+ feature +" protein id "+ seqid)
+        vprint("----------------------------------------------------------------------\n")
+        vprint(caslocus.tracrRNA)
+    if repeat:
+        vprint("Matching repeat:\n"+repeat)
 
-        CRISPRheader="REPEAT"+" "*(len(caslocus.CRISPRarray.repeats[0])-len("REPEAT"))+" SPACER"+" "*(len(caslocus.CRISPRarray.spacers)-len("SPACERS"))+"\n"
-        print("CRISPR array sequence for "+ seqid+" "+feature+".")
-        if crarraystrand==-1:
-            print("CRISPR array on REVERSE strand.")
-        print(CRISPRheader)
-        CRISPRarraysequence=""
-        for i in range(len(caslocus.CRISPRarray.repeats)):
-            try:
-                caslocus.CRISPRarray.spacers[i]
-                line=caslocus.CRISPRarray.repeats[i]+" "+caslocus.CRISPRarray.spacers[i]
-                print(line)
-                CRISPRarraysequence+=line+"\n"
-            except:
-                break
-    #TODO add the written output
+
     if saveout:
         print("\n----------------------------------------------------------------------")
         print("Saving output in: \n"+outdir)
@@ -138,18 +142,20 @@ def get_ID_info(seqid, feature,v, saveout, outdir,tracrRNA, tracrstrand, crarray
             f.write(">tracrRNA_"+seqid+"\n"+tracrRNA)
             f.close()
         print("Writing  CRISPRarray to CRISPR_"+seqid+".ffn")
-        if crarraystrand==-1:
-            f=open(outdir+seqid+"/CRISPR_"+seqid+".ffn", "w")
-            f.close()
-            f=open(outdir+seqid+"/CRISPR_"+seqid+".ffn", "a")
-            f.write("@made by L-F-S\n@ University of Trento\n@lorenzo.signorini@alumni.unitn.it\n\n")
-            f.write("CRISPR array sequence for "+ seqid+" "+feature+".\nCRISPR on REVERSE strand\n\n\n")
-            f.write(CRISPRheader)
-            f.write(CRISPRarraysequence)
-            os.popen("cp "+tmp.path+" "+outdir+seqid+"/NOT_REAL_CRISPR_but_original_annotation_of_CRISPR_"+seqid+".ffn")
-        else:
-            os.popen("cp "+tmp.path+" "+outdir+seqid+"/CRISPR_"+seqid+".ffn")
+#        if crarraystrand==-1:
+        f=open(outdir+seqid+"/CRISPR_"+seqid+".ffn", "w")
+        f.close()
+        f=open(outdir+seqid+"/CRISPR_"+seqid+".ffn", "a")
+        f.write("@made by L-F-S\n@ University of Trento\n@lorenzo.signorini@alumni.unitn.it\n\n")
+        f.write("CRISPR array sequence for "+ seqid+" "+feature+".\n"+CRISPRstrandstring+"\n\n\n")
+        f.write(CRISPRheader)
+        f.write(CRISPRarraysequence+"\n\n")
+        if repeat:
+            f.write("Matching repeat:\t"+repeat)
+#            os.popen("cp "+tmp.path+" "+outdir+seqid+"/CRISPR_"+seqid+".ffn")
 
+        print("Saving original genome")
+        os.popen("cp /shares/CIBIO-Storage/CM/scratch/tmp_projects/epasolli_darkmatter/allcontigs/ALLreconstructedgenomes/"+str(caslocus.SGB)+"/"+caslocus.genomename+".fa "+outdir+seqid+"/"+caslocus.genomename+".ffn")
 
 
         #V2:
