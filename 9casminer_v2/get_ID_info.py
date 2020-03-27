@@ -155,7 +155,7 @@ def get_ID_info(seqid, feature,v, saveout, outdir,tracrRNA, tracrstrand, crarray
 #            os.popen("cp "+tmp.path+" "+outdir+seqid+"/CRISPR_"+seqid+".ffn")
 
         print("Saving original genome")
-        os.popen("cp /shares/CIBIO-Storage/CM/scratch/tmp_projects/epasolli_darkmatter/allcontigs/ALLreconstructedgenomes/"+str(caslocus.SGB)+"/"+caslocus.genomename+".fa "+outdir+seqid+"/"+caslocus.genomename+".ffn")
+        os.popen("cp /shares/CIBIO-Storage/CM/scratch/scratchCM/users/e.pasolli/projects/epasolli_darkmatter/allcontigs/ALLreconstructedgenomes/"+str(caslocus.SGB)+"/"+caslocus.genomename+".fa "+outdir+seqid+"/"+caslocus.genomename+".ffn")
 
 
         #V2:
@@ -169,7 +169,7 @@ def get_ID_info(seqid, feature,v, saveout, outdir,tracrRNA, tracrstrand, crarray
         contigname=caslocus.contigname
         SGB=caslocus.SGB
         cosa=".ffn"
-        prokka_anno_file="/scratchCM/tmp_projects/epasolli_darkmatter/allcontigs/"+dataset+"/metabat/genomes_comp50_cont05/prokka/"+genomename+"/"+genomename+cosa
+        prokka_anno_file="/shares/CIBIO-Storage/CM/scratch/scratchCM/users/e.pasolli/projects/epasolli_darkmatter/allcontigs/"+dataset+"/metabat/genomes_comp50_cont05/prokka/"+genomename+"/"+genomename+cosa
         for record in SeqIO.parse(prokka_anno_file,"fasta"):
             if record.id.startswith(seqid):
                 record.description=feature+" len="+str(len(record.seq))+" genome="+s3_genomename+" SGB="+str(SGB)+" contig="+contigname
