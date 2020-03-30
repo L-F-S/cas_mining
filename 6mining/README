@@ -1,0 +1,24 @@
+#!/bin/bash
+# Mon Mar 30 11:37:30 CEST 2020
+# Made by L-F-S
+# At the University Of Trento, Italy
+
+
+###################################
+#                                 #
+#             STEP 6              #
+#    Mine for a nice effector Cas #
+#           variant               #
+#                                 #
+#                                 #
+###################################
+
+# Files: ipydb notebooks for filtering,
+# selecting, and clusterin sequences 
+# to extract some nice possible new
+# effector Cas variants.
+
+Mining for a nice Cas9 9-08 polished summary.ipynb  prova.png  # py notebooks to extract the sequences of
+Mining for a nice Cas9-Copy1.ipynb                             # active, working Cas9s (Cpf1s)
+Mining for a nice Cpf1 17-09-2019-Copy1.ipynb                  # from the table of ALL Cas9s (Cpf1s).
+

@@ -48,9 +48,6 @@ FILES:
 				    # you can use 'folderloop'
 |4addSGB_info.py                    # <-Merge all datasets (utils/merge_datasets.py) before running 4addSGB..
 |
-|Mining for a nice Cas9 9-08 polished summary.ipynb  prova.png  # py notebooks to extract the sequences of
-|Mining for a nice Cas9-Copy1.ipynb                             # active, working Cas9s (Cpf1s)
-|Mining for a nice Cpf1 17-09-2019-Copy1.ipynb                  # from the table of ALL Cas9s (Cpf1s). 
 |
 |README                                                         # this file lol
 |TODO find tracer RNA.ipynb
