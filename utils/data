@@ -5,7 +5,7 @@
 # cd to folders insite /cas_mining beginning with a nubmer
 # usage: cs <number>
 
-cd /shares/CIBIO-Storage/CM/scratch/tmp_projects/signorini_cas
+cd /shares/CIBIO-Storage/CM/news/users/lorenzo.signorini
 if [ $# -lt 1 ]; then 
 	true
 else
