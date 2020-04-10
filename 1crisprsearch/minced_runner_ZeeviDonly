@@ -5,8 +5,10 @@
 
 # run pilercr the samplesample bins
 # with default parameters.
-DATADIR=/scratchCM/tmp_projects/epasolli_darkmatter/allcontigs/ALLreconstructedgenomes
-WDIR=/shares/CIBIO-Storage/CM/scratch/tmp_projects/signorini_cas/1crisprsearch
+DATADIR=/shares/CIBIO-Storage/CM/scratch/scratchCM/users/e.pasolli/projects/epasolli_darkmatter/allcontigs/ALLreconstructedgenomes
+WDIR=/shares/CIBIO-Storage/CM/news/users/lorenzo.signorini/1crisprsearch
+DATASET='FengQ_2015'
+OUTDIR=/shares/CIBIO-Storage/CM/news/users/lorenzo.signorini/1crisprsearch/out/FengQ_2015 #cambia tt a mno, mortale.
 cd $DATADIR
 
 for sgb in $(ls); do
@@ -14,13 +16,16 @@ for sgb in $(ls); do
     cd $sgb
     
      # cicla tra tutti i file, e salva in tmp_Zeevid quelli che iniziano con ZeeviD (nel nome)
-    for i  in *; do if [[ $i == ZeeviD* ]]; then echo $i>>tmp_ZeeviD; fi; done
+    for i  in *; do if [[ $i == ${DATASET}* ]]; then echo $i>>tmp_ZeeviD; fi; done
     # metti tutti i file che sono in colonna , in riga
-    Vim tmp_ZeeviD -c %j -c wq
+    vim tmp_ZeeviD -c %j -c wq
     # apri il file, che è una riga di nomi space separated, e feedali a parallel
     while read p; do
            echo "$p"
-           echo "$p" |  parallel --no-notice '/home/lorenzo.signorini/cas_mining/utils/jdk-12.0.1/bin/java -jar /home/lorenzo.signorini/cas_mining/1crisprsearch/minced/minced.jar {} /shares/CIBIO-Storage/CM/scratch/tmp_projects/signorini_cas/1crisprsearch/out/ZeeviD_2015/{}.minced.out.txt /shares/CIBIO-Storage/CM/scratch/tmp_projects/signorini_cas/1crisprsearch/out/ZeeviD_2015/{}.minced.out.gff'  # TODO occhio ai 2  folder ZeeviD hardcoded
+           echo "$p" |  parallel --no-notice '/home/lorenzo.signorini/cas_mining/utils/jdk-12.0.1/bin/java \
+		   -jar /home/lorenzo.signorini/cas_mining/1crisprsearch/minced/minced.jar {} \
+		   /shares/CIBIO-Storage/CM/news/users/lorenzo.signorini/1crisprsearch/out/FengQ_2015/{}.minced.out.txt \
+		   /shares/CIBIO-Storage/CM/news/users/lorenzo.signorini/1crisprsearch/out/FengQ_2015/{}.minced.out.gff'  #TODO occhio ai 2  folder ZeeviD hardcoded
     done <tmp_ZeeviD
     rm tmp_ZeeviD
     cd ../

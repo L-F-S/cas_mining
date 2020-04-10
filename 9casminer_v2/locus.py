@@ -16,9 +16,8 @@ import filename_discrepancies
 from Bio.Seq import Seq
 
 
-outdir="/shares/CIBIO-Storage/CM/scratch/tmp_projects/signorini_cas/Nstep" #TODO add nstepdir
-datadir="/shares/CIBIO-Storage/CM/scratch/tmp_projects/signorini_cas/" #TODO add nstepdir
-annodir="/shares/CIBIO-Storage/CM/scratch/tmp_projects/signorini_cas/2casanno/crisprcasanno"
+outdir="/shares/CIBIO-Storage/CM/news/users/lorenzo.signorini/" #TODO add nstepdir
+datadir="/shares/CIBIO-Storage/CM/news/users/lorenzo.signorini/" #TODO add nstepdir
 
 class locus:
 

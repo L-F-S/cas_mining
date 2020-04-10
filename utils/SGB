@@ -1,5 +1,5 @@
 #!/bin/bash
 
-echo -e $(head -n1 /shares/CIBIO-Storage/CM/scratch/tmp_projects/signorini_cas/S4Segata.csv)
-more /shares/CIBIO-Storage/CM/scratch/tmp_projects/signorini_cas/S4Segata.csv | grep $1
+echo -e $(head -n1 /shares/CIBIO-Storage/CM/news/users/lorenzo.signorini/S4Segata.csv)
+more /shares/CIBIO-Storage/CM/news/users/lorenzo.signorini/S4Segata.csv | grep $1
 
