@@ -1656,3 +1656,13 @@ truncated (especially the smallest one, and send them out i the world.
 
 aggiungere istruzioni per tutti su come fare gli msa, decidere dove mettere 
 il color code, e dove mettere la legenda per il color code per gli msa.
+¿ 10-04
+non capisco
+
+foun inconsistency while re-clustering new sequences, i now end up with 11 (without clsutering together identical seuqences) or 10 (with clustering 
+together identical sequences) clusters, instead of 7. might skip the identicality,
+and RE DO the tree, probably the best course of action.
+FDBNBEO is not the centroid anymore, but can keep it that way for the name
+since it is not important in clusters sake.
+
+need to redo old ones as well. bellapettutti
