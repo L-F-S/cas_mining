@@ -33,16 +33,9 @@ def vprint(string):
 
 def get_ID_info(seqid, feature,v, saveout, outdir,tracrRNA, tracrstrand, crarraystrand,repeat):
     info_text=""
-    datadir="/shares/CIBIO-Storage/CM/scratch/tmp_projects/signorini_cas/" #TODO add nstepdir
-    annodir="/shares/CIBIO-Storage/CM/scratch/tmp_projects/signorini_cas/2casanno/crisprcasanno"
+    cas_dataset=pd.read_csv("/shares/CIBIO-Storage/CM/news/users/lorenzo.signorini/5caslocitable/known_"+feature+"_variants_table.csv", index_col=0)
     caslocus=locus.locus(seqid,feature)
-    cas_dataset=pd.read_csv("/shares/CIBIO-Storage/CM/scratch/tmp_projects/signorini_cas/5caslocitable/known_"+feature+"_variants_table.csv", index_col=0)
-    caslocus.set_SGB(cas_dataset)
-    caslocus.set_contigname(cas_dataset)
-    caslocus.set_genomename(cas_dataset)
-    caslocus.set_datasetname(cas_dataset)
-    caslocus.set_sequence(cas_dataset)
-    caslocus.set_other_names(cas_dataset)
+    caslocus.fill_from_dataset(cas_dataset)
     temp_print="-"*80+"\n"+" "*int((80- len("Sequence ID"))/2)+" Sequence ID"+\
           " "*int((80- len("Sequence ID"))/2)+"\n"+\
           " "*int((80- len("Sequence ID"))/2)+ seqid+\
@@ -68,12 +61,16 @@ def get_ID_info(seqid, feature,v, saveout, outdir,tracrRNA, tracrstrand, crarray
     temp_print="-> SGB ID:\t"+caslocus.SGB
     info_text+=temp_print+"\n"
     print(temp_print)
+    temp_print="-> Estimated taxonomy:\t"+caslocus.estimated_taxonomy
+    info_text+=temp_print+"\n"
+    print(temp_print)
     temp_print="-> " +feature+" sequence length:\t"+str(sequence_length)
     info_text+=temp_print+"\n"
     print(temp_print)
 
     if v:
         print("\n-> Sequence:\n\n", caslocus.seq)
+    # get array
     tmp=locus.CRISPRarray(feature=feature, contigname=caslocus.contigname,genomename=caslocus.genomename,datasetname=caslocus.datasetname)
     tmp.get_CRISPR_array()
     if crarraystrand==-1:
@@ -187,7 +184,7 @@ def get_ID_info(seqid, feature,v, saveout, outdir,tracrRNA, tracrstrand, crarray
     #            coso_non_capisco_piu_nulla[cosa]["Cas1"]=record.seq
     #            SeqIO.write(record, outputdir+"Cas1_"+seqid+cosa,"fasta")
         print("Aligning Cas9 amino acid sequence with references")
-        ref_fasta="/shares/CIBIO-Storage/CM/scratch/tmp_projects/signorini_cas/references/uniprot_working_Cas9s.fasta"
+        ref_fasta="/shares/CIBIO-Storage/CM/news/users/lorenzo.signorini/references/uniprot_working_Cas9s.fasta"
         cas9_aa_path=outdir+seqid+"/"+feature+"_"+seqid+".faa"
         alignments=[]
         for row in list(SeqIO.parse(cas9_aa_path,'fasta'))+list(SeqIO.parse(ref_fasta, 'fasta')):

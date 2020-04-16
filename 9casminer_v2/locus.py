@@ -20,12 +20,24 @@ outdir="/shares/CIBIO-Storage/CM/news/users/lorenzo.signorini/" #TODO add nstepd
 datadir="/shares/CIBIO-Storage/CM/news/users/lorenzo.signorini/" #TODO add nstepdir
 
 class locus:
+    """
+        Basic usage:
+        import locus
+
+        mylocus=locus.locus(seqid,feature)
+        mylocus.fill_from_dataset(cas_dataset)
+        tmp=locus.CRISPRarray(feature=feature, contigname=caslocus.contigname,genomename=caslocus.genomename,datasetname=caslocus.datasetname
+        tmp.get_CRISPR_array()
+             if crarraystrand==-1:
+                 tmp.rev_comp()
+        caslocus.CRISPRarray=tmp
+    """
 
     def __init__(self, locusname=None, feature=None,seq=None,\
                  CRISPRarray=None,tracrRNA=None, locus_proteins=None,\
                  metadata=None,positions=None, directions=None,\
-                 contigname=None, genomename=None, datasetname=None, orig_genomename=None, orig_datasetname=None):
-        self.locusname=locusname
+                 contigname=None, genomename=None, datasetname=None, orig_genomename=None, orig_datasetname=None, estimated_taxonomy=None):
+        self.locusname=locusname  # = seqid
         self.feature=feature
         self.seq=seq
         self.CRISPRarray=CRISPRarray
@@ -39,45 +51,17 @@ class locus:
         self.datasetname=datasetname
         self.orig_genomename=orig_genomename
         self.orig_datasetname=orig_datasetname
-#        filename_discrepancies.get_originalsamplename_froms3name_of_genome(genomename,dataset)
+        self.estimated_taxonomy=estimated_taxonomy
 
-    def set_SGB(self, cas_dataset):
-        """return SGB as a string. cas_dataset is  5cas_loci_table formatted table"""
+
+    def fill_from_dataset(self, cas_dataset):
         self.SGB=str(cas_dataset[cas_dataset["Seq ID"]==self.locusname]["SGB ID"].iloc[0])
-
-    def set_contigname(self, cas_dataset):
-        """return SGB as a string. cas_dataset is  5cas_loci_table formatted table"""
         self.contigname=str(cas_dataset[cas_dataset["Seq ID"]==self.locusname]["Contig"].iloc[0])
-
-    def set_genomename(self, cas_dataset):
-        """return genomename as a string. cas_dataset is  5cas_loci_table formatted table"""
         self.genomename=str(cas_dataset[cas_dataset["Seq ID"]==self.locusname]["Genome Name"].iloc[0])
-
-    def set_other_names(self, cas_dataset):
-        """returns genomename and dataset name from inside epasolli's folder. cas_dataset is  5cas_loci_table formatted table"""
-        if not self.genomename:
-            self.set_genomename()
-        if not self.datasetname:
-            self.set_datasetname()
-        self.orig_genomename, self.orig_datasetname=filename_discrepancies.get_originalsamplename_froms3name_of_genome(self.genomename,self.datasetname)
-
-    def set_datasetname(self, cas_dataset):
-        """return SGB as a string. cas_dataset is  5cas_loci_table formatted table"""
         self.datasetname=str(cas_dataset[cas_dataset["Seq ID"]==self.locusname]["Study"].iloc[0])
-    def set_sequence(self, cas_dataset):
+        self.orig_genomename, self.orig_datasetname=filename_discrepancies.get_originalsamplename_froms3name_of_genome(self.genomename,self.datasetname)
         self.seq=cas_dataset[cas_dataset["Seq ID"]==self.locusname]["Seq"].iloc[0]
-
-    def pyhlo(self, metadata):
-        """returns S4tab phylogeny"""
-        phylo="todo"
-        return phylo
-    def species(self, metadata):
-        """returns genus and species"""
-        sp="TODO"
-        return sp
-
-    def print_locus(self):
-        """TODO PRINTS everything tipo output"""
+        self.estimated_taxonomy=cas_dataset[cas_dataset["Seq ID"]==self.locusname]["Estimated taxonomy"].iloc[0]
 
     def fetch_positions(self, cas_dataset):
         if self.contigname:
@@ -105,6 +89,10 @@ class locus:
                                     "CRISPR":[int(n) for n in eval(cas_dataset[cas_dataset["Seq ID"]==self.locusname]["minced_CRISPR"].iloc[0])[0][1:]]
                                    }
         self.positions=cas_position
+
+    def print_locus(self):
+        """TODO PRINTS everything tipo output"""
+
 
 
 
