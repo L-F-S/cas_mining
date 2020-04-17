@@ -15,6 +15,7 @@ python get_ID_info.py -h
 #TODO onc eI automatize tracrfinding, we will be able to make this into a
 #uuseful tool
 import os
+import subprocess
 import sys
 import pandas as pd
 import argparse
@@ -33,6 +34,7 @@ def vprint(string):
 
 
 def get_ID_info(seqid, feature,v, saveout, outdir,tracrRNA, tracrstrand, crarraystrand,repeat,wdir):
+    os.chdir(wdir)
     info_text=""
     cas_dataset=pd.read_csv(wdir+"5caslocitable/known_"+feature+"_variants_table.csv", index_col=0)
     caslocus=locus.locus(seqid,feature)
@@ -154,11 +156,11 @@ def get_ID_info(seqid, feature,v, saveout, outdir,tracrRNA, tracrstrand, crarray
 
         print("Saving original genome")
         full_genome_full_path, annotation_folder=originalpath.print_path(caslocus.genomename)
-        os.popen("cp "+full_genome_full_path+outdir+seqid+"/"+caslocus.genomename+".ffn")
+        os.popen("cp "+full_genome_full_path+" "+outdir+seqid+"/"+caslocus.genomename+".ffn") #change the original  extension .fa to .ffn because  .faa is used to dentoe aminoacidic Fasta WARNING: genomename.ffn is also the name of prokka annotation file, so those 2 should be ahndled in separat efolders (prokka annotation is temporarily processed in wdir, in fact
 
 
         #V2:
-        print("Writing"+feature+" nucleotidic sequence to "+feature+"_seqid"+".ffn")
+        print("Writing "+feature+" nucleotidic sequence to "+feature+"_seqid"+".ffn")
         #chiaramente appiccicato da un altro file
         genomename, dataset=filename_discrepancies.get_originalsamplename_froms3name_of_genome(caslocus.genomename,caslocus.datasetname)
         s3_genomename=caslocus.genomename
@@ -168,13 +170,23 @@ def get_ID_info(seqid, feature,v, saveout, outdir,tracrRNA, tracrstrand, crarray
         contigname=caslocus.contigname
         SGB=caslocus.SGB
         cosa=".ffn"
+        # 17/04/2020 moved location, prokka nucleotidic sequence now a compressed
+        # file: must copy, decompress, and delete at the endo of usage
         prokka_anno_file=annotation_folder+genomename+cosa
-        for record in SeqIO.parse(prokka_anno_file,"fasta"):
+        print("Decompressing annotation file..")
+        command="cp "+prokka_anno_file+".bz2 "+wdir
+        subprocess.Popen(command,shell=True).wait()
+        command="bzip2 -d "+wdir+genomename+cosa+".bz2"
+        subprocess.Popen(command,shell=True).wait()
+        for record in SeqIO.parse(wdir+genomename+cosa,"fasta"):
             if record.id.startswith(seqid):
+                print(record.id)
+                print("++++++++++++++++++++++++++\n",record.seq)
                 record.description=feature+" len="+str(len(record.seq))+" genome="+s3_genomename+" SGB="+str(SGB)+" contig="+contigname
                 Cas9_fasta_header = ">"+seqid+" "+record.description
     #            coso_non_capisco_piu_nulla[cosa][feature]=record.seq
                 SeqIO.write(record, outdir+seqid+"/"+feature+"_"+seqid+cosa,"fasta")
+                break
     #        if record.id.startswith(Cas2ID):
     #            record.description="Cas2 len="+str(len(record.seq))+" genome="+s3_genomename+" SGB="+str(SGB)+" contig="+contigname
     #            Cas2_fasta_header=">"+Cas2ID+" "+record.description
@@ -185,6 +197,9 @@ def get_ID_info(seqid, feature,v, saveout, outdir,tracrRNA, tracrstrand, crarray
     #            Cas1_fasta_header=">"+Cas1ID+" "+record.description
     #            coso_non_capisco_piu_nulla[cosa]["Cas1"]=record.seq
     #            SeqIO.write(record, outputdir+"Cas1_"+seqid+cosa,"fasta")
+        subprocess.Popen("rm "+wdir+genomename+cosa+"*",shell=True)
+
+
         print("Aligning Cas9 amino acid sequence with references")
         ref_fasta=wdir+"control/uniprot_working_Cas9s.fasta"
         cas9_aa_path=outdir+seqid+"/"+feature+"_"+seqid+".faa"
@@ -198,7 +213,9 @@ def get_ID_info(seqid, feature,v, saveout, outdir,tracrRNA, tracrstrand, crarray
         os.system(str(cline))
 
         print("Printing SVG file of alignment from Jalview..")
-        os.system(" jalview -open "+outdir+seqid+"/msa.aln -nodisplay -colour Clustal -features "+wdir+"control/ref_features_colore  -svg prova")
+        os.chdir(outdir+feature+"/"+seqid+"/")
+        os.system(" jalview -open "+outdir+seqid+"/msa.aln -nodisplay -colour Clustal -features "+wdir+\
+                  "control/ref_features_colore  -svg msa.svg")
 
 
 
