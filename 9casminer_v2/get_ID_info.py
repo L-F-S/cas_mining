@@ -25,15 +25,16 @@ from Bio.Align.Applications import ClustalwCommandline
 import locus
 sys.path.insert(0, '/home/lorenzo.signorini/cas_mining/utils/')
 import filename_discrepancies
+import originalpath
 
 def vprint(string):
     if args.v:
         print(string)
 
 
-def get_ID_info(seqid, feature,v, saveout, outdir,tracrRNA, tracrstrand, crarraystrand,repeat):
+def get_ID_info(seqid, feature,v, saveout, outdir,tracrRNA, tracrstrand, crarraystrand,repeat,wdir):
     info_text=""
-    cas_dataset=pd.read_csv("/shares/CIBIO-Storage/CM/news/users/lorenzo.signorini/5caslocitable/known_"+feature+"_variants_table.csv", index_col=0)
+    cas_dataset=pd.read_csv(wdir+"5caslocitable/known_"+feature+"_variants_table.csv", index_col=0)
     caslocus=locus.locus(seqid,feature)
     caslocus.fill_from_dataset(cas_dataset)
     temp_print="-"*80+"\n"+" "*int((80- len("Sequence ID"))/2)+" Sequence ID"+\
@@ -152,7 +153,8 @@ def get_ID_info(seqid, feature,v, saveout, outdir,tracrRNA, tracrstrand, crarray
 #            os.popen("cp "+tmp.path+" "+outdir+seqid+"/CRISPR_"+seqid+".ffn")
 
         print("Saving original genome")
-        os.popen("cp /shares/CIBIO-Storage/CM/scratch/scratchCM/users/e.pasolli/projects/epasolli_darkmatter/allcontigs/ALLreconstructedgenomes/"+str(caslocus.SGB)+"/"+caslocus.genomename+".fa "+outdir+seqid+"/"+caslocus.genomename+".ffn")
+        full_genome_full_path, annotation_folder=originalpath.print_path(caslocus.genomename)
+        os.popen("cp "+full_genome_full_path+outdir+seqid+"/"+caslocus.genomename+".ffn")
 
 
         #V2:
@@ -166,11 +168,11 @@ def get_ID_info(seqid, feature,v, saveout, outdir,tracrRNA, tracrstrand, crarray
         contigname=caslocus.contigname
         SGB=caslocus.SGB
         cosa=".ffn"
-        prokka_anno_file="/shares/CIBIO-Storage/CM/scratch/scratchCM/users/e.pasolli/projects/epasolli_darkmatter/allcontigs/"+dataset+"/metabat/genomes_comp50_cont05/prokka/"+genomename+"/"+genomename+cosa
+        prokka_anno_file=annotation_folder+genomename+cosa
         for record in SeqIO.parse(prokka_anno_file,"fasta"):
             if record.id.startswith(seqid):
                 record.description=feature+" len="+str(len(record.seq))+" genome="+s3_genomename+" SGB="+str(SGB)+" contig="+contigname
-                Cas9_fasta_header=">"+seqid+" "+record.description
+                Cas9_fasta_header = ">"+seqid+" "+record.description
     #            coso_non_capisco_piu_nulla[cosa][feature]=record.seq
                 SeqIO.write(record, outdir+seqid+"/"+feature+"_"+seqid+cosa,"fasta")
     #        if record.id.startswith(Cas2ID):
@@ -184,7 +186,7 @@ def get_ID_info(seqid, feature,v, saveout, outdir,tracrRNA, tracrstrand, crarray
     #            coso_non_capisco_piu_nulla[cosa]["Cas1"]=record.seq
     #            SeqIO.write(record, outputdir+"Cas1_"+seqid+cosa,"fasta")
         print("Aligning Cas9 amino acid sequence with references")
-        ref_fasta="/shares/CIBIO-Storage/CM/news/users/lorenzo.signorini/references/uniprot_working_Cas9s.fasta"
+        ref_fasta=wdir+"control/uniprot_working_Cas9s.fasta"
         cas9_aa_path=outdir+seqid+"/"+feature+"_"+seqid+".faa"
         alignments=[]
         for row in list(SeqIO.parse(cas9_aa_path,'fasta'))+list(SeqIO.parse(ref_fasta, 'fasta')):
@@ -194,6 +196,9 @@ def get_ID_info(seqid, feature,v, saveout, outdir,tracrRNA, tracrstrand, crarray
         SeqIO.write(alignments, outdir+seqid+"/msa.faa", "fasta")
         cline= ClustalwCommandline("clustalw", infile=outdir+seqid+"/msa.faa", outfile=outdir+seqid+"/msa.aln")
         os.system(str(cline))
+
+        print("Printing SVG file of alignment from Jalview..")
+        os.system(" jalview -open "+outdir+seqid+"/msa.aln -nodisplay -colour Clustal -features "+wdir+"control/ref_features_colore  -svg prova")
 
 
 
@@ -207,7 +212,8 @@ if __name__=="__main__":
     parser.add_argument("-v", action="store_true", help="verbose output")
     parser.add_argument("ID", type=str, help="sequence ID")
     parser.add_argument("-f", type=str, help="effector Cas name (default= Cas9)", default="Cas9")
-    parser.add_argument("-o", type=str, help="output directory, default =/shares/CIBIO-Storage/CM/scratch/tmp_projects/signorini_cas/9output/<feature>", default="/shares/CIBIO-Storage/CM/scratch/tmp_projects/signorini_cas/9output/")
+    parser.add_argument("-o", type=str, help="output directory, default =/shares/CIBIO-Storage/CM/news/users/lorenzo.signorini/9output/<feature>/", default="/shares/CIBIO-Storage/CM/news/users/lorenzo.signorini/9output/")
+    parser.add_argument("-w", type=str, help="working directory, default =/shares/CIBIO-Storage/CM/news/users/lorenzo.signorini/", default="/shares/CIBIO-Storage/CM/news/users/lorenzo.signorini/")
     parser.add_argument("-d", action="store_true",  help="Save sequence output")
     parser.add_argument("-t", type=str, help="tracRNA sequence")
     parser.add_argument("-s", type=str, help="tracrRNA strand. Possible values= +, -")
@@ -218,6 +224,7 @@ if __name__=="__main__":
     seqid =args.ID
     feature=args.f
     outdir=args.o+feature+"/"
+    wdir=args.w
     tracrRNA=args.t
     tracrstrand=args.s
     crarraystrand=args.c
@@ -227,4 +234,4 @@ if __name__=="__main__":
             os.makedirs(outdir)
 
 
-    get_ID_info(seqid, feature,args.v,args.d,outdir,tracrRNA, tracrstrand, crarraystrand,repeat)
+    get_ID_info(seqid, feature,args.v,args.d,outdir,tracrRNA, tracrstrand, crarraystrand,repeat,wdir)

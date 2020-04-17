@@ -1,0 +1,6 @@
+#!/bin/bash
+# Fri Apr 17 11:40:13 CEST 2020
+# Made by L-F-S
+# At the University Of Trento, Italy
+
+python /home/lorenzo.signorini/cas_mining/utils/originalpath.py $1
