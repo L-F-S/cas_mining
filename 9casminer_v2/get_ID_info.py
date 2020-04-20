@@ -35,6 +35,7 @@ def vprint(string):
 
 def get_ID_info(seqid, feature,v, saveout, outdir,tracrRNA, tracrstrand, crarraystrand,repeat,wdir):
     os.chdir(wdir)
+    outdir+="test/"
     info_text=""
     cas_dataset=pd.read_csv(wdir+"5caslocitable/known_"+feature+"_variants_table.csv", index_col=0)
     caslocus=locus.locus(seqid,feature)
@@ -213,7 +214,7 @@ def get_ID_info(seqid, feature,v, saveout, outdir,tracrRNA, tracrstrand, crarray
         os.system(str(cline))
 
         print("Printing SVG file of alignment from Jalview..")
-        os.chdir(outdir+feature+"/"+seqid+"/")
+        os.chdir(outdir+seqid+"/")
         os.system(" jalview -open "+outdir+seqid+"/msa.aln -nodisplay -colour Clustal -features "+wdir+\
                   "control/ref_features_colore  -svg msa.svg")
 
