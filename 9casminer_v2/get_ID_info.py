@@ -159,74 +159,16 @@ def get_ID_info(seqid, feature,v, saveout, outdir,tracrRNA, tracrstrand, crarray
         full_genome_full_path, annotation_folder=originalpath.print_path(caslocus.genomename)
         os.popen("cp "+full_genome_full_path+" "+outdir+seqid+"/"+caslocus.genomename+".ffn") #change the original  extension .fa to .ffn because  .faa is used to dentoe aminoacidic Fasta WARNING: genomename.ffn is also the name of prokka annotation file, so those 2 should be ahndled in separat efolders (prokka annotation is temporarily processed in wdir, in fact
 
-
-        #V2:
         print("Writing "+feature+" nucleotidic sequence to "+feature+"_seqid"+".ffn")
-#        #chiaramente appiccicato da un altro file
-#        # qui genomename e datasetname si riferiscono al nome dentro epasolli
-#        # darkmatter (Zeevid_A, ZeeviD_B, megahit)
-#        # mamma mia the redundancy of those two lines, vabbe
-#        contigname=caslocus.contigname
-#        SGB=caslocus.SGB
-#        cosa=".ffn"
-#        # 17/04/2020 moved location, prokka nucleotidic sequence now a compressed
-#        # file: must copy, decompress, and delete at the endo of usage
-#i      # 21/04/2020 new location, old files, uncompressed.
-#        prokka_anno_file=annotation_folder+genomename+cosa
-#        print("Decompressing annotation file..")
-#        command="cp "+prokka_anno_file+".bz2 "+wdir
-#        subprocess.Popen(command,shell=True).wait()
-#        command="bzip2 -d "+wdir+genomename+cosa+".bz2"
-#        subprocess.Popen(command,shell=True).wait()
-#
+        # v4 21/04/2020
         for record in SeqIO.parse(annotation_folder+caslocus.genomename+".ffn","fasta"):
             if record.id.startswith(seqid):
                 print(record.id)
                 print("++++++++++++++++++++++++++\n",record.seq)
                 record.description=feature+" len="+str(len(record.seq))+" genome="+caslocus.genomename+" SGB="+str(caslocus.SGB)+" contig="+caslocus.contigname
                 Cas9_fasta_header = ">"+seqid+" "+record.description
-    #            coso_non_capisco_piu_nulla[cosa][feature]=record.seq
                 SeqIO.write(record, outdir+seqid+"/"+feature+"_"+seqid+".ffn","fasta")
                 break
-    #        if record.id.startswith(Cas2ID):
-    #            record.description="Cas2 len="+str(len(record.seq))+" genome="+s3_genomename+" SGB="+str(SGB)+" contig="+contigname
-    #            Cas2_fasta_header=">"+Cas2ID+" "+record.description
-    #            SeqIO.write(record, outputdir+"Cas2_"+seqid+cosa,"fasta")
-    #            coso_non_capisco_piu_nulla[cosa]["Cas2"]=record.seq
-    #        if record.id.startswith(Cas1ID):
-    #            record.description="Cas1 len="+str(len(record.seq))+" genome="+s3_genomename+" SGB="+str(SGB)+" contig="+contigname
-    #            Cas1_fasta_header=">"+Cas1ID+" "+record.description
-    #            coso_non_capisco_piu_nulla[cosa]["Cas1"]=record.seq
-    #            SeqIO.write(record, outputdir+"Cas1_"+seqid+cosa,"fasta")
-  #     subprocess.Popen("rm "+wdir+genomename+cosa+"*",shell=True)  #17/04 per
-  #     cancellare il file decompresso se fosse stato compresso
-
-        #v3 20/04 # 21/04 : non si u sa piu
- #       for record in SeqIO.parse(full_genome_full_path,"fasta"):  #c'è modo di non fare questo 'ciclo'?
- #               if record.id.startswith(caslocus.contigname):
- #                                    #estrai la posizione di cas9 dal contig, e traducila
- #                   cas9start=caslocus.positions[feature][0]
- #                   cas9stop=caslocus.positions[feature][1]
- #                   cas9_nnseq=record.seq[cas9start-1:cas9stop-3] #gff should have a 1-based positional annotation (ma sto andando a occhio finchè non sono uguali, è già un oggetto Bio.Seq
- #                   my_translated_cas9=cas9_nnseq.transcribe().translate()
- #                   if my_translated_cas9==caslocus.seq:
- #                       print("Cas locus on plus strand")
- #                       plus=True
- #                   if not my_translated_cas9==caslocus.seq:
- #                      #proviamo col reverse complement
- #                      cas9_nnseq=record.seq[cas9start+2:cas9stop]
- #                      my_translated_cas9=cas9_nnseq.reverse_complement().transcribe().translate()
- #                      print("Cas locus on minus strand")
- #                   if not  my_translated_cas9==caslocus.seq:
- #                       raise Exception("WARNING, translated Cas9 and annotated Cas9 differ! Exiting.")
- #                       print("TRANSLATED FROM ORIGINAL GENOME:\n",my_translated_cas9)
- #                       print("+"*80)
- #                       print("ANNOTATED",caslocus.seq)
- #                   # write file
- #                   f=open(outdir+seqid+"/"+feature+"_"+seqid+".ffn","w")
- #                   f.write(">"+seqid+"\n"+str(cas9_nnseq))
- #                   f.close()
-#########################################################à
 
         print("Aligning Cas9 amino acid sequence with references")
         ref_fasta=wdir+"control/uniprot_working_Cas9s.fasta"
