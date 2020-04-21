@@ -90,10 +90,13 @@ def get_ID_info(seqid, feature,v, saveout, outdir,tracrRNA, repeat,wdir):
         temp_print="-> CRISPRarray strand:\t"+str(args.c)
         info_text+=temp_print+"\n"
     CRISPRheader="REPEAT"+" "*(len(caslocus.CRISPRarray.repeats[0])-len("REPEAT"))+" SPACER"+" "*(len(caslocus.CRISPRarray.spacers)-len("SPACERS"))+"\n"
-    CRISPRstrandstring="CRISPR array on FORWARD strand"
-    if args.c==-1:
+    if args.c==1:
+        CRISPRstrandstring="CRISPR array on FORWARD strand"
+    elif args.c==-1:
         CRISPRstrandstring="CRISPR array on REVERSE strand."
-        # verbose output: print CRISPR ARRAY
+    else:
+        CRISPRstrandstring="Real CRISPR strand unknown, printing annotation in forward direction."
+    # verbose output: print CRISPR ARRAY
     vprint("CRISPR array sequence for "+ seqid+" "+feature+".")
     vprint(CRISPRstrandstring)
     vprint(CRISPRheader)

@@ -12,8 +12,11 @@ import filename_discrepancies
 
 
 def print_path(bin_name, metaref=False):
-    """bin (genome) names should be S3 genome names
-    add optiona larg metaref=True, to print metaref path"""
+    """bin (genome) names should be S3 genome names.
+    add optional arg metaref=True, to print metaref path
+    on filename discrepancies: metaref is a 's3' filename.
+    epasolli is not."""
+
     if metaref==True:
         metarefpath="/shares/CIBIO-Storage/CM/scratch/databases/MetaRefSGB/"
         datamap=pd.read_csv(metarefpath+"releases/Jan19/datamap.txt", sep="\t")
@@ -23,14 +26,15 @@ def print_path(bin_name, metaref=False):
         return metarefpath+rel_bin_path, metarefpath+rel_anno_path
     ####
     dataset=bin_name.split("__")[0]
+    genomename, dataset=filename_discrepancies.get_originalsamplename_froms3name_of_genome(bin_name,dataset)
     bin_path="/shares/CIBIO-Storage/CM/scratch/users/e.pasolli/projects/binning/genomes_comp50_cont05/"+dataset+\
-        "/"+bin_name+".fa"
+        "/"+genomename+".fa"
 
     anno_path="/shares/CIBIO-Storage/CM/scratch/users/e.pasolli/projects/binning/genomes_comp50_cont05/"+dataset+\
-        "/prokka/"+bin_name+"/"
+        "/prokka/"+genomename+"/"
     return bin_path, anno_path
 
 
 if __name__=="__main__":
-   print( print_path(sys.argv[1], True))
-   print( print_path(sys.argv[1]))
+    print( "metaref paths:\n",print_path(sys.argv[1], True),"\n")
+    print("E.pasolli paths:\n", print_path(sys.argv[1]))
