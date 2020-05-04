@@ -20,7 +20,7 @@ def print_path(bin_name, metaref=False):
     if metaref==True:
         metarefpath="/shares/CIBIO-Storage/CM/scratch/databases/MetaRefSGB/"
         datamap=pd.read_csv(metarefpath+"releases/Jan19/datamap.txt", sep="\t")
-        rel_bin_path=datamap[datamap["# file_name"]==bin_name]["file_path"].iloc[0].lstrip("/")
+        rel_bin_path=datamap[datamap[datamap.columns[0]]==bin_name][datamap.columns[1]].iloc[0].lstrip("/")
         random_folder=rel_bin_path.split("/")[3]
         rel_anno_path=rel_bin_path.split("/")[0]+"/"+rel_bin_path.split("/")[1]+"/annotations/prokka-1.12/"+random_folder+"/"+bin_name+"/"
         return metarefpath+rel_bin_path, metarefpath+rel_anno_path
