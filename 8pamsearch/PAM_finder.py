@@ -134,28 +134,35 @@ def extract_flanking_sequences(protospacers_of,target_sample_file):
                         start=end
                         end=s
                         revcomp=True
-                    test_value=sequence[start-1:end].reverse_complement()==matched_seq if revcomp else sequence[start-1:end]
+                    test_value=sequence[start-1:end].reverse_complement()==matched_seq if revcomp else sequence[start-1:end] == matched_seq
                     if not test_value:
                         vprint("Exception at sample: "+target_sample_file+",contig: "+target_contig,True,l)
                         raise Exception("Extracted sequence differs:\nExtracted sequence reverse complement?"+str(revcomp))
+                    vprint("original protospacer BLAST match:"+str(matched_seq),v,l)
                     vprint("start: "+ str(start)+ "  ,  end: "+str(end),v,l)
                     vprint(str(sequence[start-1:end].reverse_complement()) if revcomp else str(sequence[start:end]),v,l)
-                    vprint("upstream sequence",v,l)
-                    if start>=51:
-                        upstream_start=start-51
+                    vprint("extracted protospacer:"+str(test_value),v,l)
+                    flanking_length=50
+                    if start>=(flanking_length+1):
+                        upstream_start=start-(flanking_length+1)
                         added_nucleotides=""
                     else:
                         upstream_start=0
-                        added_nucleotides="X"*(51-start)
+                        added_nucleotides="X"*((flanking_length+1)-start)
                     upseq=added_nucleotides+sequence[upstream_start:start-1] #immediately flanking, no overlap
-                    vprint(str(upseq),v,l)
-                    vprint("downstream sequence",v,l)
-                    # no need to check length because for some reason if they
-                    # are shorter, no error will be given, and they will be NaN
-                    # only if the end of the protospacer
-                    #is exactly on the end of the contig
-                    downseq=sequence[end:end+50]  #immediately flanking, no overlap
-                    vprint(str(downseq),v,l)
+
+                    last_pos=len(sequence)
+                    if last_pos-end>=flanking_length:
+                        downstream_end=end+flanking_length
+                        added_nucleotides=""
+                    else:
+                        downstream_end=last_pos
+                        added_nucleotides="X"*(flanking_length-(last_pos-end))
+                    downseq=sequence[end:downstream_end]+added_nucleotides  #immediately flanking, no overlap
+                    if revcomp:
+                        temp=downseq
+                        downseq=upseq
+                        upseq=temp
                     f.write(target_contig+","+str(upseq)+","+str(downseq)+","+target_sample_file+","+target_bin+","+matched_seq+"\n")
                 break
     f.close()
@@ -303,7 +310,7 @@ def wrapper(seqid,feature,datadir,outdir,castabledir,v,l):
 
     # Build sequence logos
     ##################################################################
-    vprint("Building upstream and downstream sequence logos...")
+    vprint("Building upstream and downstream sequence logos...",True,l)
     #TODO add input to modify length of seq logos
     bulid_sequence_logos(dataset_of_flanking_sequences)
     return
