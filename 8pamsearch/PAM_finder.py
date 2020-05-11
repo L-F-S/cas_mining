@@ -63,9 +63,9 @@ def parallel_wrap_extract_protospacers_and_flanking_sequences(blastoutfile, cont
     temp_samplename=blastoutfile.lstrip(seqid+"_").lstrip("vs_").rstrip("blastout").rstrip(".")
     # check if the code has already been run not in parallel, to save some
     # time:
-    if "flanking_sequences_of_putative_protospacers_"+temp_samplename in os.listdir(outdir):
+    #if "flanking_sequences_of_putative_protospacers_"+temp_samplename in os.listdir(outdir):
         #vprint("Sample already parsed, moving on to next one.",v,l)
-        return
+     #   return
     # run code:
     protospacers_of_sample=extract_protospacers_of(temp_samplename, blastoutfile,contigname)  # returns a dictionary
     if len(protospacers_of_sample.keys())>0:
@@ -125,6 +125,7 @@ def extract_flanking_sequences(protospacers_of,target_sample_file):
         for record in SeqIO.parse(dbfile, "fasta"):
             if record.id==target_contig:
                 for start, end, matched_seq in protospacers_of[target_contig]:
+                    matched_seq="".join(matched_seq.split("-")) #testa se ora funge..
                     vprint("Protospacer: "+str( matched_seq),v,l)
                     sequence=record.seq
                     revcomp=False
@@ -161,8 +162,8 @@ def extract_flanking_sequences(protospacers_of,target_sample_file):
                     downseq=sequence[end:downstream_end]+added_nucleotides  #immediately flanking, no overlap
                     if revcomp:
                         temp=downseq
-                        downseq=upseq
-                        upseq=temp
+                        downseq=upseq.reverse_complement()
+                        upseq=temp.reverse_complement()
                     f.write(target_contig+","+str(upseq)+","+str(downseq)+","+target_sample_file+","+target_bin+","+matched_seq+"\n")
                 break
     f.close()
@@ -170,7 +171,7 @@ def extract_flanking_sequences(protospacers_of,target_sample_file):
 
 def bulid_sequence_logos(dataset_of_flanking_sequences):
     PAMdata=pd.read_csv(outdir+dataset_of_flanking_sequences, header=None)
-    PAMdata=PAMdata.dropna() #TODO temporary
+    vprint("N of matches: "+str(PAMdata.shape),True,l)
 
     # UPSTREAM Sequence mpileup and logo
     ####################################
@@ -197,7 +198,7 @@ def bulid_sequence_logos(dataset_of_flanking_sequences):
     plt.savefig(outdir+seqid+".downstream.PAM_logo.pdf")
     plt.close()
 
-def wrapper(seqid,feature,datadir,outdir,castabledir,v,l):
+def wrapper(seqid,feature,datadir,outdir,castabledir,v,l,strand,ncores):
     start_time=time.time()
     # define variables by reading from cas loci table
     #####################################################
@@ -235,6 +236,8 @@ def wrapper(seqid,feature,datadir,outdir,castabledir,v,l):
 
     cr=locus.CRISPRarray(feature=feature, contigname=contigname, genomename=genomename, datasetname=dataset)
     cr.get_CRISPR_array()
+    if strand == -1:
+        cr.rev_comp()
     spacers=cr.spacers
     vprint("spacers:   "+str(spacers),v,l)
 
@@ -272,6 +275,7 @@ def wrapper(seqid,feature,datadir,outdir,castabledir,v,l):
     # parse BLAST output for putative protospacers &
     # extact flanking regions
     ###################################################################
+   ##################################################################
     #vprint("-"*80,True,l)
     #vprint("Parsing Blast output:\nFinding putative protospacers and flanking regions",True,l)
 
@@ -286,25 +290,19 @@ def wrapper(seqid,feature,datadir,outdir,castabledir,v,l):
     #f.close()
 
     inputs_list=[(blastoutfile,contigname) for blastoutfile in  os.listdir(outdir) if blastoutfile.endswith("blastout")] # create a list of tuples (target_blast_output_file,contigname) to pass to the multiprocess iterator
-    pool=Pool(30)
+    pool=Pool(ncores)
     pool.starmap(parallel_wrap_extract_protospacers_and_flanking_sequences,inputs_list)
     # the rest  will be executed after multiprocesses are completed
 
-    # uncomment to execute with 1 core:
-   # for blastoutfile in os.listdir(outdir):  #cycle though all samples
-   #     # parse all blast outputs and extract putative protospacers
-   #     if blastoutfile.endswith("blastout"):
-   #         temp_samplename=blastoutfile.lstrip(seqid+"_").lstrip("vs_").rstrip("blastout").rstrip(".")
-   #         protospacers_of_sample=extract_protospacers_of(temp_samplename, blastoutfile,contigname)  # returns a dictionary
-   #         if len(protospacers_of_sample.keys())>0:
-   #             extract_flanking_sequences(protospacers_of_sample,temp_samplename) # extract flanking sequences from original genomes and saves to a file TODO an easier version would extract from sample file instead of old genomes!!
-   ##################################################################
 
     # Merge all files in one dataset
     vprint("Merging all flanking sequences in one dataset...",True,l)
     os.chdir(outdir)
     dataset_of_flanking_sequences="dataset_flanking_sequences_of_putative_protospacers"
-    subprocess.Popen("cat flanking_sequences* > dataset_flanking_sequences_of_putative_protospacers", shell=True)
+    process=subprocess.Popen("cat flanking_sequences* > dataset_flanking_sequences_of_putative_protospacers ", shell=True)
+    process.wait()
+    subprocess.Popen("rm flanking_sequences*", shell=True)
+    vprint("Time passed: "+str(time.time()-start_time),True,l)
     #subprocess.Popen("cat flanking_sequences* > dataset_flanking_sequences_of_putative_protospacers && rm flanking_sequences*", shell=True)
    # vprint("Time passed: "+str(time.time()-start_time),True,l)
 
@@ -313,6 +311,7 @@ def wrapper(seqid,feature,datadir,outdir,castabledir,v,l):
     vprint("Building upstream and downstream sequence logos...",True,l)
     #TODO add input to modify length of seq logos
     bulid_sequence_logos(dataset_of_flanking_sequences)
+    vprint("Done.\nTime passed: "+str(time.time()-start_time),True,l)
     return
 
 
@@ -330,6 +329,7 @@ if __name__=="__main__":
     parser.add_argument("-l", action="store_false", help="Do not log PAM_finder's outptut.")
     parser.add_argument("-f", type=str, help="effector Cas name (default= Cas9)"\
                         , default="Cas9")
+    parser.add_argument("-x", type=int, help="N of cores, default: 30", default=30)
     parser.add_argument("-c", type=str, help="cas_dataset position, default=\
                         /shares/CIBIO-Storage/CM/news/users/lorenzo.signorini/5caslocitable"\
                         ,default="/shares/CIBIO-Storage/CM/news/users/lorenzo.signorini/5caslocitable/")
@@ -341,14 +341,19 @@ if __name__=="__main__":
                         =/shares/CIBIO-Storage/CM/news/users/lorenzo.signorini/"\
                         , default="/shares/CIBIO-Storage/CM/news/users/lorenzo.signorini/8pamsearch/")
     parser.add_argument("-d", action="store_true",  help="Save sequence output")
+    parser.add_argument("s", type=int, choices=[-1,+1], help="Spacer orientation. If unknown, run tracrRNA_finder. Allowed values: (+1,-1)")
     args=parser.parse_args()
     seqid =args.ID
+    strand=args.s
     feature=args.f
     outdir=args.o+seqid+"/"
     datadir=args.w
     castabledir=args.c
+    ncores=args.x
+
     v=args.v
     l=args.l
     if not os.path.exists(outdir):
             os.makedirs(outdir)
-    wrapper(seqid,feature,datadir,outdir,castabledir,v,l)
+
+    wrapper(seqid,feature,datadir,outdir,castabledir,v,l,strand,ncores)
