@@ -155,11 +155,13 @@ def get_ID_info(seqid, feature,v, saveout, outdir,tracrRNA, repeat,wdir):
 
         print("Saving original genome")
         full_genome_full_path, annotation_folder=originalpath.print_path(caslocus.genomename)
+        old_genome_name=full_genome_full_path.split("/")[-1].rstrip(".fa")
+        print(old_genome_name)
         os.popen("cp "+full_genome_full_path+" "+outdir+seqid+"/"+caslocus.genomename+".ffn") #change the original  extension .fa to .ffn because  .faa is used to dentoe aminoacidic Fasta WARNING: genomename.ffn is also the name of prokka annotation file, so those 2 should be ahndled in separat efolders (prokka annotation is temporarily processed in wdir, in fact
 
         print("Writing "+feature+" nucleotidic sequence to "+feature+"_seqid"+".ffn")
         # v4 21/04/2020
-        for record in SeqIO.parse(annotation_folder+caslocus.genomename+".ffn","fasta"):
+        for record in SeqIO.parse(annotation_folder+caslocus.orig_genomename+".ffn","fasta"):
             if record.id.startswith(seqid):
                 print(record.id)
                 print("++++++++++++++++++++++++++\n",record.seq)
